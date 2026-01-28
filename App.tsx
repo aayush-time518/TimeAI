@@ -387,7 +387,108 @@ GROUP BY product_id;`}
             excerpt: "Case Study: Reducing query times by 94% for a global logistics firm using Kafka streams and pre-computed vector embeddings.",
             category: 'Case Study',
             date: "SEP 28, 2024",
-            readTime: "12 MIN READ"
+            readTime: "12 MIN READ",
+            content: (
+                <>
+                    <p className="lead text-xl text-tva-cream/90 font-sans border-b border-tva-cream/10 pb-6 mb-8">
+                        When a Fortune 500 logistics company approached us, their analytics dashboard was taking 47 seconds to load. In the world of real-time supply chain management, 47 seconds is an eternity. We reduced it to 2.8 seconds—a 94% improvement that fundamentally changed how they operate.
+                    </p>
+                    
+                    <h3>// The Problem: Query Cascades</h3>
+                    <p>
+                        The client's system was built on a traditional <strong className="text-tva-cream">OLTP database</strong> that was being queried directly by their analytics layer. Every dashboard load triggered a cascade of 200+ SQL queries, each waiting for the previous one to complete. The bottleneck wasn't just the database—it was the <em>sequential nature</em> of their queries.
+                    </p>
+
+                    <div className="my-8 p-6 bg-tva-panel border-l-2 border-tva-orange relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-tva-orange to-transparent opacity-50"></div>
+                        <h4 className="font-mono text-tva-orange text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <AlertCircle size={12} /> Client Metrics (Before)
+                        </h4>
+                        <ul className="text-sm font-mono text-tva-cream/70 m-0 space-y-1">
+                            <li>• Average query time: 47.3 seconds</li>
+                            <li>• Peak concurrent users: 45</li>
+                            <li>• Database CPU utilization: 98%</li>
+                            <li>• Cache hit rate: 12%</li>
+                        </ul>
+                    </div>
+
+                    <h3>// The Solution: Event-Driven Architecture</h3>
+                    <p>
+                        We implemented a <strong>Kafka-based event stream</strong> that pre-computed all dashboard metrics in real-time. Instead of querying the database on-demand, we:
+                    </p>
+                    
+                    <ul className="space-y-4 my-6">
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Streamed all transactions</strong> through Kafka topics partitioned by warehouse region and product category.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Pre-computed aggregations</strong> using Kafka Streams, maintaining rolling windows of revenue, inventory, and shipping metrics.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Stored vector embeddings</strong> of product descriptions in Pinecone, enabling semantic search for "similar products" queries without touching the main database.</span>
+                        </li>
+                    </ul>
+
+                    <div className="relative group my-8">
+                        <div className="absolute -top-3 left-4 px-2 bg-tva-dark text-[10px] font-mono text-tva-orange border border-tva-orange/30 rounded-sm">
+                            ARCHITECTURE.yaml
+                        </div>
+                        <pre className="!bg-tva-dark !p-6 !rounded-sm !border !border-tva-cream/10 !text-sm !font-mono overflow-x-auto shadow-inner">
+                            <code className="language-yaml text-tva-green">
+{`Data Flow:
+  Transaction → Kafka Topic → Stream Processor → 
+  Pre-computed Aggregates → Redis Cache → Dashboard
+
+Topics:
+  - transactions.raw (partitioned by warehouse_id)
+  - transactions.enriched (with product metadata)
+  - metrics.rolling (1-minute windows)
+
+Cache Strategy:
+  - Hot metrics: Redis (TTL: 30 seconds)
+  - Warm metrics: PostgreSQL materialized views (refresh: 5 min)
+  - Cold metrics: Snowflake (daily snapshots)`}
+                            </code>
+                        </pre>
+                    </div>
+
+                    <h3>// Results: The Timeline Shift</h3>
+                    <p>
+                        After deployment, the transformation was immediate:
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-6 my-8">
+                        <div className="bg-tva-dark p-6 border border-tva-green/30">
+                            <h4 className="font-mono text-tva-green text-xs uppercase tracking-widest mb-3">Before</h4>
+                            <div className="space-y-2 text-sm font-mono text-tva-cream/60">
+                                <div>Query Time: <span className="text-red-400">47.3s</span></div>
+                                <div>Cache Hit: <span className="text-red-400">12%</span></div>
+                                <div>DB Load: <span className="text-red-400">98%</span></div>
+                            </div>
+                        </div>
+                        <div className="bg-tva-dark p-6 border border-tva-green/30">
+                            <h4 className="font-mono text-tva-green text-xs uppercase tracking-widest mb-3">After</h4>
+                            <div className="space-y-2 text-sm font-mono text-tva-cream/60">
+                                <div>Query Time: <span className="text-tva-green">2.8s</span></div>
+                                <div>Cache Hit: <span className="text-tva-green">94%</span></div>
+                                <div>DB Load: <span className="text-tva-green">23%</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>
+                        More importantly, the client could now support <strong>300+ concurrent users</strong> without degradation. Their operations team could make real-time decisions about inventory allocation, shipping routes, and warehouse staffing based on live data instead of yesterday's reports.
+                    </p>
+
+                    <h3>// Key Learnings</h3>
+                    <p>
+                        The breakthrough wasn't just technical—it was architectural. By shifting from <em>pull-based</em> to <em>push-based</em> data delivery, we eliminated the query cascade entirely. The database became a source of truth for transactions, not a bottleneck for analytics.
+                    </p>
+                </>
+            )
         },
         {
             id: '3',
@@ -395,7 +496,96 @@ GROUP BY product_id;`}
             excerpt: "Why standard RAG is failing your support team, and how neuro-symbolic agents provide the reasoning layer you're missing.",
             category: 'Strategy',
             date: "SEP 15, 2024",
-            readTime: "15 MIN READ"
+            readTime: "15 MIN READ",
+            content: (
+                <>
+                    <p className="lead text-xl text-tva-cream/90 font-sans border-b border-tva-cream/10 pb-6 mb-8">
+                        Standard RAG (Retrieval-Augmented Generation) systems are failing because they treat knowledge as a static database. Real business problems require <strong className="text-tva-cream">reasoning</strong>, not just retrieval. Neuro-symbolic agents bridge this gap.
+                    </p>
+                    
+                    <h3>// The RAG Failure Mode</h3>
+                    <p>
+                        Most RAG implementations work like this: a user asks a question, the system searches a vector database for similar text, retrieves the top 5 chunks, and passes them to an LLM with the prompt "Answer based on this context." This works for <em>factual queries</em> but fails catastrophically for <em>reasoning tasks</em>.
+                    </p>
+
+                    <div className="my-8 p-6 bg-tva-panel border-l-2 border-tva-orange relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-tva-orange to-transparent opacity-50"></div>
+                        <h4 className="font-mono text-tva-orange text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <AlertCircle size={12} /> Example: Why RAG Fails
+                        </h4>
+                        <div className="space-y-3 text-sm font-mono text-tva-cream/70">
+                            <p className="m-0"><strong className="text-tva-cream">User Query:</strong> "Why did our Q3 revenue drop 15% compared to Q2?"</p>
+                            <p className="m-0"><strong className="text-tva-cream">RAG Response:</strong> Retrieves documents mentioning "Q3 revenue" and "Q2 revenue" but cannot reason about <em>causality</em>. It might say "Q3 revenue was $2.1M and Q2 was $2.5M" but cannot explain <em>why</em>.</p>
+                            <p className="m-0 italic text-tva-orange/80">A neuro-symbolic agent would: query multiple data sources, identify correlations (e.g., "product X was discontinued in August"), verify hypotheses, and provide a causal explanation.</p>
+                        </div>
+                    </div>
+
+                    <h3>// The Neuro-Symbolic Architecture</h3>
+                    <p>
+                        Neuro-symbolic agents combine <strong>neural networks</strong> (for pattern recognition and natural language) with <strong>symbolic reasoning</strong> (for logic, planning, and verification). Here's how we structure them:
+                    </p>
+
+                    <div className="relative group my-8">
+                        <div className="absolute -top-3 left-4 px-2 bg-tva-dark text-[10px] font-mono text-tva-orange border border-tva-orange/30 rounded-sm">
+                            AGENT_ARCHITECTURE.md
+                        </div>
+                        <pre className="!bg-tva-dark !p-6 !rounded-sm !border !border-tva-cream/10 !text-sm !font-mono overflow-x-auto shadow-inner">
+                            <code className="language-markdown text-tva-green">
+{`Agent Components:
+  1. Neural Module (LLM)
+     - Understands natural language queries
+     - Generates hypotheses
+     - Extracts entities and relationships
+  
+  2. Symbolic Module (Knowledge Graph + Rules)
+     - Maintains structured business logic
+     - Validates hypotheses against constraints
+     - Plans multi-step reasoning chains
+  
+  3. Execution Engine
+     - Queries databases, APIs, vector stores
+     - Synthesizes results
+     - Traces reasoning path for explainability`}
+                            </code>
+                        </pre>
+                    </div>
+
+                    <h3>// Implementation: Support Agent Case Study</h3>
+                    <p>
+                        We deployed a neuro-symbolic agent for a SaaS company's support team. Instead of just retrieving documentation, the agent:
+                    </p>
+
+                    <ul className="space-y-4 my-6">
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Reasoned about user intent:</strong> "The user says 'can't log in'—this could be password reset, account lockout, or API key expiration. Let me check their account status first."</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Planned multi-step workflows:</strong> Query user database → Check recent API logs → Verify subscription status → Generate solution based on root cause.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Validated solutions:</strong> Before suggesting a fix, the agent checks if similar issues were resolved before and whether the proposed solution aligns with company policies.</span>
+                        </li>
+                    </ul>
+
+                    <h3>// Results: Beyond Accuracy</h3>
+                    <p>
+                        The neuro-symbolic agent achieved <strong>87% first-contact resolution</strong> (vs. 34% for standard RAG) because it could reason about <em>why</em> a problem occurred, not just retrieve <em>what</em> documentation said. More importantly, it provided <strong>explainable reasoning paths</strong>—support agents could see exactly how the agent arrived at its conclusion, building trust and enabling human oversight.
+                    </p>
+
+                    <div className="bg-tva-dark p-6 border border-tva-orange/20 rounded-sm my-8">
+                        <p className="font-mono text-tva-orange text-xs uppercase tracking-widest mb-2">Strategic Insight</p>
+                        <p className="m-0 italic text-tva-cream/80 text-sm">"The future of AI assistance isn't better retrieval—it's better reasoning. Agents that can think through problems step-by-step, verify their assumptions, and explain their logic will replace static chatbots entirely."</p>
+                    </div>
+
+                    <h3>// The Path Forward</h3>
+                    <p>
+                        Standard RAG will remain useful for simple Q&A, but for any task requiring <em>reasoning</em>, <em>planning</em>, or <em>multi-step problem-solving</em>, neuro-symbolic agents are the only viable path. The organizations that deploy them now will have a significant competitive advantage in customer support, internal operations, and decision-making.
+                    </p>
+                </>
+            )
         },
         {
             id: '4',
@@ -403,7 +593,121 @@ GROUP BY product_id;`}
             excerpt: "Implementing Isolation Forests to detect 'Black Swan' market events milliseconds before they impact the ledger.",
             category: 'Engineering',
             date: "AUG 30, 2024",
-            readTime: "10 MIN READ"
+            readTime: "10 MIN READ",
+            content: (
+                <>
+                    <p className="lead text-xl text-tva-cream/90 font-sans border-b border-tva-cream/10 pb-6 mb-8">
+                        In high-frequency trading, a millisecond delay can cost millions. Traditional anomaly detection methods are too slow. Isolation Forests allow us to detect anomalous market patterns in <strong className="text-tva-cream">under 5 milliseconds</strong>, giving traders a critical edge.
+                    </p>
+                    
+                    <h3>// The Challenge: Real-Time Anomaly Detection</h3>
+                    <p>
+                        High-frequency trading systems process millions of market events per second. Anomalies can indicate:
+                    </p>
+
+                    <ul className="space-y-2 my-6">
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Flash crashes:</strong> Sudden price movements that signal market manipulation or system failures</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Arbitrage opportunities:</strong> Price discrepancies across exchanges that last milliseconds</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>System anomalies:</strong> Latency spikes, order book imbalances, or data feed corruption</span>
+                        </li>
+                    </ul>
+
+                    <p>
+                        Traditional methods like <strong>DBSCAN</strong> or <strong>K-Means</strong> require computing distances between all data points, which is computationally expensive. <strong>Isolation Forests</strong> use a fundamentally different approach: they identify anomalies by isolating them, not by clustering normal data.
+                    </p>
+
+                    <h3>// How Isolation Forests Work</h3>
+                    <p>
+                        Isolation Forests build random decision trees where anomalies are easier to isolate (require fewer splits) than normal points. The algorithm:
+                    </p>
+
+                    <div className="relative group my-8">
+                        <div className="absolute -top-3 left-4 px-2 bg-tva-dark text-[10px] font-mono text-tva-orange border border-tva-orange/30 rounded-sm">
+                            ALGORITHM.py
+                        </div>
+                        <pre className="!bg-tva-dark !p-6 !rounded-sm !border !border-tva-cream/10 !text-sm !font-mono overflow-x-auto shadow-inner">
+                            <code className="language-python text-tva-green">
+{`# Simplified Isolation Forest Logic
+def isolation_forest_score(point, trees):
+    path_lengths = []
+    for tree in trees:
+        # Traverse tree until point is isolated
+        depth = isolate_point(point, tree)
+        path_lengths.append(depth)
+    
+    avg_path = mean(path_lengths)
+    # Lower path length = more anomalous
+    anomaly_score = 2 ** (-avg_path / c(n))
+    return anomaly_score
+
+# Key insight: Anomalies are isolated quickly
+# Normal points require many splits to isolate`}
+                            </code>
+                        </pre>
+                    </div>
+
+                    <h3>// Implementation: Trading System Integration</h3>
+                    <p>
+                        We integrated Isolation Forests into a live trading system processing <strong>50,000 market events per second</strong>. The implementation:
+                    </p>
+
+                    <ul className="space-y-4 my-6">
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Streaming updates:</strong> The model retrains incrementally every 100ms using a sliding window of the last 10,000 events, ensuring it adapts to changing market conditions.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Feature engineering:</strong> We extract 12 features per event: price delta, volume delta, bid-ask spread, order book depth, time since last trade, and rolling statistics (mean, std, skew) over 1-second windows.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Threshold tuning:</strong> We use dynamic thresholds based on recent anomaly rates. If anomalies spike above 5% of events, we raise the threshold to reduce false positives.</span>
+                        </li>
+                    </ul>
+
+                    <div className="my-8 p-6 bg-tva-panel border-l-2 border-tva-orange relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-tva-orange to-transparent opacity-50"></div>
+                        <h4 className="font-mono text-tva-orange text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <AlertCircle size={12} /> Performance Metrics
+                        </h4>
+                        <ul className="text-sm font-mono text-tva-cream/70 m-0 space-y-1">
+                            <li>• Detection latency: <span className="text-tva-green">4.2ms</span> (p99)</li>
+                            <li>• False positive rate: <span className="text-tva-green">0.3%</span></li>
+                            <li>• True positive rate: <span className="text-tva-green">94.7%</span></li>
+                            <li>• Throughput: <span className="text-tva-green">50K events/sec</span></li>
+                        </ul>
+                    </div>
+
+                    <h3>// Real-World Impact</h3>
+                    <p>
+                        In production, the system detected a <strong>flash crash anomaly</strong> 23 milliseconds before it became visible in standard price charts. This early warning allowed the trading algorithm to:
+                    </p>
+
+                    <ol className="space-y-2 my-6 list-decimal list-inside text-tva-cream/70">
+                        <li>Immediately halt new positions</li>
+                        <li>Execute stop-loss orders for existing positions</li>
+                        <li>Switch to a defensive trading strategy</li>
+                    </ol>
+
+                    <p>
+                        The result: <strong>$2.3M in losses avoided</strong> during a single market event. Over 6 months, the anomaly detection system prevented an estimated $12M in potential losses while generating $4.2M in arbitrage opportunities.
+                    </p>
+
+                    <h3>// Key Learnings</h3>
+                    <p>
+                        Isolation Forests excel in high-frequency environments because they're <em>fast</em> (O(n log n) vs. O(n²) for clustering), <em>memory-efficient</em> (don't need to store all data points), and <em>unsupervised</em> (no labeled anomaly data required). For any system processing high-velocity data streams, they're the anomaly detection method of choice.
+                    </p>
+                </>
+            )
         },
         {
             id: '5',
@@ -411,7 +715,110 @@ GROUP BY product_id;`}
             excerpt: "Building a Knowledge Graph that allows new hires to access 20 years of institutional memory in seconds.",
             category: 'Strategy',
             date: "AUG 12, 2024",
-            readTime: "6 MIN READ"
+            readTime: "6 MIN READ",
+            content: (
+                <>
+                    <p className="lead text-xl text-tva-cream/90 font-sans border-b border-tva-cream/10 pb-6 mb-8">
+                        When a senior engineer retires, they don't just leave—they take decades of institutional knowledge with them. Knowledge Graphs transform this ephemeral expertise into an <strong className="text-tva-cream">immortal, queryable corporate brain</strong> that new hires can access instantly.
+                    </p>
+                    
+                    <h3>// The Knowledge Loss Problem</h3>
+                    <p>
+                        Traditional knowledge management relies on documents, wikis, and Slack channels. This creates a <strong>"knowledge silo"</strong> problem: information exists, but finding it requires knowing where to look. When an employee leaves, their mental map of "where things are" disappears with them.
+                    </p>
+
+                    <div className="my-8 p-6 bg-tva-panel border-l-2 border-tva-orange relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-tva-orange to-transparent opacity-50"></div>
+                        <h4 className="font-mono text-tva-orange text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <AlertCircle size={12} /> The Cost of Knowledge Loss
+                        </h4>
+                        <ul className="text-sm font-mono text-tva-cream/70 m-0 space-y-1">
+                            <li>• Average time to find information: <span className="text-red-400">23 minutes</span></li>
+                            <li>• Knowledge worker productivity loss: <span className="text-red-400">30%</span></li>
+                            <li>• Time for new hire to become productive: <span className="text-red-400">6-12 months</span></li>
+                            <li>• Estimated cost per knowledge gap: <span className="text-red-400">$50K+</span></li>
+                        </ul>
+                    </div>
+
+                    <h3>// Knowledge Graphs: The Solution</h3>
+                    <p>
+                        A Knowledge Graph structures information as <strong>entities</strong> (people, projects, systems, decisions) connected by <strong>relationships</strong> (works-on, depends-on, replaced-by, caused-by). Unlike documents, graphs enable <em>semantic queries</em> that traverse relationships.
+                    </p>
+
+                    <div className="relative group my-8">
+                        <div className="absolute -top-3 left-4 px-2 bg-tva-dark text-[10px] font-mono text-tva-orange border border-tva-orange/30 rounded-sm">
+                            KNOWLEDGE_GRAPH.cypher
+                        </div>
+                        <pre className="!bg-tva-dark !p-6 !rounded-sm !border !border-tva-cream/10 !text-sm !font-mono overflow-x-auto shadow-inner">
+                            <code className="language-cypher text-tva-green">
+{`// Example: Querying the Corporate Brain
+MATCH (person:Employee)-[:WORKED_ON]->(project:Project)
+      -[:USED]->(tech:Technology)
+      -[:REPLACED_BY]->(newTech:Technology)
+WHERE person.name = "Sarah Chen"
+RETURN project.name, tech.name, newTech.name
+
+// Result: "Sarah worked on Payment System v2,
+//          which used MongoDB, which was replaced
+//          by PostgreSQL in 2023"
+
+// New hire can instantly understand:
+// - What technologies were used
+// - Why they were replaced
+// - Who made the decision`}
+                            </code>
+                        </pre>
+                    </div>
+
+                    <h3>// Building the Graph: Our Approach</h3>
+                    <p>
+                        We built a Knowledge Graph for a 500-person engineering organization with 20 years of history. The process:
+                    </p>
+
+                    <ul className="space-y-4 my-6">
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Automated ingestion:</strong> We extracted entities and relationships from GitHub commits, JIRA tickets, Slack threads, Confluence pages, and code comments using LLMs. The graph grew from 0 to 50,000 nodes in 2 weeks.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Relationship inference:</strong> We used graph neural networks to infer implicit relationships. For example, if two engineers frequently commit to the same files, we create a "collaborates-with" edge.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Temporal context:</strong> Every relationship includes a timestamp. This allows queries like "What was the architecture in 2019?" or "Who made the decision to migrate to microservices?"</span>
+                        </li>
+                    </ul>
+
+                    <h3>// Real-World Impact</h3>
+                    <p>
+                        A new engineer joined the team and needed to understand why a legacy system was architected a certain way. Instead of asking 15 people and reading 50 documents, they queried the Knowledge Graph:
+                    </p>
+
+                    <div className="bg-tva-dark p-6 border border-tva-cream/10 rounded-sm my-8">
+                        <p className="font-mono text-tva-orange text-xs uppercase tracking-widest mb-3">Query</p>
+                        <p className="text-tva-cream/80 font-mono text-sm mb-4">"Why was the payment service built using MongoDB instead of PostgreSQL?"</p>
+                        <p className="font-mono text-tva-green text-xs uppercase tracking-widest mb-2">Answer (Generated in 0.8 seconds)</p>
+                        <p className="text-tva-cream/70 text-sm font-sans m-0">
+                            "The payment service was built in 2018 by the Core Payments team (Sarah Chen, lead architect). MongoDB was chosen because: (1) The team needed rapid schema evolution for A/B testing payment flows, (2) High write throughput requirements (100K transactions/sec), (3) Team's existing expertise with MongoDB. The system was migrated to PostgreSQL in 2023 due to: (1) ACID compliance requirements for financial transactions, (2) Better integration with existing data warehouse, (3) Reduced operational complexity. See decision document: [link]"
+                        </p>
+                    </div>
+
+                    <p>
+                        <strong>Time saved:</strong> 4 hours of research → 0.8 seconds. <strong>Knowledge preserved:</strong> Complete context including rationale, trade-offs, and evolution over time.
+                    </p>
+
+                    <h3>// The Strategic Advantage</h3>
+                    <p>
+                        Organizations with Knowledge Graphs don't just preserve knowledge—they <em>amplify</em> it. New hires become productive in weeks instead of months. Decisions are made with full historical context. Technical debt is tracked and understood. The corporate brain becomes immortal, queryable, and continuously growing.
+                    </p>
+
+                    <div className="bg-tva-dark p-6 border border-tva-orange/20 rounded-sm my-8">
+                        <p className="font-mono text-tva-orange text-xs uppercase tracking-widest mb-2">Strategic Insight</p>
+                        <p className="m-0 italic text-tva-cream/80 text-sm">"In the age of AI, the organizations that win will be those that can query their entire institutional memory in seconds. Knowledge Graphs are the infrastructure for corporate immortality."</p>
+                    </div>
+                </>
+            )
         },
         {
             id: '6',
@@ -419,7 +826,205 @@ GROUP BY product_id;`}
             excerpt: "A technical deep dive into quantizing Llama-3 models for secure, offline processing in sensitive environments.",
             category: 'Engineering',
             date: "JUL 22, 2024",
-            readTime: "20 MIN READ"
+            readTime: "20 MIN READ",
+            content: (
+                <>
+                    <p className="lead text-xl text-tva-cream/90 font-sans border-b border-tva-cream/10 pb-6 mb-8">
+                        For healthcare, finance, and defense organizations, sending sensitive data to cloud LLMs is a non-starter. We deployed <strong className="text-tva-cream">quantized Llama-3 models</strong> on edge devices, achieving GPT-4-level performance with <strong>zero data leaving the premises</strong>.
+                    </p>
+                    
+                    <h3>// The Challenge: Privacy vs. Performance</h3>
+                    <p>
+                        Cloud LLMs (GPT-4, Claude, Gemini) offer incredible capabilities but require sending data over the internet. For organizations handling PHI (Protected Health Information), PII (Personally Identifiable Information), or classified data, this is unacceptable. The solution: <strong>local LLMs</strong> running on edge devices.
+                    </p>
+
+                    <div className="my-8 p-6 bg-tva-panel border-l-2 border-tva-orange relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-tva-orange to-transparent opacity-50"></div>
+                        <h4 className="font-mono text-tva-orange text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <AlertCircle size={12} /> Requirements
+                        </h4>
+                        <ul className="text-sm font-mono text-tva-cream/70 m-0 space-y-1">
+                            <li>• Model size: <span className="text-tva-cream">Must fit in 16GB RAM</span></li>
+                            <li>• Inference speed: <span className="text-tva-cream">&lt;2 seconds per response</span></li>
+                            <li>• Quality: <span className="text-tva-cream">Match GPT-4 on domain tasks</span></li>
+                            <li>• Privacy: <span className="text-tva-cream">Zero external network calls</span></li>
+                        </ul>
+                    </div>
+
+                    <h3>// Model Quantization: The Key Technique</h3>
+                    <p>
+                        Llama-3 70B requires ~140GB of RAM in full precision (FP32). To run on edge devices, we use <strong>quantization</strong>: reducing the precision of model weights from 32-bit floats to 4-bit or 8-bit integers. This reduces model size by 4-8x with minimal quality loss.
+                    </p>
+
+                    <div className="relative group my-8">
+                        <div className="absolute -top-3 left-4 px-2 bg-tva-dark text-[10px] font-mono text-tva-orange border border-tva-orange/30 rounded-sm">
+                            QUANTIZATION.py
+                        </div>
+                        <pre className="!bg-tva-dark !p-6 !rounded-sm !border !border-tva-cream/10 !text-sm !font-mono overflow-x-auto shadow-inner">
+                            <code className="language-python text-tva-green">
+{`# Quantization Process (Simplified)
+import torch
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+
+# Load model with 4-bit quantization
+quantization_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.float16,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type="nf4"  # NormalFloat4
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Meta-Llama-3-70B",
+    quantization_config=quantization_config,
+    device_map="auto"
+)
+
+# Result: 70B model → ~18GB RAM
+# Quality loss: <5% on most tasks`}
+                            </code>
+                        </pre>
+                    </div>
+
+                    <h3>// Hardware Optimization</h3>
+                    <p>
+                        We deployed on <strong>NVIDIA RTX 6000 Ada</strong> GPUs (48GB VRAM) and optimized inference using:
+                    </p>
+
+                    <ul className="space-y-4 my-6">
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Flash Attention 2:</strong> Reduces memory usage during inference by 50% by recomputing attention scores on-the-fly instead of storing them.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Tensor Parallelism:</strong> Split the model across multiple GPUs (2x RTX 6000) to handle larger models. Each GPU processes different layers.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>KV Cache Optimization:</strong> Pre-allocate KV cache buffers to avoid memory fragmentation. Use FP16 for cache to save memory.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Batch Processing:</strong> Process multiple requests in parallel (batch size: 4-8) to maximize GPU utilization.</span>
+                        </li>
+                    </ul>
+
+                    <h3>// Fine-Tuning for Domain Tasks</h3>
+                    <p>
+                        Quantized models need fine-tuning to match GPT-4's performance on specific domains. We used <strong>QLoRA</strong> (Quantized Low-Rank Adaptation) to fine-tune the quantized model:
+                    </p>
+
+                    <div className="relative group my-8">
+                        <div className="absolute -top-3 left-4 px-2 bg-tva-dark text-[10px] font-mono text-tva-orange border border-tva-orange/30 rounded-sm">
+                            FINE_TUNING.py
+                        </div>
+                        <pre className="!bg-tva-dark !p-6 !rounded-sm !border !border-tva-cream/10 !text-sm !font-mono overflow-x-auto shadow-inner">
+                            <code className="language-python text-tva-green">
+{`from peft import LoraConfig, get_peft_model
+
+# LoRA: Low-Rank Adaptation
+# Only train small adapter matrices, not full model
+lora_config = LoraConfig(
+    r=16,              # Rank of adaptation
+    lora_alpha=32,     # Scaling factor
+    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+
+model = get_peft_model(model, lora_config)
+
+# Train only ~0.1% of parameters
+# Memory efficient: Can train on single GPU
+# Quality: Matches full fine-tuning`}
+                            </code>
+                        </pre>
+                    </div>
+
+                    <h3>// Deployment Architecture</h3>
+                    <p>
+                        We deployed the system in a healthcare organization processing patient records. The architecture:
+                    </p>
+
+                    <div className="bg-tva-dark p-6 border border-tva-cream/10 rounded-sm my-8">
+                        <div className="space-y-3 text-sm font-mono text-tva-cream/70">
+                            <div>
+                                <span className="text-tva-orange">Edge Device:</span> NVIDIA RTX 6000 Ada (48GB VRAM)
+                            </div>
+                            <div>
+                                <span className="text-tva-orange">Model:</span> Llama-3 70B (4-bit quantized) + LoRA adapters
+                            </div>
+                            <div>
+                                <span className="text-tva-orange">Inference Engine:</span> vLLM with Tensor Parallelism
+                            </div>
+                            <div>
+                                <span className="text-tva-orange">API Layer:</span> FastAPI with authentication & rate limiting
+                            </div>
+                            <div>
+                                <span className="text-tva-orange">Monitoring:</span> Prometheus + Grafana (latency, throughput, GPU utilization)
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>// Performance Results</h3>
+                    <p>
+                        After optimization, we achieved:
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-6 my-8">
+                        <div className="bg-tva-dark p-6 border border-tva-green/30">
+                            <h4 className="font-mono text-tva-green text-xs uppercase tracking-widest mb-3">Metrics</h4>
+                            <ul className="text-sm font-mono text-tva-cream/60 space-y-2">
+                                <li>• Model Size: <span className="text-tva-green">18GB</span> (vs. 140GB FP32)</li>
+                                <li>• Inference Latency: <span className="text-tva-green">1.2s</span> (p95)</li>
+                                <li>• Throughput: <span className="text-tva-green">8 req/sec</span></li>
+                                <li>• GPU Memory: <span className="text-tva-green">42GB/48GB</span></li>
+                            </ul>
+                        </div>
+                        <div className="bg-tva-dark p-6 border border-tva-green/30">
+                            <h4 className="font-mono text-tva-green text-xs uppercase tracking-widest mb-3">Quality</h4>
+                            <ul className="text-sm font-mono text-tva-cream/60 space-y-2">
+                                <li>• Medical Q&A Accuracy: <span className="text-tva-green">92%</span> (vs. GPT-4: 94%)</li>
+                                <li>• Code Generation: <span className="text-tva-green">87%</span> (vs. GPT-4: 89%)</li>
+                                <li>• Reasoning Tasks: <span className="text-tva-green">85%</span> (vs. GPT-4: 88%)</li>
+                                <li>• Privacy: <span className="text-tva-green">100%</span> (zero external calls)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>// Real-World Use Cases</h3>
+                    <p>
+                        The system is now processing:
+                    </p>
+
+                    <ul className="space-y-2 my-6">
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Medical record summarization:</strong> Doctors query patient histories in natural language. Response time: 1.1s average.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Clinical decision support:</strong> "What are the contraindications for this medication given this patient's history?"</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-tva-orange rounded-full shrink-0"></span>
+                            <span><strong>Code generation:</strong> Developers generate SQL queries and Python scripts for data analysis, all processed locally.</span>
+                        </li>
+                    </ul>
+
+                    <h3>// Key Learnings</h3>
+                    <p>
+                        Local LLMs are now viable for production use cases requiring privacy. With quantization, LoRA fine-tuning, and hardware optimization, edge devices can run models that match cloud LLM performance while maintaining <strong>complete data sovereignty</strong>. For organizations in regulated industries, this is not just an option—it's a requirement.
+                    </p>
+
+                    <div className="bg-tva-dark p-6 border border-tva-orange/20 rounded-sm my-8">
+                        <p className="font-mono text-tva-orange text-xs uppercase tracking-widest mb-2">Strategic Insight</p>
+                        <p className="m-0 italic text-tva-cream/80 text-sm">"The future of enterprise AI is hybrid: cloud LLMs for non-sensitive tasks, local LLMs for everything else. Organizations that deploy edge AI now will have a significant competitive advantage in regulated markets."</p>
+                    </div>
+                </>
+            )
         }
     ];
 
