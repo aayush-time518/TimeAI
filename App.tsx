@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { ServicesGrid } from './components/ServicesGrid';
@@ -82,11 +82,12 @@ const HomeView: React.FC<{ setView: (v: ViewState) => void }> = ({ setView }) =>
     <ScrollReveal>
       <LiveDemos />
     </ScrollReveal>
-    <ScrollReveal>
+    {/* Industries has z-30 to allow modals to float over the CTA Strip */}
+    <ScrollReveal className="relative z-30">
       <Industries />
     </ScrollReveal>
-    {/* CTA Strip */}
-    <ScrollReveal>
+    {/* CTA Strip has z-20 to stay below Industries dropdowns */}
+    <ScrollReveal className="relative z-20">
       <section className="py-24 bg-tva-orange text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-tva-dark/10 bg-[size:20px_20px] opacity-20"></div>
           <div className="container mx-auto px-6 relative z-10">
@@ -170,11 +171,22 @@ const SolutionsView: React.FC<{ setView: (v: ViewState) => void }> = ({ setView 
 
 /* --- ARTICLE READER COMPONENT --- */
 const ArticleModal: React.FC<{ post: BlogPost; onClose: () => void }> = ({ post, onClose }) => {
+    const contentRef = useRef<HTMLDivElement>(null);
+    const [progress, setProgress] = useState(0);
+
     // Prevent background scroll
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => { document.body.style.overflow = 'unset'; }
     }, []);
+
+    const handleScroll = () => {
+        if (contentRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = contentRef.current;
+            const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+            setProgress(scrollPercentage);
+        }
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6">
@@ -185,7 +197,10 @@ const ArticleModal: React.FC<{ post: BlogPost; onClose: () => void }> = ({ post,
             
             <div className="relative w-full max-w-4xl bg-tva-panel h-full md:h-[90vh] md:rounded-lg shadow-2xl border border-tva-cream/10 flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 duration-500">
                 {/* Header Bar */}
-                <div className="bg-tva-dark/50 p-4 border-b border-tva-orange/20 flex items-center justify-between shrink-0">
+                <div className="bg-tva-dark/50 p-4 border-b border-tva-orange/20 flex items-center justify-between shrink-0 relative">
+                     {/* Progress Bar */}
+                    <div className="absolute bottom-0 left-0 h-[2px] bg-tva-orange transition-all duration-150 ease-out z-50" style={{ width: `${progress}%` }}></div>
+
                     <div className="flex items-center gap-4">
                         <div className="p-2 bg-tva-orange/10 border border-tva-orange/30 rounded text-tva-orange">
                             <FileText size={20} />
@@ -217,7 +232,11 @@ const ArticleModal: React.FC<{ post: BlogPost; onClose: () => void }> = ({ post,
                 </div>
 
                 {/* Article Content */}
-                <div className="flex-1 overflow-y-auto p-6 md:p-12 font-serif">
+                <div 
+                    ref={contentRef}
+                    onScroll={handleScroll}
+                    className="flex-1 overflow-y-auto p-6 md:p-12 font-serif scroll-smooth"
+                >
                     <div className="max-w-3xl mx-auto">
                         <span className="inline-block px-3 py-1 mb-6 bg-tva-cream/5 border border-tva-cream/10 rounded-full text-xs font-mono text-tva-cream/60 uppercase tracking-wider">
                             {post.category} // {post.readTime}
@@ -285,6 +304,7 @@ const ArticleModal: React.FC<{ post: BlogPost; onClose: () => void }> = ({ post,
 
 const IntelView: React.FC = () => {
     const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const posts: BlogPost[] = [
         {
@@ -403,6 +423,13 @@ GROUP BY product_id;`}
         }
     ];
 
+    // Filter Logic
+    const filteredPosts = posts.filter(post => 
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        post.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="pt-32 pb-20 container mx-auto px-6 min-h-screen">
             <ScrollReveal>
@@ -415,61 +442,81 @@ GROUP BY product_id;`}
                         <h1 className="text-4xl md:text-5xl font-mono font-bold text-tva-cream uppercase">Intel Database</h1>
                     </div>
                     
-                    {/* Fake Search Interface */}
+                    {/* Search Interface */}
                     <div className="mt-6 md:mt-0 w-full md:w-1/3">
                         <div className="relative group">
                             <input 
                                 type="text" 
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search archives..." 
                                 className="w-full bg-tva-panel border border-tva-cream/20 text-tva-cream pl-10 pr-4 py-2 font-mono text-sm focus:border-tva-orange focus:outline-none transition-colors"
                             />
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-tva-cream/30 group-focus-within:text-tva-orange transition-colors" size={16} />
+                            {searchQuery && (
+                                <button 
+                                    onClick={() => setSearchQuery('')}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-tva-cream/30 hover:text-tva-orange transition-colors"
+                                >
+                                    <X size={14} />
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
             </ScrollReveal>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {posts.map((post, index) => (
-                    <ScrollReveal key={post.id} delay={index * 100}>
-                        <div 
-                            onClick={() => setSelectedPost(post)}
-                            className="group bg-tva-panel border border-tva-cream/10 hover:border-tva-orange/50 transition-all duration-300 h-full flex flex-col hover:-translate-y-1 hover:shadow-lg cursor-pointer relative overflow-hidden"
-                        >
-                            {/* Card Top Decor */}
-                            <div className="absolute top-0 right-0 p-2 opacity-50">
-                                <Hash size={40} className="text-tva-dark rotate-12" />
-                            </div>
-                            
-                            <div className="p-6 flex flex-col h-full relative z-10">
-                                <div className="flex justify-between items-center mb-4">
-                                    <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-1 bg-tva-dark border border-tva-cream/10 text-tva-orange rounded-sm">
-                                        {post.category}
-                                    </span>
-                                    <span className="text-[10px] font-mono text-tva-cream/40">{post.date}</span>
+            {filteredPosts.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredPosts.map((post, index) => (
+                        <ScrollReveal key={post.id} delay={index * 50}>
+                            <div 
+                                onClick={() => setSelectedPost(post)}
+                                className="group bg-tva-panel border border-tva-cream/10 hover:border-tva-orange/50 transition-all duration-300 h-full flex flex-col hover:-translate-y-1 hover:shadow-lg cursor-pointer relative overflow-hidden"
+                            >
+                                {/* Card Top Decor */}
+                                <div className="absolute top-0 right-0 p-2 opacity-50">
+                                    <Hash size={40} className="text-tva-dark rotate-12" />
                                 </div>
                                 
-                                <h3 className="text-xl font-mono font-bold text-tva-cream mb-3 group-hover:text-tva-orange transition-colors">
-                                    {post.title}
-                                </h3>
-                                
-                                <p className="text-tva-cream/60 text-sm font-sans leading-relaxed mb-6 flex-grow">
-                                    {post.excerpt}
-                                </p>
-                                
-                                <div className="border-t border-tva-cream/5 pt-4 flex justify-between items-center">
-                                    <span className="text-xs font-mono text-tva-cream/30 flex items-center gap-1">
-                                        <Clock size={12} /> {post.readTime}
-                                    </span>
-                                    <span className="text-tva-orange text-xs font-mono uppercase tracking-wider flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        Read File <ArrowRight size={12} />
-                                    </span>
+                                <div className="p-6 flex flex-col h-full relative z-10">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-1 bg-tva-dark border border-tva-cream/10 text-tva-orange rounded-sm">
+                                            {post.category}
+                                        </span>
+                                        <span className="text-[10px] font-mono text-tva-cream/40">{post.date}</span>
+                                    </div>
+                                    
+                                    <h3 className="text-xl font-mono font-bold text-tva-cream mb-3 group-hover:text-tva-orange transition-colors">
+                                        {post.title}
+                                    </h3>
+                                    
+                                    <p className="text-tva-cream/60 text-sm font-sans leading-relaxed mb-6 flex-grow">
+                                        {post.excerpt}
+                                    </p>
+                                    
+                                    <div className="border-t border-tva-cream/5 pt-4 flex justify-between items-center">
+                                        <span className="text-xs font-mono text-tva-cream/30 flex items-center gap-1">
+                                            <Clock size={12} /> {post.readTime}
+                                        </span>
+                                        <span className="text-tva-orange text-xs font-mono uppercase tracking-wider flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            Read File <ArrowRight size={12} />
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </ScrollReveal>
-                ))}
-            </div>
+                        </ScrollReveal>
+                    ))}
+                </div>
+            ) : (
+                <div className="py-20 text-center animate-in fade-in">
+                    <div className="inline-block p-6 rounded-full bg-tva-panel border border-tva-cream/10 mb-4">
+                        <Search size={40} className="text-tva-cream/20" />
+                    </div>
+                    <h3 className="text-xl font-mono text-tva-cream mb-2">File Not Found</h3>
+                    <p className="text-tva-cream/50 font-mono text-sm">Query "{searchQuery}" returned no matching records in the current timeline.</p>
+                </div>
+            )}
             
             <div className="mt-16 text-center">
                  <p className="text-tva-cream/30 font-mono text-xs uppercase tracking-widest mb-4">// End of Declassified Section //</p>

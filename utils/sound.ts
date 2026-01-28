@@ -1,4 +1,29 @@
+
+let muted = false;
+
+// Initialize from storage if available
+try {
+  const stored = localStorage.getItem('tva_muted');
+  if (stored !== null) {
+    muted = stored === 'true';
+  }
+} catch (e) {
+  console.warn('LocalStorage access denied');
+}
+
+export const isMuted = () => muted;
+
+export const toggleMute = () => {
+  muted = !muted;
+  try {
+    localStorage.setItem('tva_muted', muted.toString());
+  } catch (e) {}
+  return muted;
+};
+
 export const playSound = (type: 'tick' | 'chime' | 'hover' | 'alert' | 'pop') => {
+  if (muted) return;
+
   // Prevent sounds if user hasn't interacted with page yet (browser policy), 
   // but usually click handlers allow this.
   const AudioContext = window.AudioContext || (window as any).webkitAudioContext;

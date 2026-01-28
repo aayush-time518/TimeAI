@@ -12,30 +12,29 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
   const [displayText, setDisplayText] = useState('');
   const [wordIndex, setWordIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+  const [glitchTrigger, setGlitchTrigger] = useState(false);
   
   const phrases = ["REVENUE TIMELINE", "OPERATIONAL SPEED", "FUTURE GROWTH", "DATA INTEGRITY"];
   
   useEffect(() => {
-    if (isPaused) return;
-
     const currentPhrase = phrases[wordIndex % phrases.length];
-    const typeSpeed = isDeleting ? 40 : 80; 
     
+    // Determine speed based on state
+    let typeSpeed = isDeleting ? 50 : 100;
+
+    if (!isDeleting && displayText === currentPhrase) {
+        typeSpeed = 2000; // Pause at end of phrase
+    } else if (isDeleting && displayText === '') {
+        typeSpeed = 500; // Pause before starting next phrase
+    }
+
     const timer = setTimeout(() => {
         if (!isDeleting && displayText === currentPhrase) {
-            // Finished typing, pause then delete
-            setIsPaused(true);
-            setTimeout(() => {
-                setIsPaused(false);
-                setIsDeleting(true);
-            }, 2000);
+            setIsDeleting(true);
         } else if (isDeleting && displayText === '') {
-            // Finished deleting, move to next
             setIsDeleting(false);
             setWordIndex((prev) => prev + 1);
         } else {
-            // Typing or Deleting
             const nextText = isDeleting 
                 ? currentPhrase.substring(0, displayText.length - 1) 
                 : currentPhrase.substring(0, displayText.length + 1);
@@ -44,7 +43,18 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
     }, typeSpeed);
 
     return () => clearTimeout(timer);
-  }, [displayText, isDeleting, wordIndex, isPaused]);
+  }, [displayText, isDeleting, wordIndex]);
+
+  // Random glitch effect trigger
+  useEffect(() => {
+      const interval = setInterval(() => {
+          if (Math.random() > 0.7) {
+              setGlitchTrigger(true);
+              setTimeout(() => setGlitchTrigger(false), 300);
+          }
+      }, 5000);
+      return () => clearInterval(interval);
+  }, []);
 
   // --- CYCLING SYSTEM STATUS ---
   const [systemStatus, setSystemStatus] = useState({ label: "TIMELINE", status: "STABLE", color: "text-tva-orange" });
@@ -138,7 +148,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                 <span className={systemStatus.color}>{systemStatus.status}</span>
               </div>
               
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-mono font-bold leading-none tracking-tighter text-tva-cream mb-4">
+              <h1 className={`text-4xl md:text-6xl lg:text-7xl font-mono font-bold leading-none tracking-tighter text-tva-cream mb-4 ${glitchTrigger ? 'animate-glitch text-tva-orange' : ''}`}>
                 PROTECT YOUR <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-tva-orange to-tva-amber text-glow inline-block min-h-[1.2em]">
                   {displayText}

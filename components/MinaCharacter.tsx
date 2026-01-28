@@ -1,13 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { playSound } from '../utils/sound';
 
 interface MinaCharacterProps {
   className?: string;
-  variant?: 'idle' | 'thinking' | 'alert' | 'success';
+  variant?: 'idle' | 'thinking' | 'alert' | 'success' | 'talking';
 }
 
 export const MinaCharacter: React.FC<MinaCharacterProps> = ({ className, variant = 'idle' }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [eyePos, setEyePos] = useState({ x: 0, y: 0 });
+  const [isBlinking, setIsBlinking] = useState(false);
+
+  // Mouse tracking logic for eyes
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Don't track if thinking (looks focused) or alert (looks panic)
+      // When talking, keep eye contact mostly but allow slight movement
+      if (variant === 'thinking' || variant === 'alert') {
+          setEyePos({ x: 0, y: 0 });
+          return;
+      }
+
+      const { innerWidth, innerHeight } = window;
+      // Calculate normalized position (-1 to 1) relative to center of screen
+      const x = (e.clientX - innerWidth / 2) / (innerWidth / 2);
+      const y = (e.clientY - innerHeight / 2) / (innerHeight / 2);
+      
+      // Limit movement range (max 6px offset)
+      // If talking, reduce range slightly to keep focus
+      const range = variant === 'talking' ? 3 : 6;
+      
+      setEyePos({ 
+        x: Math.max(-range, Math.min(range, x * range)), 
+        y: Math.max(-range, Math.min(range, y * range)) 
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [variant]);
+
+  // Natural Blinking Logic (Random intervals)
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    // Don't blink if alert (wide eyed) or thinking (squinting)
+    if (variant === 'alert' || variant === 'thinking') return;
+
+    const blink = () => {
+        setIsBlinking(true);
+        setTimeout(() => setIsBlinking(false), 150);
+        
+        // Random interval between 2s and 6s
+        // Blink more often when talking
+        const min = variant === 'talking' ? 1500 : 2000;
+        const max = variant === 'talking' ? 3000 : 4000;
+        const nextBlink = Math.random() * max + min;
+        timeoutId = setTimeout(blink, nextBlink);
+    };
+
+    const initialDelay = Math.random() * 2000 + 1000;
+    timeoutId = setTimeout(blink, initialDelay);
+
+    return () => clearTimeout(timeoutId);
+  }, [variant]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -22,13 +78,22 @@ export const MinaCharacter: React.FC<MinaCharacterProps> = ({ className, variant
   const isAlert = variant === 'alert';
   const isThinking = variant === 'thinking';
   const isSuccess = variant === 'success';
+  const isTalking = variant === 'talking';
 
-  const faceColor = isAlert ? "#7f1d1d" : (isSuccess ? "#064e3b" : "#ea580c"); // Red-900 vs Green-900 vs Orange
-  const eyeColor = isAlert ? "#fca5a5" : "#fff";
+  // Smoother/Slower hands for thinking
+  const minuteHandClass = isThinking 
+    ? "animate-[spin_1.5s_linear_infinite_reverse]" 
+    : (isAlert ? "animate-[pulse_0.2s_infinite]" : "animate-[spin_3s_linear_infinite]");
   
-  // Hand animations
-  const minuteHandClass = isThinking ? "animate-[spin_0.5s_linear_infinite_reverse]" : (isAlert ? "animate-[pulse_0.2s_infinite]" : "animate-[spin_3s_linear_infinite]");
-  const hourHandClass = isThinking ? "animate-[spin_2s_linear_infinite_reverse]" : "animate-[spin_60s_linear_infinite]";
+  const hourHandClass = isThinking 
+    ? "animate-[spin_6s_linear_infinite_reverse]" 
+    : "animate-[spin_60s_linear_infinite]";
+
+  const eyeColor = isAlert ? "#fca5a5" : "#fff";
+  const pupilColor = "#1a1816";
+
+  // Common transition for eye movement
+  const eyeTransition = { transition: 'transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)' };
 
   return (
     <div 
@@ -44,13 +109,6 @@ export const MinaCharacter: React.FC<MinaCharacterProps> = ({ className, variant
                     <stop offset="80%" stopColor={isAlert ? "#b91c1c" : (isSuccess ? "#059669" : "#ea580c")} />
                     <stop offset="100%" stopColor={isAlert ? "#7f1d1d" : (isSuccess ? "#047857" : "#9a3412")} />
                 </radialGradient>
-                <filter id="glow">
-                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                    <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
             </defs>
 
             {/* Ears */}
@@ -79,46 +137,77 @@ export const MinaCharacter: React.FC<MinaCharacterProps> = ({ className, variant
             <path d="M115 180 Q 120 210 130 230" stroke="#f59e0b" strokeWidth="8" fill="none" strokeLinecap="round" />
 
             {/* Arms */}
+            {/* Thinking: Hands on hips/no arms visible? Or crossed? Let's keep relaxed. */}
             <g transform="translate(40, 110)">
-               <path d={isThinking ? "M10 20 Q 20 0 40 -20" : "M10 20 Q 0 0 -20 -20"} stroke="#f59e0b" strokeWidth="8" fill="none" strokeLinecap="round" className={isThinking ? "animate-pulse" : "mina-arm-left"} />
+               {/* Talking: Maybe small gesture? Keeping simple for now. */}
+               <path d={isThinking ? "M10 20 Q 20 10 30 -10" : "M10 20 Q 0 0 -20 -20"} stroke="#f59e0b" strokeWidth="8" fill="none" strokeLinecap="round" className={isThinking ? "" : "mina-arm-left"} />
             </g>
             <g transform="translate(160, 110)">
-               <path d={isThinking ? "M-10 20 Q -20 0 -40 -20" : "M-10 20 Q 0 0 20 -20"} stroke="#f59e0b" strokeWidth="8" fill="none" strokeLinecap="round" className={isThinking ? "animate-pulse" : "mina-arm-right"} />
+               <path d={isThinking ? "M-10 20 Q -20 10 -30 -10" : "M-10 20 Q 0 0 20 -20"} stroke="#f59e0b" strokeWidth="8" fill="none" strokeLinecap="round" className={isThinking ? "" : "mina-arm-right"} />
             </g>
 
-            {/* Body */}
+            {/* Body Shadow */}
             <circle cx="100" cy="100" r="85" fill="#000" className="opacity-20 blur-sm translate-y-2" />
+            {/* Main Face */}
             <circle cx="100" cy="100" r="80" fill="url(#faceGradient)" stroke="#fcd34d" strokeWidth="4" />
             
             {/* Highlight Shine */}
             <ellipse cx="70" cy="60" rx="30" ry="15" fill="#fff" fillOpacity="0.2" transform="rotate(-30 70 60)" />
 
-            {/* Face */}
+            {/* Face Components */}
             <g className="mina-face">
-                {/* Eyes */}
-                <ellipse cx="75" cy="90" rx="10" ry={isAlert ? "10" : "14"} fill={eyeColor} className={isAlert ? "animate-ping" : "mina-eye"} />
-                <ellipse cx="125" cy="90" rx="10" ry={isAlert ? "10" : "14"} fill={eyeColor} className={isAlert ? "animate-ping" : "mina-eye"} />
                 
-                {/* Pupils */}
-                {!isThinking && (
+                {isThinking ? (
+                    /* Thinking Eyes (Curved Lines for Squint/Focus) */
+                    <g className="animate-pulse">
+                        <path d="M65 92 Q 75 98 85 92" stroke="#1a1816" strokeWidth="4" fill="none" strokeLinecap="round" />
+                        <path d="M115 92 Q 125 98 135 92" stroke="#1a1816" strokeWidth="4" fill="none" strokeLinecap="round" />
+                    </g>
+                ) : (
+                    /* Normal Eyes with Blinking & Tracking */
                     <>
-                        <circle cx="77" cy="90" r="4" fill="#1a1816" />
-                        <circle cx="123" cy="90" r="4" fill="#1a1816" />
-                    </>
-                )}
-                {/* Thinking Eyes (Squint/Dash) */}
-                {isThinking && (
-                    <>
-                        <rect x="65" y="88" width="20" height="4" fill="#1a1816" />
-                        <rect x="115" y="88" width="20" height="4" fill="#1a1816" />
+                        {/* Left Eye Group */}
+                        <g 
+                            style={{ 
+                                ...eyeTransition, 
+                                transform: `translate(${eyePos.x}px, ${eyePos.y}px) ${isBlinking ? 'scale(1, 0.1)' : 'scale(1, 1)'}`,
+                                transformOrigin: '75px 90px'
+                            }}
+                        >
+                            <ellipse cx="75" cy="90" rx="10" ry={isAlert ? "10" : "14"} fill={eyeColor} />
+                            <circle cx="75" cy="90" r="4" fill={pupilColor} />
+                        </g>
+
+                        {/* Right Eye Group */}
+                        <g 
+                            style={{ 
+                                ...eyeTransition, 
+                                transform: `translate(${eyePos.x}px, ${eyePos.y}px) ${isBlinking ? 'scale(1, 0.1)' : 'scale(1, 1)'}`,
+                                transformOrigin: '125px 90px'
+                            }}
+                        >
+                            <ellipse cx="125" cy="90" rx="10" ry={isAlert ? "10" : "14"} fill={eyeColor} />
+                            <circle cx="125" cy="90" r="4" fill={pupilColor} />
+                        </g>
                     </>
                 )}
 
-                {/* Mouth */}
+                {/* Mouth Logic */}
                 {isAlert ? (
-                   <circle cx="100" cy="130" r="10" fill="#1a1816" /> // O face
+                   <circle cx="100" cy="130" r="8" fill="#1a1816" /> // O face
                 ) : isThinking ? (
-                   <line x1="85" y1="130" x2="115" y2="130" stroke="#fff" strokeWidth="4" /> // Straight line
+                   // Pursed lips for thinking
+                   <path d="M90 130 H 110" stroke="#fff" strokeWidth="4" fill="none" strokeLinecap="round" />
+                ) : isTalking ? (
+                   // Animated talking mouth
+                   <g>
+                     <path d="M85 130 Q 100 145 115 130" stroke="#fff" strokeWidth="4" fill="#1a1816" strokeLinecap="round">
+                        <animate attributeName="d" 
+                                 values="M85 130 Q 100 130 115 130; M85 130 Q 100 150 115 130; M85 130 Q 100 130 115 130" 
+                                 dur="0.25s" 
+                                 repeatCount="indefinite" />
+                     </path>
+                   </g>
                 ) : isSuccess ? (
                    <path d="M80 125 Q 100 145 120 125" stroke="#fff" strokeWidth="4" fill="none" strokeLinecap="round" /> // Big Smile
                 ) : (

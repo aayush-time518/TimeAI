@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Menu, X, Terminal, ChevronRight, Activity, Database, Users, LayoutDashboard, Shield, FileText } from 'lucide-react';
+import { Clock, Menu, X, Terminal, ChevronRight, LayoutDashboard, Database, Users, FileText, Volume2, VolumeX } from 'lucide-react';
 import { ViewState } from '../types';
+import { toggleMute, isMuted } from '../utils/sound';
 
 interface HeaderProps {
   setView: (view: ViewState) => void;
@@ -10,6 +11,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(!isMuted());
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +29,11 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
       document.body.style.overflow = 'unset';
     }
   }, [mobileMenuOpen]);
+
+  const handleSoundToggle = () => {
+    const muted = toggleMute();
+    setSoundEnabled(!muted);
+  };
 
   const NavLink = ({ view, label }: { view: ViewState, label: string }) => (
     <button 
@@ -82,6 +89,17 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
             <NavLink view="solutions" label="Protocols" />
             <NavLink view="intel" label="Intel" />
             <NavLink view="about" label="Archivists" />
+            
+            <div className="h-6 w-px bg-tva-cream/20 mx-2"></div>
+            
+            <button 
+              onClick={handleSoundToggle}
+              className="p-2 text-tva-cream/50 hover:text-tva-orange transition-colors"
+              title={soundEnabled ? "Mute System Audio" : "Enable System Audio"}
+            >
+              {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+            </button>
+
             <button 
               onClick={() => setView('contact')}
               className="ml-4 px-6 py-2 bg-tva-orange text-tva-dark font-mono font-bold uppercase tracking-wide rounded-sm hover:bg-tva-amber transition-colors shadow-[0_0_10px_rgba(234,88,12,0.4)] flex items-center gap-2"
@@ -91,12 +109,20 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
           </nav>
 
           {/* Mobile Toggle */}
-          <button 
-            className="lg:hidden text-tva-orange p-2 border border-tva-orange/30 rounded hover:bg-tva-orange/10 transition-colors z-50" 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X /> : <Menu />}
-          </button>
+          <div className="lg:hidden flex items-center gap-4 z-50">
+             <button 
+              onClick={handleSoundToggle}
+              className="text-tva-cream/50 hover:text-tva-orange transition-colors"
+            >
+              {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+            </button>
+            <button 
+              className="text-tva-orange p-2 border border-tva-orange/30 rounded hover:bg-tva-orange/10 transition-colors" 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
         </div>
       </header>
 

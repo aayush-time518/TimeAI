@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, Linkedin, Twitter, Mail, MapPin, ArrowRight } from 'lucide-react';
+import { Clock, Linkedin, Twitter, Mail, MapPin, ArrowRight, Send } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface FooterProps {
@@ -58,22 +58,32 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           </div>
 
           <div>
-            <h4 className="text-tva-cream font-mono font-bold mb-4 uppercase text-sm tracking-widest text-glow">Contact</h4>
-            <ul className="space-y-3 text-sm text-tva-cream/60 font-mono">
-              <li className="flex items-center gap-2">
-                <MapPin size={16} className="text-tva-orange" /> 
-                Brickell Ave, Miami, FL
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail size={16} className="text-tva-orange" /> 
-                <a href="mailto:hello@timeai.com" className="hover:text-tva-cream transition-colors">hello@timeai.com</a>
-              </li>
-            </ul>
+            <h4 className="text-tva-cream font-mono font-bold mb-4 uppercase text-sm tracking-widest text-glow">Temporal Updates</h4>
+            <p className="text-xs text-tva-cream/50 mb-4 font-mono">Subscribe for briefing updates from the timeline.</p>
+            <div className="flex flex-col gap-2">
+                <div className="relative">
+                    <input 
+                        type="email" 
+                        placeholder="agent@timeline.net" 
+                        className="w-full bg-tva-panel border border-tva-cream/10 text-tva-cream text-xs p-3 pr-10 focus:border-tva-orange focus:outline-none font-mono"
+                    />
+                    <button className="absolute right-2 top-1/2 -translate-y-1/2 text-tva-orange hover:text-tva-cream transition-colors">
+                        <Send size={14} />
+                    </button>
+                </div>
+                <div className="text-[10px] text-tva-cream/30">
+                    // Encrypted Transmission
+                </div>
+            </div>
           </div>
         </div>
         
-        <div className="border-t border-tva-cream/10 pt-8 text-center text-tva-cream/30 text-xs font-mono">
-          &copy; {new Date().getFullYear()} Time AI Solutions. All rights reserved. // VARIANCE MONITORING ACTIVE
+        <div className="border-t border-tva-cream/10 pt-8 text-center text-tva-cream/30 text-xs font-mono flex flex-col md:flex-row justify-between items-center gap-4">
+          <span>&copy; {new Date().getFullYear()} Time AI Solutions. All rights reserved.</span>
+          <span className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-tva-green rounded-full animate-pulse"></span>
+            VARIANCE MONITORING ACTIVE
+          </span>
         </div>
       </div>
     </footer>

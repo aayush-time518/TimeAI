@@ -1,6 +1,6 @@
 import React, { useState, useRef, MouseEvent, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Bot, Zap, X, ArrowRight, Database, Server, LineChart, Activity, Power, Layers, GitBranch, Network, BarChart3, Share2, Code2 } from 'lucide-react';
+import { Bot, Zap, X, ArrowRight, Database, Server, LineChart, Activity, Power, Layers, GitBranch, Network, BarChart3, Share2, Code2, TrendingUp, Workflow, BrainCircuit, Radar, UserCog } from 'lucide-react';
 import { ServiceCardProps, ViewState } from '../types';
 import { playSound } from '../utils/sound';
 
@@ -12,48 +12,84 @@ const ServiceVisual: React.FC<{ type: string; isHovered: boolean }> = ({ type, i
   switch (type) {
     case 'analytics': // Snowflake/Tableau
       return (
-        <svg className="absolute right-0 bottom-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none transition-all duration-500" viewBox="0 0 100 100">
-           <g fill="none" stroke={color} strokeWidth="0.5" strokeOpacity={opacity}>
-             {/* Bar Chart Abstract */}
-             <rect x="10" y="60" width="15" height="30" className={isHovered ? "animate-[pulse_2s_infinite]" : ""} />
-             <rect x="30" y="40" width="15" height="50" className={isHovered ? "animate-[pulse_2s_infinite_100ms]" : ""} />
-             <rect x="50" y="20" width="15" height="70" className={isHovered ? "animate-[pulse_2s_infinite_200ms]" : ""} />
-             <rect x="70" y="50" width="15" height="40" className={isHovered ? "animate-[pulse_2s_infinite_300ms]" : ""} />
-             {/* Snowflake-ish Hexagon */}
-             <path d="M85 15 L95 20 L95 30 L85 35 L75 30 L75 20 Z" strokeWidth="1" />
-             <circle cx="85" cy="25" r="2" fill={color} fillOpacity={opacity} />
+        <svg className={`absolute right-0 bottom-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none transition-all duration-700 ${isHovered ? 'scale-110 opacity-100' : 'opacity-60'}`} viewBox="0 0 100 100">
+           <g fill={isHovered ? color : "none"} stroke={color} strokeWidth="0.5" strokeOpacity={opacity} className="transition-all duration-500">
+             {/* Bar Chart Abstract - Fills on hover */}
+             <rect x="10" y="60" width="15" height="30" fillOpacity={isHovered ? 0.1 : 0} className={isHovered ? "animate-[pulse_2s_infinite]" : ""} />
+             <rect x="30" y="40" width="15" height="50" fillOpacity={isHovered ? 0.2 : 0} className={isHovered ? "animate-[pulse_2s_infinite_100ms]" : ""} />
+             <rect x="50" y="20" width="15" height="70" fillOpacity={isHovered ? 0.3 : 0} className={isHovered ? "animate-[pulse_2s_infinite_200ms]" : ""} />
+             <rect x="70" y="50" width="15" height="40" fillOpacity={isHovered ? 0.15 : 0} className={isHovered ? "animate-[pulse_2s_infinite_300ms]" : ""} />
+             
+             {/* Snowflake-ish Hexagon - Rotates on hover */}
+             <g className={isHovered ? "animate-[spin_10s_linear_infinite]" : ""} style={{transformOrigin: '85px 25px'}}>
+                <path d="M85 15 L95 20 L95 30 L85 35 L75 30 L75 20 Z" strokeWidth="1" fill="none" />
+                <circle cx="85" cy="25" r="2" fill={color} fillOpacity={opacity} />
+             </g>
            </g>
         </svg>
       );
     case 'chat': // Neural/Chatbot
       return (
-        <svg className="absolute right-0 bottom-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none transition-all duration-500" viewBox="0 0 100 100">
+        <svg className={`absolute right-0 bottom-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none transition-all duration-700 ${isHovered ? 'scale-105' : ''}`} viewBox="0 0 100 100">
            <g fill="none" stroke={color} strokeWidth="0.5" strokeOpacity={opacity}>
-              <circle cx="50" cy="50" r="30" strokeDasharray="4 4" className={isHovered ? "animate-[spin_10s_linear_infinite]" : ""} />
-              <circle cx="50" cy="50" r="20" strokeWidth="1" />
-              <path d="M30 50 H70 M50 30 V70" className={isHovered ? "animate-pulse" : ""} />
-              {/* Nodes */}
-              <circle cx="35" cy="35" r="2" fill={color} fillOpacity={opacity} />
-              <circle cx="65" cy="65" r="2" fill={color} fillOpacity={opacity} />
+              {/* Outer Rings */}
+              <circle cx="50" cy="50" r="30" strokeDasharray="4 4" className={isHovered ? "animate-[spin_4s_linear_infinite]" : "animate-[spin_10s_linear_infinite]"} style={{transformOrigin: '50px 50px'}} />
+              <circle cx="50" cy="50" r="35" strokeDasharray="2 6" className={isHovered ? "animate-[spin_6s_linear_infinite_reverse] opacity-50" : "opacity-0"} style={{transformOrigin: '50px 50px'}} />
+              
+              <circle cx="50" cy="50" r="20" strokeWidth="1" className={isHovered ? "stroke-tva-orange" : ""} />
+              <path d="M30 50 H70 M50 30 V70" className={isHovered ? "animate-pulse stroke-tva-orange" : ""} />
+              
+              {/* Nodes - Expand on hover */}
+              <circle cx="35" cy="35" r={isHovered ? 3 : 2} fill={color} fillOpacity={opacity} className="transition-all duration-300" />
+              <circle cx="65" cy="65" r={isHovered ? 3 : 2} fill={color} fillOpacity={opacity} className="transition-all duration-300" />
+              <circle cx="35" cy="65" r={isHovered ? 3 : 2} fill={color} fillOpacity={opacity} className="transition-all duration-300" />
+              <circle cx="65" cy="35" r={isHovered ? 3 : 2} fill={color} fillOpacity={opacity} className="transition-all duration-300" />
            </g>
         </svg>
       );
     case 'anomaly': // Anomaly/Server
       return (
         <svg className="absolute right-0 bottom-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none transition-all duration-500" viewBox="0 0 100 100">
-           <path d="M0 80 Q 25 80 35 50 T 70 80 T 100 80" fill="none" stroke={color} strokeWidth="1" strokeOpacity={opacity} className={isHovered ? "animate-[dash_2s_linear_infinite]" : ""} />
+           {/* Normal Data Stream */}
+           <path d="M0 80 Q 25 80 35 50 T 70 80 T 100 80" fill="none" stroke={color} strokeWidth="1" strokeOpacity={opacity} className={isHovered ? "animate-pulse" : ""} strokeDasharray={isHovered ? "5 2" : "none"} />
+           
+           {/* Baseline */}
            <path d="M0 90 Q 25 90 40 70 T 80 90 T 100 90" fill="none" stroke={color} strokeWidth="0.5" strokeOpacity={opacity} />
-           <rect x="40" y="20" width="20" height="20" fill="none" stroke={color} strokeOpacity={opacity} />
-           <circle cx="50" cy="30" r="4" fill={color} fillOpacity={isHovered ? 0.4 : 0} className="transition-all" />
+           
+           {/* Bounding Box */}
+           <rect x="40" y="20" width="20" height="20" fill="none" stroke={isHovered ? "#ef4444" : color} strokeOpacity={isHovered ? 0.8 : opacity} className="transition-colors duration-300" strokeDasharray={isHovered ? "2 2" : ""} />
+           
+           {/* The Anomaly Dot */}
+           <circle cx="50" cy="30" r={isHovered ? 6 : 4} fill={isHovered ? "#ef4444" : color} fillOpacity={isHovered ? 0.8 : 0} className="transition-all duration-300 animate-pulse" />
+           {isHovered && (
+               <circle cx="50" cy="30" r="10" stroke="#ef4444" strokeWidth="0.5" fill="none" className="animate-ping" />
+           )}
         </svg>
       );
     case 'pipeline': // Data Pipelines
       return (
         <svg className="absolute right-0 bottom-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none transition-all duration-500" viewBox="0 0 100 100">
            <g fill="none" stroke={color} strokeWidth="0.8" strokeOpacity={opacity}>
-             <path d="M10 20 H30 L40 30 H60 L70 20 H90" />
-             <path d="M10 50 H30 L40 60 H60 L70 50 H90" />
-             <path d="M10 80 H30 L40 70 H60 L70 80 H90" />
+             <path d="M10 20 H30 L40 30 H60 L70 20 H90" className={isHovered ? "stroke-tva-orange" : ""} />
+             <path d="M10 50 H30 L40 60 H60 L70 50 H90" className={isHovered ? "stroke-tva-orange delay-100" : ""} />
+             <path d="M10 80 H30 L40 70 H60 L70 80 H90" className={isHovered ? "stroke-tva-orange delay-200" : ""} />
+             
+             {/* Data Packets Moving */}
+             {isHovered && (
+                 <>
+                    <circle r="2" fill="#ea580c">
+                        <animateMotion dur="1.5s" repeatCount="indefinite" path="M10 20 H30 L40 30 H60 L70 20 H90" />
+                    </circle>
+                    <circle r="2" fill="#ea580c">
+                        <animateMotion dur="2s" repeatCount="indefinite" path="M10 50 H30 L40 60 H60 L70 50 H90" />
+                    </circle>
+                    <circle r="2" fill="#ea580c">
+                        <animateMotion dur="1.8s" repeatCount="indefinite" path="M10 80 H30 L40 70 H60 L70 80 H90" />
+                    </circle>
+                 </>
+             )}
+
+             {/* Nodes */}
              <circle cx="20" cy="20" r="2" fill={color} fillOpacity={opacity} />
              <circle cx="50" cy="30" r="2" fill={color} fillOpacity={opacity} />
              <circle cx="80" cy="20" r="2" fill={color} fillOpacity={opacity} />
@@ -63,19 +99,25 @@ const ServiceVisual: React.FC<{ type: string; isHovered: boolean }> = ({ type, i
     case 'knowledge': // Knowledge Graph
       return (
         <svg className="absolute right-0 bottom-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none transition-all duration-500" viewBox="0 0 100 100">
-           <g fill={color} fillOpacity={opacity} stroke={color} strokeOpacity={opacity} strokeWidth="0.5">
-             <circle cx="50" cy="50" r="4" />
-             <circle cx="20" cy="80" r="3" />
-             <circle cx="80" cy="20" r="3" />
-             <circle cx="80" cy="80" r="3" />
-             <circle cx="20" cy="20" r="3" />
-             <line x1="50" y1="50" x2="20" y2="80" />
-             <line x1="50" y1="50" x2="80" y2="20" />
-             <line x1="50" y1="50" x2="80" y2="80" />
-             <line x1="50" y1="50" x2="20" y2="20" />
+           <g fill={isHovered ? "#ea580c" : color} fillOpacity={isHovered ? 0.4 : opacity} stroke={color} strokeOpacity={opacity} strokeWidth={isHovered ? "1" : "0.5"} className="transition-all duration-500">
+             {/* Central Node */}
+             <circle cx="50" cy="50" r={isHovered ? 6 : 4} className="transition-all" />
+             
+             {/* Satellite Nodes */}
+             <circle cx="20" cy="80" r="3" className={isHovered ? "animate-pulse" : ""} />
+             <circle cx="80" cy="20" r="3" className={isHovered ? "animate-pulse delay-75" : ""} />
+             <circle cx="80" cy="80" r="3" className={isHovered ? "animate-pulse delay-150" : ""} />
+             <circle cx="20" cy="20" r="3" className={isHovered ? "animate-pulse delay-200" : ""} />
+             
+             {/* Links */}
+             <line x1="50" y1="50" x2="20" y2="80" className={isHovered ? "stroke-tva-orange" : ""} />
+             <line x1="50" y1="50" x2="80" y2="20" className={isHovered ? "stroke-tva-orange" : ""} />
+             <line x1="50" y1="50" x2="80" y2="80" className={isHovered ? "stroke-tva-orange" : ""} />
+             <line x1="50" y1="50" x2="20" y2="20" className={isHovered ? "stroke-tva-orange" : ""} />
+             
              {/* Floating Nodes */}
-             <circle cx="50" cy="20" r="2" className={isHovered ? "animate-pulse" : ""} />
-             <line x1="50" y1="50" x2="50" y2="20" strokeDasharray="2 2" />
+             <circle cx="50" cy="20" r="2" className={isHovered ? "animate-bounce" : ""} />
+             <line x1="50" y1="50" x2="50" y2="20" strokeDasharray="2 2" className={isHovered ? "opacity-100" : "opacity-30"} />
            </g>
         </svg>
       );
@@ -207,9 +249,9 @@ const ServiceModal: React.FC<{ service: ServiceCardProps; onClose: () => void }>
         <div className="p-6 sm:p-8 space-y-6 sm:space-y-8 bg-tva-panel/95 overflow-y-auto">
           <div>
             <h3 className="text-sm font-mono font-bold text-tva-orange mb-2 uppercase tracking-widest">01 // Operational Objective</h3>
-            <p className="text-tva-cream/80 leading-relaxed font-sans text-base sm:text-lg border-l-2 border-tva-cream/10 pl-4">
-              {service.description} {service.details.outcome}
-            </p>
+            <div className="text-tva-cream/80 leading-relaxed font-sans text-base sm:text-lg border-l-2 border-tva-cream/10 pl-4">
+               {service.description} {service.details.outcome}
+            </div>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
@@ -259,7 +301,7 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
     {
       title: "Predictive Intelligence",
       description: "Transcend reactive reporting. We engineer Snowflake data lakes that feed ensemble forecasting models, providing a periscope into next quarter's revenue with mathematical certainty.",
-      icon: <BarChart3 size={24} />,
+      icon: <TrendingUp size={24} />,
       visualType: 'analytics',
       details: {
         features: ["Snowflake Data Cloud Architecture", "Ensemble Forecasting (Prophet + XGBoost)", "Monte Carlo Risk Simulation", "Automated Board Reporting"],
@@ -270,7 +312,7 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
     {
       title: "Knowledge Graph Core",
       description: "Amnesia is the enemy of efficiency. We weave your scattered PDFs, Slacks, and emails into a semantic Knowledge Graph, creating an immortal corporate brain that answers instantly.",
-      icon: <Share2 size={24} />,
+      icon: <Network size={24} />,
       visualType: 'knowledge',
       details: {
         features: ["Semantic Knowledge Graphs", "Vector Search (RAG)", "Source-Citated Answers", "Role-Based Data Governance"],
@@ -281,7 +323,7 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
     {
       title: "Pipeline Architecture",
       description: "Stale data is a liability. We build autonomous dbt pipelines orchestrated by Airflow that treat your data as a continuous, living stream—never a stagnant pond.",
-      icon: <GitBranch size={24} />,
+      icon: <Workflow size={24} />,
       visualType: 'pipeline',
       details: {
         features: ["Modern Data Stack (MDS)", "dbt Transformation Logic", "Airflow Orchestration", "Real-time CDC Streaming"],
@@ -292,7 +334,7 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
     {
       title: "Neural Support Interface",
       description: "Beyond simple chatbots. We deploy deterministic, neuro-symbolic agents that understand intent, execute API actions, and protect your brand voice with ironclad guardrails.",
-      icon: <Bot size={24} />,
+      icon: <BrainCircuit size={24} />,
       visualType: 'chat',
       details: {
         features: ["Hybrid NLU (Symbolic + Generative)", "Action-Oriented Agents", "Secure PII Redaction", "Omnichannel Deployment"],
@@ -303,7 +345,7 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
     {
       title: "Entropy Monitor",
       description: "Silence the noise. Our multivariate anomaly detection engines listen to the heartbeat of your infrastructure, identifying 'Black Swan' events before they breach the surface.",
-      icon: <Activity size={24} />,
+      icon: <Radar size={24} />,
       visualType: 'anomaly',
       details: {
         features: ["Unsupervised Anomaly Detection", "Multivariate Gaussian Mixtures", "Root Cause Traceability", "Auto-Healing Scripts"],
@@ -314,7 +356,7 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
     {
       title: "Staff Augmentation",
       description: "Deploy specific tactical units. We embed battle-hardened AI Architects and MLOps Engineers directly into your squad to accelerate delivery velocity immediately.",
-      icon: <Code2 size={24} />,
+      icon: <UserCog size={24} />,
       visualType: 'chat', // Reusing visual
       details: {
         features: ["Fractional CTO Services", "MLOps Infrastructure Setup", "LLM Fine-Tuning", "Rapid Prototyping Squads"],

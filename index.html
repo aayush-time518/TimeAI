@@ -63,6 +63,7 @@
         background-color: #1a1816;
         color: #fef3c7;
         font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
       }
       
       /* CRT Scanline Effect */
@@ -71,8 +72,8 @@
           to bottom,
           rgba(255,255,255,0),
           rgba(255,255,255,0) 50%,
-          rgba(0,0,0,0.2) 50%,
-          rgba(0,0,0,0.2)
+          rgba(0,0,0,0.1) 50%,
+          rgba(0,0,0,0.1)
         );
         background-size: 100% 4px;
         position: fixed;
@@ -82,7 +83,33 @@
         right: 0;
         bottom: 0;
         z-index: 9999;
-        opacity: 0.15;
+        opacity: 0.2;
+      }
+
+      /* Subtle CRT Flicker */
+      @keyframes flicker {
+        0% { opacity: 0.97; }
+        5% { opacity: 0.95; }
+        10% { opacity: 0.9; }
+        15% { opacity: 0.95; }
+        20% { opacity: 0.99; }
+        50% { opacity: 0.95; }
+        80% { opacity: 0.9; }
+        100% { opacity: 0.97; }
+      }
+
+      .crt-flicker {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(18, 16, 16, 0.1);
+        opacity: 0;
+        z-index: 9998;
+        pointer-events: none;
+        animation: flicker 0.15s infinite;
+        display: none; /* Disabled by default, can enable for extra retro feel */
       }
 
       /* Retro Glow */
@@ -101,6 +128,19 @@
           rgba(234, 88, 12, 0.15),
           transparent 40%
         );
+      }
+
+      /* Glitch Effect */
+      @keyframes glitch {
+        0% { transform: translate(0) }
+        20% { transform: translate(-2px, 2px) }
+        40% { transform: translate(-2px, -2px) }
+        60% { transform: translate(2px, 2px) }
+        80% { transform: translate(2px, -2px) }
+        100% { transform: translate(0) }
+      }
+      .animate-glitch {
+        animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both;
       }
 
       /* Custom scrollbar */
@@ -155,6 +195,8 @@
 </head>
   <body>
     <div class="scanlines"></div>
+    <!-- Optional flicker overlay, uncommment to enable strong retro effect -->
+    <!-- <div class="crt-flicker"></div> -->
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
   <script type="module" src="/index.tsx"></script>
