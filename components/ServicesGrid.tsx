@@ -1,4 +1,5 @@
-import React, { useState, useRef, MouseEvent } from 'react';
+import React, { useState, useRef, MouseEvent, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Bot, Zap, X, ArrowRight, Database, Server, LineChart, Activity, Power, Layers, GitBranch, Network, BarChart3, Share2, Code2 } from 'lucide-react';
 import { ServiceCardProps, ViewState } from '../types';
 import { playSound } from '../utils/sound';
@@ -175,8 +176,14 @@ const SpotlightCard: React.FC<ServiceCardProps & { visualType: string }> = ({ ti
 
 /* --- SERVICE MODAL COMPONENT --- */
 const ServiceModal: React.FC<{ service: ServiceCardProps; onClose: () => void }> = ({ service, onClose }) => {
-  return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+  // Prevent background scroll
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = 'unset'; }
+  }, []);
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div 
         className="absolute inset-0 bg-tva-dark/90 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
@@ -240,7 +247,8 @@ const ServiceModal: React.FC<{ service: ServiceCardProps; onClose: () => void }>
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
