@@ -3,29 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Time AI | Timeline Preservation</title>
+    <title>Time AI | Enterprise Intelligence</title>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
-              mono: ['Share Tech Mono', 'monospace'],
+              mono: ['JetBrains Mono', 'monospace'],
             },
             colors: {
               tva: {
-                dark: '#1a1816', // Dark Brown/Black
-                panel: '#2c2520', // Bureaucracy Brown
-                amber: '#f59e0b', // CRT Amber
-                orange: '#ea580c', // Retro Orange
-                cream: '#fef3c7', // Paper/Folder color
-                green: '#10b981', // Old Monitor Green
+                dark: '#f8fafc', // Slate 50 - Ultra Light Background
+                panel: '#ffffff', // Pure White
+                amber: '#fbbf24', // Amber 400
+                orange: '#2563eb', // PRIMARY BRAND COLOR (Blue)
+                blue: '#3b82f6', // Blue 500 (Secondary)
+                cream: '#0f172a', // Slate 900 (Primary Text)
+                green: '#10b981', // Emerald 500
+                void: '#020617', // Slate 950
               }
             },
             transitionTimingFunction: {
               'out-expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
+              'luxury': 'cubic-bezier(0.25, 1, 0.5, 1)', // Ultra smooth "Apple-like" ease
+              'elastic': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+              'fluid': 'cubic-bezier(0.3, 0, 0, 1)',
+            },
+            transitionDuration: {
+              '400': '400ms',
+              '800': '800ms',
+              '2000': '2000ms',
             },
             animation: {
               'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -34,8 +44,21 @@
               'spin-slow': 'spin 60s linear infinite',
               'ear-idle': 'earIdle 3s ease-in-out infinite',
               'ear-alert': 'earAlert 0.4s ease-in-out infinite',
+              'progress': 'progress 2s ease-in-out infinite',
+              'flicker': 'flicker 2s infinite',
+              'shimmer': 'shimmer 3s linear infinite',
+              'enter-view': 'enterView 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards',
+              'fade-up': 'fadeUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards',
             },
             keyframes: {
+              enterView: {
+                '0%': { opacity: 0, transform: 'translateY(10px) scale(0.99)', filter: 'blur(4px)' },
+                '100%': { opacity: 1, transform: 'translateY(0) scale(1)', filter: 'blur(0)' },
+              },
+              fadeUp: {
+                 '0%': { opacity: 0, transform: 'translateY(20px)' },
+                 '100%': { opacity: 1, transform: 'translateY(0)' },
+              },
               float: {
                 '0%, 100%': { transform: 'translateY(0)' },
                 '50%': { transform: 'translateY(-20px)' },
@@ -52,7 +75,31 @@
                 '0%, 100%': { transform: 'rotate(0deg)' },
                 '25%': { transform: 'rotate(15deg)' },
                 '75%': { transform: 'rotate(-5deg)' },
+              },
+              progress: {
+                '0%': { transform: 'translateX(-100%)' },
+                '50%': { transform: 'translateX(0%)' },
+                '100%': { transform: 'translateX(100%)' },
+              },
+              flicker: {
+                '0%, 100%': { opacity: 1 },
+                '33%': { opacity: 0.8 },
+                '34%': { opacity: 1 },
+                '35%': { opacity: 0.1 },
+                '36%': { opacity: 1 },
+                '70%': { opacity: 0.7 },
+                '71%': { opacity: 1 },
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '200% 0' },
+                '100%': { backgroundPosition: '-200% 0' }
               }
+            },
+            boxShadow: {
+              'glow-blue': '0 0 40px -10px rgba(37, 99, 235, 0.4)',
+              'glow-orange': '0 0 40px -10px rgba(37, 99, 235, 0.5)',
+              'retro': '4px 4px 0px 0px rgba(15, 23, 42, 1)',
+              'subtle': '0 2px 10px rgba(0,0,0,0.03)',
             }
           }
         }
@@ -60,123 +107,52 @@
     </script>
     <style>
       body {
-        background-color: #1a1816;
-        color: #fef3c7;
+        background-color: #f8fafc;
+        color: #0f172a;
         font-family: 'Inter', sans-serif;
         overflow-x: hidden;
       }
       
-      /* CRT Scanline Effect */
-      .scanlines {
-        background: linear-gradient(
-          to bottom,
-          rgba(255,255,255,0),
-          rgba(255,255,255,0) 50%,
-          rgba(0,0,0,0.1) 50%,
-          rgba(0,0,0,0.1)
-        );
-        background-size: 100% 4px;
-        position: fixed;
-        pointer-events: none;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 9999;
-        opacity: 0.2;
+      /* Modern Dot Matrix Background */
+      .bg-grid {
+        background-color: #f8fafc;
+        background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+        background-size: 32px 32px;
       }
 
-      /* Subtle CRT Flicker */
-      @keyframes flicker {
-        0% { opacity: 0.97; }
-        5% { opacity: 0.95; }
-        10% { opacity: 0.9; }
-        15% { opacity: 0.95; }
-        20% { opacity: 0.99; }
-        50% { opacity: 0.95; }
-        80% { opacity: 0.9; }
-        100% { opacity: 0.97; }
+      /* View Transition Utilities */
+      .view-transition-container {
+        animation: enterView 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
       }
 
-      .crt-flicker {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(18, 16, 16, 0.1);
-        opacity: 0;
-        z-index: 9998;
-        pointer-events: none;
-        animation: flicker 0.15s infinite;
-        display: none; /* Disabled by default, can enable for extra retro feel */
-      }
-
-      /* Retro Glow */
+      /* Clean Shadow Glows */
       .text-glow {
-        text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        text-shadow: 0 0 30px rgba(37, 99, 235, 0.2);
       }
       
-      .border-glow {
-        box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
       }
-
-      /* Spotlight Effect Utility */
-      .spotlight-card {
-        background: radial-gradient(
-          800px circle at var(--mouse-x) var(--mouse-y),
-          rgba(234, 88, 12, 0.15),
-          transparent 40%
-        );
-      }
-
-      /* Glitch Effect */
-      @keyframes glitch {
-        0% { transform: translate(0) }
-        20% { transform: translate(-2px, 2px) }
-        40% { transform: translate(-2px, -2px) }
-        60% { transform: translate(2px, 2px) }
-        80% { transform: translate(2px, -2px) }
-        100% { transform: translate(0) }
-      }
-      .animate-glitch {
-        animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both;
-      }
-
+      
       /* Custom scrollbar */
       ::-webkit-scrollbar {
-        width: 10px;
+        width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #2c2520;
+        background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: #ea580c;
-        border: 2px solid #2c2520;
+        background: #cbd5e1;
+        border-radius: 10px;
+        border: 2px solid #f8fafc;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #f59e0b;
+        background: #94a3b8;
       }
-
-      /* Mina Character Animations */
-      @keyframes blink {
-        0%, 96%, 100% { transform: scaleY(1); }
-        98% { transform: scaleY(0.1); }
-      }
-      
-      .mina-eye {
-        transform-origin: center;
-        animation: blink 4s infinite;
-      }
-
-      @keyframes limb-wiggle {
-        0%, 100% { transform: rotate(-10deg); }
-        50% { transform: rotate(10deg); }
-      }
-      
-      .mina-arm-left { transform-origin: 100% 0%; animation: limb-wiggle 3s ease-in-out infinite; }
-      .mina-arm-right { transform-origin: 0% 0%; animation: limb-wiggle 3s ease-in-out infinite reverse; }
-      
     </style>
   <script type="importmap">
 {
@@ -193,10 +169,7 @@
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div class="scanlines"></div>
-    <!-- Optional flicker overlay, uncommment to enable strong retro effect -->
-    <!-- <div class="crt-flicker"></div> -->
+  <body class="bg-grid selection:bg-tva-orange selection:text-white">
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
   <script type="module" src="/index.tsx"></script>

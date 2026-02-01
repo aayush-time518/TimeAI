@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Menu, X, Terminal, ChevronRight, LayoutDashboard, Database, Users, FileText, Volume2, VolumeX } from 'lucide-react';
+import { Clock, Menu, X, Terminal, ChevronRight, LayoutDashboard, Database, Users, FileText, Volume2, VolumeX, MessageSquare } from 'lucide-react';
 import { ViewState } from '../types';
 import { toggleMute, isMuted } from '../utils/sound';
 
@@ -15,9 +15,10 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      // Use a slightly larger threshold for a deliberate transition
+      setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -42,9 +43,17 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
         setMobileMenuOpen(false);
         window.scrollTo(0,0);
       }}
-      className={`font-mono text-sm tracking-wider uppercase transition-all px-4 py-2 border border-transparent hover:border-tva-orange/50 hover:bg-tva-orange/10 ${currentView === view ? 'text-tva-orange border-b-tva-orange' : 'text-tva-cream/70 hover:text-tva-amber'}`}
+      className={`
+        relative font-sans font-medium text-sm tracking-wide transition-all duration-700 ease-luxury px-4 py-2 rounded-lg 
+        ${currentView === view 
+            ? 'text-tva-orange bg-tva-orange/5 font-bold' 
+            : 'text-gray-500 hover:text-tva-orange hover:bg-gray-50'}
+      `}
     >
       {label}
+      {currentView === view && (
+          <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-tva-orange rounded-full"></span>
+      )}
     </button>
   );
 
@@ -55,56 +64,60 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
             setMobileMenuOpen(false);
             window.scrollTo(0,0);
         }}
-        className={`flex items-center gap-4 p-4 rounded-lg border transition-all w-full text-left group ${currentView === view ? 'bg-tva-orange/10 border-tva-orange' : 'bg-tva-panel/50 border-tva-cream/5 hover:border-tva-orange/50'}`}
+        className={`flex items-center gap-4 p-4 rounded-lg border transition-all duration-500 ease-luxury w-full text-left group ${currentView === view ? 'bg-tva-orange/10 border-tva-orange' : 'bg-white/80 border-gray-200 hover:border-tva-orange/50'}`}
     >
-        <div className={`p-3 rounded-md ${currentView === view ? 'bg-tva-orange text-tva-dark' : 'bg-tva-dark text-tva-orange group-hover:bg-tva-orange group-hover:text-tva-dark'} transition-colors`}>
+        <div className={`p-3 rounded-md ${currentView === view ? 'bg-tva-orange text-white' : 'bg-gray-100 text-tva-orange group-hover:bg-tva-orange group-hover:text-white'} transition-colors duration-300`}>
             {icon}
         </div>
         <div>
-            <div className={`font-mono font-bold uppercase tracking-wider ${currentView === view ? 'text-tva-orange' : 'text-tva-cream group-hover:text-tva-orange'}`}>{title}</div>
-            <div className="text-xs text-tva-cream/50 font-mono mt-1">{desc}</div>
+            <div className={`font-sans font-bold ${currentView === view ? 'text-tva-orange' : 'text-tva-cream group-hover:text-tva-orange'}`}>{title}</div>
+            <div className="text-xs text-gray-400 mt-1">{desc}</div>
         </div>
-        <ChevronRight className={`ml-auto w-5 h-5 transition-transform ${currentView === view ? 'text-tva-orange' : 'text-tva-cream/20 group-hover:text-tva-orange group-hover:translate-x-1'}`} />
+        <ChevronRight className={`ml-auto w-5 h-5 transition-transform duration-300 ${currentView === view ? 'text-tva-orange' : 'text-gray-300 group-hover:text-tva-orange group-hover:translate-x-1'}`} />
     </button>
   );
 
   return (
     <>
-      <header className={`fixed top-0 w-full z-40 transition-all duration-300 border-b ${isScrolled ? 'bg-tva-dark/95 backdrop-blur-sm border-tva-orange/30 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.5)]' : 'bg-transparent border-transparent py-6'}`}>
+      <header 
+        className={`fixed top-0 w-full z-40 transition-all duration-1000 ease-luxury ${isScrolled ? 'bg-white/90 backdrop-blur-xl border-b border-gray-200/50 py-3 shadow-sm' : 'bg-transparent border-transparent py-6'}`}
+      >
         <div className="container mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
           <button onClick={() => setView('home')} className="flex items-center gap-3 group relative z-50">
-             <div className="relative w-10 h-10 bg-tva-orange rounded-full flex items-center justify-center border-2 border-tva-cream group-hover:scale-110 transition-transform">
-               <Clock className="text-tva-dark w-6 h-6 animate-[spin_60s_linear_infinite]" />
+             <div className="relative w-10 h-10 bg-tva-orange rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:rotate-3 transition-all duration-700 ease-luxury overflow-hidden">
+               {/* Shine effect on logo */}
+               <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shimmer" />
+               <Clock className="text-white w-6 h-6 group-hover:animate-pulse" />
              </div>
              <div className="flex flex-col items-start">
-               <span className="text-tva-orange font-mono font-bold text-xl tracking-tighter leading-none text-glow">TIME AI</span>
-               <span className="text-tva-cream/60 font-mono text-[10px] uppercase tracking-[0.2em] leading-none mt-1">Timeline Authority</span>
+               <span className={`font-bold text-xl tracking-tight leading-none transition-colors duration-700 ${isScrolled ? 'text-tva-cream' : 'text-tva-cream'}`}>Time AI</span>
+               <span className="text-tva-orange font-medium text-[10px] uppercase tracking-widest leading-none mt-1">Enterprise Intelligence</span>
              </div>
           </button>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-2">
-            <NavLink view="home" label="Dashboard" />
-            <NavLink view="solutions" label="Protocols" />
-            <NavLink view="intel" label="Intel" />
-            <NavLink view="about" label="Archivists" />
+          <nav className="hidden lg:flex items-center gap-1">
+            <NavLink view="home" label="Home" />
+            <NavLink view="solutions" label="Services" />
+            <NavLink view="intel" label="Blog" />
+            <NavLink view="about" label="About Us" />
             
-            <div className="h-6 w-px bg-tva-cream/20 mx-2"></div>
+            <div className="h-6 w-px bg-gray-200 mx-2"></div>
             
             <button 
               onClick={handleSoundToggle}
-              className="p-2 text-tva-cream/50 hover:text-tva-orange transition-colors"
-              title={soundEnabled ? "Mute System Audio" : "Enable System Audio"}
+              className="p-2 text-gray-400 hover:text-tva-orange transition-colors duration-300 hover:scale-110"
+              title={soundEnabled ? "Mute Sound" : "Enable Sound"}
             >
               {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
             </button>
 
             <button 
               onClick={() => setView('contact')}
-              className="ml-4 px-6 py-2 bg-tva-orange text-tva-dark font-mono font-bold uppercase tracking-wide rounded-sm hover:bg-tva-amber transition-colors shadow-[0_0_10px_rgba(234,88,12,0.4)] flex items-center gap-2"
+              className="ml-4 px-6 py-2.5 bg-tva-orange text-white font-medium rounded-lg hover:bg-blue-600 hover:shadow-glow-blue transition-all duration-300 flex items-center gap-2 transform hover:-translate-y-0.5 shadow-md"
             >
-              <Terminal size={14} /> Open Case
+              <MessageSquare size={16} /> Contact Us
             </button>
           </nav>
 
@@ -112,12 +125,12 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
           <div className="lg:hidden flex items-center gap-4 z-50">
              <button 
               onClick={handleSoundToggle}
-              className="text-tva-cream/50 hover:text-tva-orange transition-colors"
+              className="text-gray-400 hover:text-tva-orange transition-colors"
             >
               {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
             </button>
             <button 
-              className="text-tva-orange p-2 border border-tva-orange/30 rounded hover:bg-tva-orange/10 transition-colors" 
+              className="text-tva-cream p-2 hover:bg-gray-100 rounded-lg transition-colors" 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X /> : <Menu />}
@@ -127,54 +140,44 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
       </header>
 
       {/* Mobile Mega Menu Overlay */}
-      <div className={`fixed inset-0 z-40 bg-tva-dark/95 backdrop-blur-xl transition-all duration-500 lg:hidden flex flex-col ${mobileMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'}`}>
+      <div className={`fixed inset-0 z-40 bg-white/90 backdrop-blur-xl transition-all duration-700 ease-luxury lg:hidden flex flex-col ${mobileMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'}`}>
           <div className="flex-1 flex flex-col p-6 pt-24 overflow-y-auto">
               <div className="grid gap-4 max-w-md mx-auto w-full">
-                  <div className="text-tva-cream/30 font-mono text-xs uppercase tracking-widest mb-2 px-1">// Navigation Mainframe</div>
+                  <div className="text-gray-400 font-bold text-xs uppercase tracking-widest mb-2 px-1 font-mono">System Navigation</div>
                   
                   <MobileNavLink 
                     view="home" 
-                    title="Dashboard" 
-                    desc="Real-time Operational View" 
+                    title="Home" 
+                    desc="Dashboard & Overview" 
                     icon={<LayoutDashboard size={20} />} 
                   />
                   <MobileNavLink 
                     view="solutions" 
-                    title="Protocols" 
-                    desc="Available Services & Tools" 
+                    title="Services" 
+                    desc="Our Solutions & Tools" 
                     icon={<Database size={20} />} 
                   />
                   <MobileNavLink 
                     view="intel" 
-                    title="Intel Records" 
-                    desc="Guides & Technical Briefs" 
+                    title="Blog" 
+                    desc="Insights & Case Studies" 
                     icon={<FileText size={20} />} 
                   />
                   <MobileNavLink 
                     view="about" 
-                    title="Archivists" 
-                    desc="Personnel & Origin Story" 
+                    title="About Us" 
+                    desc="Our Team & Mission" 
                     icon={<Users size={20} />} 
                   />
                   
-                  <div className="h-px bg-tva-cream/10 my-4"></div>
+                  <div className="h-px bg-gray-200 my-4"></div>
                   
                   <MobileNavLink 
                     view="contact" 
-                    title="Open Case File" 
-                    desc="Priority Signal to HQ" 
+                    title="Contact Us" 
+                    desc="Start a Project" 
                     icon={<Terminal size={20} />} 
                   />
-              </div>
-
-              <div className="mt-auto pt-8 pb-8 max-w-md mx-auto w-full">
-                  <div className="bg-tva-panel border border-tva-orange/20 p-4 rounded-lg flex items-center gap-4">
-                      <div className="w-2 h-2 bg-tva-green rounded-full animate-pulse"></div>
-                      <div className="font-mono text-xs text-tva-cream/60">
-                          SYSTEM STATUS: <span className="text-tva-green">OPTIMIZED</span><br/>
-                          SERVER TIME: {new Date().toLocaleTimeString()}
-                      </div>
-                  </div>
               </div>
           </div>
       </div>

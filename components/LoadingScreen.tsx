@@ -40,7 +40,7 @@ export const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete
   return (
     <div className="fixed inset-0 z-[100] bg-tva-dark flex flex-col items-center justify-center cursor-wait">
       {/* Background Grid */}
-      <div className="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(234,88,12,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(234,88,12,0.2)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+      <div className="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(37,99,235,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(37,99,235,0.2)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
       
       <div className="relative w-full max-w-md p-8">
         {/* Logo/Icon */}
@@ -61,7 +61,7 @@ export const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete
         {/* Progress Bar Container */}
         <div className="h-2 bg-tva-panel border border-tva-orange/30 rounded-sm overflow-hidden mb-4 relative">
             <div 
-                className="h-full bg-tva-orange shadow-[0_0_15px_#ea580c] transition-all duration-75 ease-out relative"
+                className="h-full bg-tva-orange shadow-[0_0_15px_#2563eb] transition-all duration-75 ease-out relative"
                 style={{ width: `${progress}%` }}
             >
                 <div className="absolute inset-0 bg-white/20 animate-[scan_2s_linear_infinite]"></div>

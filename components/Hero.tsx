@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Activity, Zap, ShieldCheck, Terminal, Disc, Cpu, AlertTriangle, CheckCircle, Brain, Database } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowRight, Activity, Zap, ShieldCheck, Terminal, Disc, Cpu, AlertTriangle, CheckCircle, Brain, Database, Layers } from 'lucide-react';
 import { ViewState } from '../types';
 import { MinaCharacter } from './MinaCharacter';
 
@@ -8,32 +8,33 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ setView }) => {
-  // --- TYPEWRITER EFFECT FOR HEADLINE ---
+  // --- TYPEWRITER EFFECT ---
   const [displayText, setDisplayText] = useState('');
   const [wordIndex, setWordIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [glitchTrigger, setGlitchTrigger] = useState(false);
   
-  const phrases = ["REVENUE TIMELINE", "OPERATIONAL SPEED", "FUTURE GROWTH", "DATA INTEGRITY"];
+  const phrases = ["INTELLIGENT CHATBOTS", "PREDICTIVE FORECASTS", "SENTIMENT ANALYSIS", "LIVE DASHBOARDS"];
   
   useEffect(() => {
     const currentPhrase = phrases[wordIndex % phrases.length];
-    
-    // Determine speed based on state
-    let typeSpeed = isDeleting ? 50 : 100;
+    let typeSpeed = isDeleting ? 40 : 80;
 
     if (!isDeleting && displayText === currentPhrase) {
-        typeSpeed = 2000; // Pause at end of phrase
+        typeSpeed = 2500; 
     } else if (isDeleting && displayText === '') {
-        typeSpeed = 500; // Pause before starting next phrase
+        typeSpeed = 300; 
+        setIsDeleting(false);
+        setWordIndex((prev) => prev + 1);
+        return;
+    } else if (isDeleting && displayText === '') {
+         // safety catch
+         setIsDeleting(false);
+         setWordIndex((prev) => prev + 1);
     }
 
     const timer = setTimeout(() => {
         if (!isDeleting && displayText === currentPhrase) {
             setIsDeleting(true);
-        } else if (isDeleting && displayText === '') {
-            setIsDeleting(false);
-            setWordIndex((prev) => prev + 1);
         } else {
             const nextText = isDeleting 
                 ? currentPhrase.substring(0, displayText.length - 1) 
@@ -45,235 +46,207 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, wordIndex]);
 
-  // Random glitch effect trigger
-  useEffect(() => {
-      const interval = setInterval(() => {
-          if (Math.random() > 0.7) {
-              setGlitchTrigger(true);
-              setTimeout(() => setGlitchTrigger(false), 300);
-          }
-      }, 5000);
-      return () => clearInterval(interval);
-  }, []);
-
-  // --- CYCLING SYSTEM STATUS ---
-  const [systemStatus, setSystemStatus] = useState({ label: "TIMELINE", status: "STABLE", color: "text-tva-orange" });
+  // --- SYSTEM STATUS ---
+  const [systemStatus, setSystemStatus] = useState({ label: "SYSTEM", status: "OPTIMAL", color: "text-tva-green" });
   
   useEffect(() => {
      const statuses = [
-         { label: "TIMELINE", status: "STABLE", color: "text-tva-orange" },
-         { label: "VARIANCE", status: "0.00%", color: "text-tva-green" },
-         { label: "AGENTS", status: "ACTIVE", color: "text-tva-amber" },
-         { label: "SYNC", status: "100%", color: "text-tva-orange" }
+         { label: "LATENCY", status: "12ms", color: "text-tva-green" },
+         { label: "AGENTS", status: "ACTIVE", color: "text-tva-orange" },
+         { label: "UPTIME", status: "99.99%", color: "text-tva-green" }
      ];
      let i = 0;
      const interval = setInterval(() => {
          i = (i + 1) % statuses.length;
          setSystemStatus(statuses[i]);
-     }, 3000);
+     }, 4000);
      return () => clearInterval(interval);
   }, []);
 
-  // --- MINA STORY CYCLE (RIGHT SIDE) ---
-  const stories: { 
-      id: string; 
-      variant: 'idle' | 'thinking' | 'alert' | 'success'; 
-      text: string; 
-      subtext: string;
-      color: string;
-      icon: React.ReactNode;
-  }[] = [
-      {
-          id: 'monitor',
-          variant: 'idle',
-          text: "Monitoring Streams",
-          subtext: "14,203 events/sec",
-          color: "text-tva-orange",
-          icon: <Activity size={16} />
-      },
-      {
-          id: 'alert',
-          variant: 'alert',
-          text: "Variance Detected",
-          subtext: "Latency > 400ms",
-          color: "text-red-500",
-          icon: <AlertTriangle size={16} />
-      },
-      {
-          id: 'thinking',
-          variant: 'thinking',
-          text: "Pruning Variance",
-          subtext: "Optimizing Query...",
-          color: "text-tva-amber",
-          icon: <Brain size={16} />
-      },
-      {
-          id: 'success',
-          variant: 'success',
-          text: "Timeline Restored",
-          subtext: "Efficiency +12%",
-          color: "text-tva-green",
-          icon: <CheckCircle size={16} />
-      }
-  ];
+  // --- MINA STORY CYCLE ---
+  const stories = [
+      { id: '1', variant: 'idle', text: "Analyzing Stream", subtext: "Data Flow Normal", color: "text-tva-orange", icon: <Activity size={14} /> },
+      { id: '2', variant: 'alert', text: "Variance Detected", subtext: "Revenue Dip Predicted", color: "text-red-500", icon: <AlertTriangle size={14} /> },
+      { id: '3', variant: 'thinking', text: "Running Agents", subtext: "Optimizing Logic...", color: "text-tva-amber", icon: <Brain size={14} /> },
+      { id: '4', variant: 'success', text: "Workflow Optimized", subtext: "+15% Efficiency", color: "text-tva-green", icon: <CheckCircle size={14} /> }
+  ] as const;
 
   const [storyIndex, setStoryIndex] = useState(0);
 
   useEffect(() => {
       const interval = setInterval(() => {
           setStoryIndex(prev => (prev + 1) % stories.length);
-      }, 4000); // Change story every 4 seconds
+      }, 4500); 
       return () => clearInterval(interval);
   }, []);
 
   const currentStory = stories[storyIndex];
 
-  const description = "We deploy specialized AI Agents to prune inefficiencies and automate workflows. Don't let a Nexus Event disrupt your operations.";
+  // --- OPTIMIZED MOUSE PARALLAX (DIRECT DOM) ---
+  const parallaxContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+        if (!parallaxContainerRef.current) return;
+        
+        // Calculate tilt based on center of screen
+        const x = (e.clientX / window.innerWidth - 0.5) * 15; // Max 7.5 deg tilt
+        const y = (e.clientY / window.innerHeight - 0.5) * 15;
+
+        // Apply transform directly to DOM element to avoid React Re-renders
+        parallaxContainerRef.current.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+    };
+    
+    // Add passive listener for better scroll performance
+    window.addEventListener('mousemove', handleMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMove);
+  }, []);
 
   return (
-    <section className="relative min-h-screen overflow-hidden flex items-center justify-center bg-tva-dark py-20 lg:py-0">
-      {/* Background Gradients */}
-      <div className="absolute top-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-tva-orange/5 rounded-full blur-[100px] -z-10 animate-pulse-slow pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-tva-amber/5 rounded-full blur-[80px] -z-10 pointer-events-none" />
+    <section className="relative min-h-screen overflow-hidden flex items-center justify-center bg-transparent py-20 lg:py-0">
+      {/* Background Ambience */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-tva-orange/5 rounded-full blur-[120px] -z-10 translate-x-1/3 -translate-y-1/3 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-tva-amber/5 rounded-full blur-[100px] -z-10 -translate-x-1/3 translate-y-1/3 pointer-events-none" />
+      
+      {/* Architectural Grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] -z-20 pointer-events-none"></div>
 
       <div className="container mx-auto px-6 h-full flex flex-col justify-center relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Content - Dynamic */}
-          <div className="space-y-6 lg:space-y-8 flex flex-col justify-center order-2 lg:order-1">
-            <div>
-              {/* Dynamic Badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 bg-tva-panel border border-tva-orange/40 text-[10px] md:text-xs font-mono uppercase tracking-widest shadow-[0_0_15px_rgba(234,88,12,0.2)] animate-in fade-in slide-in-from-left-4 duration-700">
-                <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${systemStatus.color === 'text-tva-orange' ? 'bg-tva-orange' : systemStatus.color === 'text-tva-green' ? 'bg-tva-green' : 'bg-tva-amber'}`}></span>
-                <span className="text-tva-cream/50">{systemStatus.label}:</span>
-                <span className={systemStatus.color}>{systemStatus.status}</span>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          
+          {/* LEFT: Content */}
+          <div className="space-y-8 flex flex-col justify-center order-2 lg:order-1">
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-luxury">
+              <div className="inline-flex items-center gap-3 px-4 py-1.5 mb-8 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-full shadow-sm text-xs font-bold uppercase tracking-widest ring-1 ring-gray-100">
+                <span className={`w-2 h-2 rounded-full animate-pulse ${systemStatus.color === 'text-tva-orange' ? 'bg-tva-orange' : 'bg-tva-green'}`}></span>
+                <span className="text-gray-400 font-mono">{systemStatus.label}:</span>
+                <span className={`${systemStatus.color} font-mono`}>{systemStatus.status}</span>
               </div>
               
-              <h1 className={`text-4xl md:text-6xl lg:text-7xl font-mono font-bold leading-none tracking-tighter text-tva-cream mb-4 ${glitchTrigger ? 'animate-glitch text-tva-orange' : ''}`}>
-                PROTECT YOUR <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-tva-orange to-tva-amber text-glow inline-block min-h-[1.2em]">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-sans font-extrabold leading-tight tracking-tight text-tva-cream mb-6">
+                Accelerate Your <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-tva-orange via-blue-400 to-tva-amber inline-block min-h-[1.2em] animate-gradient-x">
                   {displayText}
                   <span className="animate-pulse text-tva-orange ml-1">_</span>
                 </span>
               </h1>
               
-              {/* Static Description with Fade In */}
-              <div className="text-lg md:text-xl text-tva-cream/70 max-w-lg leading-relaxed font-sans border-l-2 border-tva-orange/30 pl-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-                 {description}
-              </div>
+              <p className="text-lg md:text-xl text-gray-500 max-w-lg leading-relaxed font-sans border-l-4 border-tva-orange/20 pl-6">
+                 We deploy specialized AI Agents to streamline workflows and automate complex tasks. Secure your business future with predictive intelligence.
+              </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-500 fill-mode-backwards">
+            <div className="flex flex-col sm:flex-row gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-luxury delay-200">
               <button 
                 onClick={() => setView('contact')}
-                className="px-8 py-4 bg-tva-orange text-tva-dark font-mono font-bold text-sm md:text-base uppercase tracking-wide rounded-sm hover:bg-tva-amber hover:shadow-[0_0_20px_rgba(245,158,11,0.6)] transition-all flex items-center justify-center gap-2 group"
+                className="group relative px-8 py-4 bg-tva-orange text-white font-bold text-base rounded-xl overflow-hidden shadow-glow-blue transition-all transform hover:-translate-y-1 hover:shadow-xl"
               >
-                Initiate Protocol
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                {/* Shimmer Effect */}
+                <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shimmer" />
+                
+                <span className="relative flex items-center justify-center gap-2">
+                  Start Free Pilot
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </span>
               </button>
+              
               <button 
                 onClick={() => setView('solutions')}
-                className="px-8 py-4 bg-transparent border-2 border-tva-cream/20 text-tva-cream font-mono font-bold text-sm md:text-base uppercase tracking-wide rounded-sm hover:border-tva-orange hover:text-tva-orange transition-all flex items-center justify-center gap-2"
+                className="px-8 py-4 bg-white border border-gray-200 text-gray-700 font-bold text-base rounded-xl hover:border-tva-orange hover:text-tva-orange transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md group"
               >
-                Access Files
+                <Terminal size={16} className="text-gray-400 group-hover:text-tva-orange transition-colors" />
+                Explore Platform
               </button>
             </div>
 
-            <div className="pt-6 border-t border-tva-cream/10 flex items-center gap-4 md:gap-8 text-xs md:text-sm text-tva-cream/50 font-mono animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-700 fill-mode-backwards">
+            <div className="pt-8 border-t border-gray-200/60 flex items-center gap-6 text-xs text-gray-500 font-semibold uppercase tracking-wide animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-luxury delay-300">
               <span className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-tva-amber" /> Rapid Deployment
+                <Zap size={16} className="text-tva-orange" /> Instant Setup
               </span>
               <span className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-tva-amber" /> Secure Processing
-              </span>
-              <span className="flex items-center gap-2">
-                <Terminal className="w-4 h-4 text-tva-amber" /> CLI Compatible
+                <ShieldCheck size={16} className="text-tva-orange" /> SOC2 Compliant
               </span>
             </div>
           </div>
 
-          {/* Right Visual - HOLOGRAPHIC TIMELINE PROJECTOR (Responsive) */}
-          {/* Order 1 on mobile to show graphic first or order 2? Let's keep it visible. */}
-          <div className="relative group flex items-center justify-center perspective-[1000px] order-1 lg:order-2 h-[300px] lg:h-full">
-             {/* 3D Container - Scaled down on mobile */}
-             <div className="relative w-full max-w-md h-[300px] lg:h-[500px] flex items-center justify-center scale-75 lg:scale-100">
+          {/* RIGHT: Floating Glass Stack Visual with Parallax */}
+          <div 
+             className="relative flex items-center justify-center perspective-[1000px] order-1 lg:order-2 h-[400px] lg:h-full"
+             style={{ perspective: '1000px' }}
+          >
+             <div 
+                ref={parallaxContainerRef}
+                className="relative w-full max-w-md h-[400px] flex items-center justify-center will-change-transform"
+                style={{ 
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.1s linear' // Slight smooth factor
+                }}
+             >
                 
-                {/* 1. Holographic Base Plate (Tilted) */}
-                <div className="absolute bottom-10 w-48 h-48 lg:w-64 lg:h-64 border-2 border-tva-orange/30 rounded-full bg-tva-orange/5 shadow-[0_0_50px_rgba(234,88,12,0.2)] animate-[spin_10s_linear_infinite] [transform:rotateX(60deg)]">
-                   <div className="absolute inset-4 border border-tva-orange/20 rounded-full border-dashed"></div>
-                   <div className="absolute inset-12 border border-tva-orange/40 rounded-full"></div>
-                </div>
+                {/* 1. Floating Glass Panes (Layers) */}
+                <div className="absolute inset-0 flex items-center justify-center animate-float" style={{ transform: 'translateZ(0px)' }}>
+                    {/* Bottom Pane */}
+                    <div className="absolute w-64 h-64 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl shadow-xl transform rotate-x-60 rotate-z-12 translate-y-20 z-0 scale-90 transition-transform duration-500 hover:translate-z-10"></div>
+                    
+                    {/* Middle Pane */}
+                    <div className="absolute w-64 h-64 bg-white/60 backdrop-blur-md border border-white/60 rounded-3xl shadow-xl transform rotate-x-60 rotate-z-12 translate-y-10 z-10 scale-95 flex items-center justify-center transition-transform duration-500 hover:translate-z-20">
+                        <div className="w-48 h-48 border border-tva-orange/10 rounded-full animate-spin-slow opacity-50"></div>
+                    </div>
 
-                {/* 2. Vertical Data Rings (Rotating around Mina) */}
-                <div className={`absolute w-[280px] h-[280px] lg:w-[350px] lg:h-[350px] rounded-full border border-tva-cream/5 transition-all duration-1000 ${currentStory.variant === 'thinking' ? 'animate-[spin_2s_linear_infinite_reverse] border-tva-amber/30' : 'animate-[spin_20s_linear_infinite_reverse]'}`}>
-                   <div className="absolute top-0 left-1/2 w-2 h-2 bg-tva-cream/20 rounded-full"></div>
-                </div>
-                <div className={`absolute w-[240px] h-[240px] lg:w-[300px] lg:h-[300px] rounded-full border border-dashed transition-all duration-1000 ${currentStory.variant === 'alert' ? 'border-red-500/30 animate-[spin_5s_linear_infinite]' : 'border-tva-orange/10 animate-[spin_15s_linear_infinite]'}`}></div>
-
-                {/* 3. Central Character (Floating) */}
-                <div className="absolute z-20 animate-float pb-10">
-                    <div className="w-40 h-40 lg:w-56 lg:h-56 relative">
-                        {/* Pass the dynamic variant to Mina */}
-                        <MinaCharacter 
-                            className="w-full h-full drop-shadow-[0_0_30px_rgba(234,88,12,0.4)]" 
-                            variant={currentStory.variant}
-                        />
-                        
-                        {/* Hologram Scan Effect Overlay */}
-                        <div className={`absolute inset-0 bg-gradient-to-b from-transparent to-transparent animate-scan pointer-events-none rounded-full opacity-50 transition-colors duration-500 ${currentStory.variant === 'alert' ? 'via-red-500/10' : 'via-tva-orange/10'}`}></div>
+                    {/* Top Pane (Active Layer) */}
+                    <div className="absolute w-64 h-64 bg-gradient-to-br from-white/80 to-white/40 backdrop-blur-xl border border-white rounded-3xl shadow-2xl transform rotate-x-60 rotate-z-12 z-20 flex items-center justify-center overflow-hidden transition-transform duration-500 hover:translate-z-30">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-tva-orange/5 to-transparent"></div>
+                        <div className="grid grid-cols-4 gap-4 opacity-20 transform -rotate-12 scale-150">
+                            {[...Array(16)].map((_, i) => (
+                                <div key={i} className="w-8 h-8 rounded-lg bg-tva-orange/20"></div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* 4. Dynamic Thought Bubble / Story Card */}
-                <div className="absolute top-0 -right-4 lg:top-10 lg:-right-4 animate-[float_4s_ease-in-out_infinite_reverse] z-30">
-                   <div className={`bg-tva-panel/90 backdrop-blur-md border border-tva-cream/10 p-3 lg:p-4 rounded-sm shadow-2xl w-40 lg:w-48 transition-all duration-500 transform ${currentStory.variant === 'alert' ? 'border-red-500/50 scale-105' : ''}`}>
-                      <div className="flex items-start gap-3">
-                         <div className={`mt-1 ${currentStory.color}`}>{currentStory.icon}</div>
-                         <div>
-                             <div className={`text-[8px] lg:text-[10px] font-mono uppercase tracking-widest mb-1 ${currentStory.color}`}>
-                                {currentStory.text}
-                             </div>
-                             <div className="text-[10px] lg:text-xs text-tva-cream font-mono leading-tight">
-                                {currentStory.subtext}
-                             </div>
-                         </div>
+                {/* 2. Character Floating Above Layers */}
+                <div className="absolute z-30 animate-float" style={{ animationDelay: '-1s', transform: 'translateZ(60px)' }}>
+                    <div className="w-48 h-48 lg:w-60 lg:h-60 relative filter drop-shadow-2xl">
+                        <MinaCharacter className="w-full h-full" variant={currentStory.variant} />
+                    </div>
+                </div>
+
+                {/* 3. Floating "Status Card" */}
+                <div className="absolute top-10 -right-4 lg:right-0 z-40 animate-float" style={{ animationDelay: '-2s', transform: 'translateZ(80px)' }}>
+                   <div className={`glass-card p-4 rounded-xl shadow-lg border-l-4 w-48 transition-all duration-300 ${
+                       currentStory.variant === 'alert' ? 'border-l-red-500' : 'border-l-tva-orange'
+                   }`}>
+                      <div className="flex items-center gap-3 mb-1">
+                          <div className={`p-1.5 rounded-lg ${currentStory.variant === 'alert' ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-tva-orange'}`}>
+                              {currentStory.icon}
+                          </div>
+                          <span className={`text-[10px] font-bold uppercase ${currentStory.color}`}>
+                              {currentStory.text}
+                          </span>
                       </div>
-                      
-                      {/* Progress Bar for Thinking */}
+                      <div className="text-xs text-gray-500 font-medium pl-1">
+                          {currentStory.subtext}
+                      </div>
                       {currentStory.variant === 'thinking' && (
-                          <div className="w-full h-1 bg-tva-dark mt-2 rounded-full overflow-hidden">
-                              <div className="h-full bg-tva-amber animate-[width_2s_ease-in-out_infinite]" style={{width: '60%'}}></div>
+                          <div className="h-1 w-full bg-gray-100 rounded-full mt-2 overflow-hidden">
+                              <div className="h-full bg-tva-amber animate-progress"></div>
                           </div>
                       )}
                    </div>
-                   
-                   {/* Connector Line */}
-                   <svg className="absolute top-full left-0 w-8 h-8 -ml-4 -mt-2 pointer-events-none" viewBox="0 0 50 50">
-                       <path d="M50 0 L0 50" stroke={currentStory.variant === 'alert' ? '#ef4444' : '#ea580c'} strokeWidth="1" strokeDasharray="2 2" fill="none" />
-                       <circle cx="0" cy="50" r="2" fill={currentStory.variant === 'alert' ? '#ef4444' : '#ea580c'} />
-                   </svg>
                 </div>
 
-                {/* 5. Floating Stats Card (Bottom Left) */}
-                <div className="absolute bottom-12 lg:bottom-20 left-0 lg:-left-4 animate-[float_5s_ease-in-out_infinite]">
-                   <div className="bg-tva-panel/80 backdrop-blur-sm border border-tva-cream/20 p-2 rounded-sm shadow-xl flex items-center gap-2">
-                      <Cpu size={16} className="text-tva-amber" />
-                      <div className="text-[10px] font-mono text-tva-cream/70">
-                         <div>AI CORES: ONLINE</div>
-                         <div className="text-tva-green">OPTIMIZED</div>
-                      </div>
-                   </div>
+                {/* 4. Stats Badge */}
+                <div className="absolute bottom-20 left-0 z-40 animate-float" style={{ animationDelay: '-3s', transform: 'translateZ(40px)' }}>
+                    <div className="glass-card px-4 py-2 rounded-lg shadow-lg flex items-center gap-3 ring-1 ring-white/50">
+                        <Database size={16} className="text-tva-orange" />
+                        <div className="text-[10px] font-bold uppercase text-gray-500">
+                            Data Ingest <span className="text-tva-cream ml-1 font-mono">1.2TB/s</span>
+                        </div>
+                    </div>
                 </div>
 
-                {/* 6. Back Glow */}
-                <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 lg:w-96 lg:h-96 rounded-full blur-[80px] -z-10 pointer-events-none transition-colors duration-1000 ${currentStory.variant === 'alert' ? 'bg-red-500/20' : 'bg-tva-orange/10'}`}></div>
              </div>
           </div>
-        </div>
-        
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-4 lg:bottom-8 left-1/2 -translate-x-1/2 text-tva-cream/20 flex flex-col items-center gap-2 animate-bounce">
-            <span className="text-[10px] font-mono uppercase tracking-widest">Scroll for Intel</span>
-            <div className="w-px h-8 bg-gradient-to-b from-tva-orange to-transparent"></div>
         </div>
       </div>
     </section>

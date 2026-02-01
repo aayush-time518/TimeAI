@@ -1,26 +1,67 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Sparkles, CircleDot, RefreshCw } from 'lucide-react';
+import { MessageSquare, X, Send, Sparkles, RefreshCw, ChevronDown, BarChart3, Search, Calendar, Cpu, Loader2, TrendingUp, Zap, BrainCircuit, Activity, Database, Layers, FileText, AlertTriangle, Bot, Workflow, Target, Clock, ShieldCheck, Users, UserCog } from 'lucide-react';
 import { sendMessageToMina } from '../services/geminiService';
-import { ChatMessage } from '../types';
+import { ChatMessage, ViewState } from '../types';
 import { MinaCharacter } from './MinaCharacter';
 import { playSound } from '../utils/sound';
 
-export const MinaAssistant: React.FC = () => {
+interface MinaAssistantProps {
+  currentView: ViewState;
+}
+
+export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: "Greetings! I'm monitoring your operational timeline. How can I assist with variance reduction today?" }
+    { role: 'model', text: "Hello! I'm Mina, your Intelligence Architect. How can I help optimize your business today?" }
   ]);
   const [input, setInput] = useState('');
   const [assistantState, setAssistantState] = useState<'idle' | 'thinking' | 'talking'>('idle');
+  const [loadingText, setLoadingText] = useState("Initializing...");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Business-focused suggestions
-  const suggestions = [
-    "Forecast Q3 Revenue",
-    "Analyze Supply Chain Lag",
-    "Detect Anomalies",
-    "Deploy New Agent"
-  ];
+  // Context-aware suggestions based on currentView
+  const getSuggestions = (view: ViewState) => {
+    switch (view) {
+      case 'solutions':
+        return [
+           { icon: <TrendingUp size={14} />, text: "Forecasting Capabilities?" },
+           { icon: <BrainCircuit size={14} />, text: "Explain Neural Arch" },
+           { icon: <Bot size={14} />, text: "How do Agents work?" },
+           { icon: <Workflow size={14} />, text: "Data Pipeline Specs" }
+        ];
+      case 'intel':
+        return [
+           { icon: <FileText size={14} />, text: "Summarize RAG Strategy" },
+           { icon: <Search size={14} />, text: "Find Logistics Case Studies" },
+           { icon: <Cpu size={14} />, text: "Latest Engineering Reports" },
+           { icon: <Layers size={14} />, text: "Explain 'Active' UI" }
+        ];
+      case 'about':
+        return [
+           { icon: <Target size={14} />, text: "What is your Mission?" },
+           { icon: <Clock size={14} />, text: "Implementation Timeline" },
+           { icon: <ShieldCheck size={14} />, text: "Security Protocols" },
+           { icon: <Users size={14} />, text: "Client Success Stories" }
+        ];
+      case 'contact':
+        return [
+           { icon: <Zap size={14} />, text: "Start a Pilot Program" },
+           { icon: <UserCog size={14} />, text: "Speak to an Architect" },
+           { icon: <Calendar size={14} />, text: "Schedule Audit" },
+           { icon: <MessageSquare size={14} />, text: "Support Channels" }
+        ];
+      case 'home':
+      default:
+        return [
+            { icon: <TrendingUp size={14} />, text: "Predict Q4 Revenue Drift" },
+            { icon: <Activity size={14} />, text: "Analyze Supply Chain Latency" },
+            { icon: <FileText size={14} />, text: "Draft Risk Assessment" },
+            { icon: <Zap size={14} />, text: "Explain Recent Anomalies" }
+        ];
+    }
+  };
+
+  const suggestions = getSuggestions(currentView);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -30,12 +71,28 @@ export const MinaAssistant: React.FC = () => {
     scrollToBottom();
   }, [messages, assistantState]);
 
-  const toggleChat = () => {
-    if (!isOpen) {
-      playSound('chime');
-    } else {
-      playSound('tick');
+  // Cycle loading text for "thinking" state
+  useEffect(() => {
+    if (assistantState === 'thinking') {
+        const texts = [
+            "Ingesting Data Streams...", 
+            "Aligning Temporal Vectors...", 
+            "Calculating Variance...", 
+            "Accessing Neural Weights...", 
+            "Optimizing Tokens..."
+        ];
+        let i = 0;
+        setLoadingText(texts[0]); // Reset immediately
+        const interval = setInterval(() => {
+            i = (i + 1) % texts.length;
+            setLoadingText(texts[i]);
+        }, 1200);
+        return () => clearInterval(interval);
     }
+  }, [assistantState]);
+
+  const toggleChat = () => {
+    if (!isOpen) playSound('chime');
     setIsOpen(!isOpen);
   };
 
@@ -46,9 +103,11 @@ export const MinaAssistant: React.FC = () => {
     playSound('pop');
     setInput('');
     setAssistantState('thinking');
+    
+    // Add user message
     setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
-
-    // Add placeholder for streaming response
+    
+    // Add placeholder for model response
     setMessages(prev => [...prev, { role: 'model', text: '', isStreaming: true }]);
 
     try {
@@ -71,12 +130,9 @@ export const MinaAssistant: React.FC = () => {
             }
             return newMsgs;
           });
-          // Play subtle ticks during generation (throttled)
-          if (Math.random() > 0.8) playSound('tick');
         }
       }
       
-      // Finalize message
       setMessages(prev => {
         const newMsgs = [...prev];
         const lastMsg = newMsgs[newMsgs.length - 1];
@@ -86,12 +142,11 @@ export const MinaAssistant: React.FC = () => {
       playSound('chime');
 
     } catch (e) {
-      console.error(e);
       setMessages(prev => {
          const newMsgs = [...prev];
          const lastMsg = newMsgs[newMsgs.length - 1];
          if (lastMsg.role === 'model') {
-             lastMsg.text = "Signal lost. Temporal interference detected. Please retry.";
+             lastMsg.text = "Connection interrupted. Please try again.";
              lastMsg.isStreaming = false;
          }
          return newMsgs;
@@ -102,67 +157,98 @@ export const MinaAssistant: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none font-sans">
       {/* Chat Window */}
-      {isOpen && (
-        <div className="bg-tva-panel border-2 border-tva-orange shadow-[0_0_30px_rgba(234,88,12,0.3)] rounded-xl w-[calc(100vw-3rem)] md:w-96 mb-4 overflow-hidden pointer-events-auto flex flex-col h-[500px] max-h-[70vh] animate-in slide-in-from-bottom-10 fade-in duration-300">
+      <div className={`
+        bg-white shadow-2xl rounded-2xl w-[calc(100vw-2rem)] md:w-[400px] mb-4 overflow-hidden pointer-events-auto flex flex-col 
+        transition-all duration-700 ease-out-expo origin-bottom-right border border-gray-100
+        ${isOpen ? 'scale-100 opacity-100 translate-y-0 h-[650px] max-h-[85vh]' : 'scale-90 opacity-0 translate-y-10 h-0 invisible'}
+      `}>
           
           {/* Header */}
-          <div className="bg-tva-orange p-3 flex items-center justify-between relative overflow-hidden">
-            <div className="absolute inset-0 bg-tva-dark/10 bg-[size:10px_10px] opacity-20"></div>
+          <div className="bg-gradient-to-r from-tva-orange to-indigo-900 p-4 flex items-center justify-between shrink-0 relative overflow-hidden">
+            {/* Background pattern */}
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSIvPgo8L3N2Zz4=')] opacity-20"></div>
+            
             <div className="flex items-center gap-3 relative z-10">
-              <div className="bg-tva-cream/90 p-1 rounded-full border-2 border-tva-dark w-12 h-12 overflow-hidden flex items-center justify-center">
-                <MinaCharacter className="w-full h-full" variant={assistantState} />
+              <div className="relative">
+                  <div className="bg-white/95 backdrop-blur-sm p-1 rounded-full w-12 h-12 overflow-hidden shadow-lg border-2 border-white/20">
+                    <MinaCharacter className="w-full h-full" variant={assistantState} />
+                  </div>
+                  <div className={`absolute -bottom-1 -right-1 w-4 h-4 border-2 border-white rounded-full flex items-center justify-center ${assistantState !== 'idle' ? 'bg-amber-400' : 'bg-green-400'}`}>
+                    {assistantState !== 'idle' && <div className="w-2 h-2 bg-white/50 rounded-full animate-ping" />}
+                  </div>
               </div>
               <div>
-                <h3 className="font-mono font-bold text-tva-dark text-lg uppercase tracking-wider leading-none">Mina</h3>
-                <div className="flex items-center gap-1 mt-1">
-                   <span className={`w-1.5 h-1.5 rounded-full ${assistantState !== 'idle' ? 'bg-tva-dark animate-ping' : 'bg-green-700'}`}></span>
-                   <p className="text-[10px] text-tva-dark/80 font-mono font-bold uppercase">
-                     {assistantState === 'thinking' ? 'Processing...' : assistantState === 'talking' ? 'Transmitting...' : 'Online'}
-                   </p>
+                <h3 className="font-bold text-white text-lg leading-tight">Mina</h3>
+                <div className="flex items-center gap-2">
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider transition-colors duration-300 ${assistantState === 'idle' ? 'bg-white/10 text-white/90' : 'bg-amber-400/20 text-amber-300'}`}>
+                        {assistantState === 'idle' ? 'Online' : (assistantState === 'thinking' ? 'Processing' : 'Transmitting')}
+                    </span>
+                    <span className="text-blue-100 text-xs font-medium">v2.4</span>
                 </div>
               </div>
             </div>
-            <button 
-              onClick={toggleChat}
-              className="text-tva-dark hover:text-white transition-colors relative z-10"
-            >
-              <X size={20} />
+            <button onClick={toggleChat} className="text-white/80 hover:text-white transition-colors bg-white/10 hover:bg-white/20 p-2 rounded-lg relative z-10">
+              <ChevronDown size={20} />
             </button>
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-tva-dark/95 relative scroll-smooth">
-            {/* Background Grid */}
-            <div className="absolute inset-0 opacity-5 bg-[linear-gradient(rgba(245,158,11,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.2)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
-
+          <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-gray-50/50 scroll-smooth relative">
+            <div className="text-center text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] my-4 opacity-50">Secure Uplink Established</div>
+            
             {messages.map((msg, idx) => (
               <div 
                 key={idx} 
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} relative z-10 animate-in fade-in slide-in-from-bottom-2 duration-300`}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out`}
               >
+                {msg.role === 'model' && (
+                    <div className="w-8 h-8 rounded-full bg-white border border-gray-200 p-1 mr-3 mt-1 shrink-0 shadow-sm flex items-center justify-center">
+                        <Sparkles size={14} className="text-tva-orange" />
+                    </div>
+                )}
                 <div 
-                  className={`max-w-[85%] rounded-lg px-4 py-3 text-sm font-mono leading-relaxed border shadow-sm ${
+                  className={`max-w-[85%] rounded-2xl px-5 py-3.5 text-sm leading-relaxed shadow-sm relative ${
                     msg.role === 'user' 
-                      ? 'bg-tva-orange text-tva-dark border-tva-orange' 
-                      : 'bg-tva-panel text-tva-cream border-tva-amber/30'
+                      ? 'bg-tva-orange text-white rounded-br-sm' 
+                      : 'bg-white text-gray-700 border border-gray-200 rounded-bl-sm'
                   }`}
                 >
-                  {/* Empty loading state for model */}
-                  {msg.role === 'model' && msg.isStreaming && !msg.text && (
-                      <div className="flex gap-1 items-center h-5">
-                          <span className="w-1 h-1 bg-tva-orange rounded-full animate-bounce delay-0"></span>
-                          <span className="w-1 h-1 bg-tva-orange rounded-full animate-bounce delay-150"></span>
-                          <span className="w-1 h-1 bg-tva-orange rounded-full animate-bounce delay-300"></span>
+                  {/* Loading State: High-Tech Processing */}
+                  {msg.isStreaming && !msg.text && (
+                      <div className="flex flex-col gap-2 min-w-[160px] py-1">
+                          <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-tva-orange uppercase tracking-widest">
+                              <Loader2 className="animate-spin" size={10} />
+                              <span className="animate-pulse">{loadingText}</span>
+                          </div>
+                          
+                          {/* Animated Matrix Bar */}
+                          <div className="flex gap-0.5 h-3 items-center">
+                              {[...Array(12)].map((_, i) => (
+                                  <div 
+                                    key={i}
+                                    className="w-1 bg-tva-orange rounded-full animate-pulse"
+                                    style={{
+                                        height: `${Math.random() * 100}%`,
+                                        animationDelay: `${i * 0.05}s`,
+                                        opacity: 0.4
+                                    }}
+                                  ></div>
+                              ))}
+                          </div>
                       </div>
                   )}
-                  
-                  {msg.text}
-                  
-                  {/* Cursor for streaming */}
-                  {msg.isStreaming && msg.text && (
-                      <span className="inline-block w-2 h-4 ml-1 align-middle bg-tva-orange animate-pulse shadow-[0_0_5px_#ea580c]"/>
+
+                  {/* Message Content */}
+                  {msg.text && (
+                      <div className={msg.role === 'model' ? "markdown-prose" : ""}>
+                          {msg.text}
+                          {/* Enhanced Cursor */}
+                          {msg.isStreaming && (
+                              <span className="inline-block w-2 h-4 bg-tva-orange ml-1 align-middle animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.8)]"></span>
+                          )}
+                      </div>
                   )}
                 </div>
               </div>
@@ -171,70 +257,67 @@ export const MinaAssistant: React.FC = () => {
           </div>
 
           {/* Input Area */}
-          <div className="p-3 bg-tva-panel border-t border-tva-orange/50">
-             {/* Quick Suggestions */}
-             <div className="flex gap-2 overflow-x-auto pb-3 mb-1 no-scrollbar mask-gradient-right">
-                {suggestions.map((s, i) => (
-                    <button 
-                        key={i}
-                        onClick={() => handleSend(s)}
-                        disabled={assistantState !== 'idle'}
-                        className="whitespace-nowrap px-3 py-1.5 bg-tva-dark border border-tva-orange/30 text-tva-orange/80 text-[10px] font-mono rounded-sm hover:bg-tva-orange hover:text-tva-dark hover:border-tva-orange transition-all flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider"
-                    >
-                        {s}
-                    </button>
-                ))}
-             </div>
+          <div className="p-4 bg-white border-t border-gray-100 shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)] z-10">
+             {/* Suggestions */}
+             {messages.length < 3 && (
+                <div className="flex gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar mask-fade-right">
+                    {suggestions.map((s, i) => (
+                        <button 
+                            key={i}
+                            onClick={() => handleSend(s.text)}
+                            disabled={assistantState !== 'idle'}
+                            className="whitespace-nowrap px-3 py-2 bg-gray-50 border border-gray-200 text-gray-600 text-xs font-bold rounded-lg hover:border-tva-orange hover:text-tva-orange hover:bg-blue-50 transition-all flex-shrink-0 flex items-center gap-2 shadow-sm group"
+                        >
+                            <span className="text-gray-400 group-hover:text-tva-orange transition-colors">{s.icon}</span>
+                            {s.text}
+                        </button>
+                    ))}
+                </div>
+             )}
 
-            <div className="relative group">
-              <div className="absolute inset-0 bg-tva-orange/5 rounded-md blur-sm group-focus-within:bg-tva-orange/10 transition-colors"></div>
+            <div className="relative flex items-center gap-2">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder={assistantState === 'thinking' ? "Processing request..." : assistantState === 'talking' ? "Receiving transmission..." : "Query the timeline..."}
+                placeholder="Ask Mina about your data..."
                 disabled={assistantState !== 'idle'}
-                className="w-full bg-tva-dark relative text-tva-amber font-mono text-sm rounded-md pl-4 pr-12 py-3 border border-tva-orange/30 focus:outline-none focus:border-tva-orange focus:ring-1 focus:ring-tva-orange placeholder:text-tva-amber/20 transition-all disabled:opacity-50 disabled:cursor-wait"
+                className="w-full bg-gray-50 text-gray-800 text-sm rounded-xl pl-4 pr-12 py-3.5 focus:outline-none focus:ring-2 focus:ring-tva-orange/50 focus:bg-white transition-all disabled:opacity-50 font-medium placeholder:text-gray-400"
               />
               <button 
                 onClick={() => handleSend()}
                 disabled={assistantState !== 'idle' || !input.trim()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-tva-orange hover:text-tva-cream transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="absolute right-2 p-2 bg-tva-orange text-white rounded-lg hover:bg-blue-700 hover:shadow-lg transition-all disabled:opacity-50 disabled:bg-gray-200 disabled:shadow-none transform hover:-translate-y-0.5 active:translate-y-0"
               >
-                {assistantState !== 'idle' ? <RefreshCw size={16} className="animate-spin" /> : <Send size={16} />}
+                {assistantState !== 'idle' ? <RefreshCw size={18} className="animate-spin" /> : <Send size={18} />}
               </button>
             </div>
             
-            <div className="flex justify-between mt-2 px-1">
-                <span className="text-[9px] text-tva-cream/20 font-mono uppercase">SECURE CHANNEL // ENCRYPTED</span>
-                <span className="text-[9px] text-tva-cream/20 font-mono uppercase">V.2.04</span>
+            <div className="text-center mt-2">
+                <span className="text-[10px] text-gray-300 font-medium">Powered by Time AI Neural Engine</span>
             </div>
           </div>
-        </div>
-      )}
+      </div>
 
-      {/* Floating Toggle Button */}
+      {/* Launcher Button */}
       <button
         onClick={toggleChat}
-        className="pointer-events-auto group relative flex items-center justify-center w-16 h-16 bg-tva-panel hover:bg-tva-dark border-2 border-tva-orange rounded-full shadow-[0_0_20px_rgba(234,88,12,0.4)] transition-all duration-300 hover:scale-105 active:scale-95"
+        className={`
+            pointer-events-auto group relative flex items-center justify-center w-16 h-16 rounded-full shadow-2xl transition-all duration-500 ease-out-expo
+            ${isOpen ? 'bg-white text-gray-400 rotate-90 scale-90' : 'bg-tva-orange text-white hover:scale-110 hover:bg-blue-600 hover:shadow-glow-blue'}
+        `}
       >
-        {/* Animated Rings */}
-        <div className="absolute inset-0 rounded-full border border-tva-amber/50 animate-[spin_8s_linear_infinite]" style={{ borderTopColor: 'transparent', borderBottomColor: 'transparent' }}></div>
-        <div className="absolute inset-1 rounded-full border border-tva-orange/50 animate-[spin_12s_linear_infinite_reverse]" style={{ borderLeftColor: 'transparent', borderRightColor: 'transparent' }}></div>
-        
         {isOpen ? (
-          <X className="text-tva-orange w-8 h-8" />
+          <X size={28} />
         ) : (
-          <div className="relative">
-             <div className="w-10 h-10 transition-transform duration-300 group-hover:scale-110">
-               <MinaCharacter variant="idle" />
-             </div>
-            <span className="absolute -top-1 -right-1 flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tva-amber opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-tva-amber"></span>
+          <>
+            <MessageSquare size={28} className="fill-current" />
+            <span className="absolute top-0 right-0 flex h-4 w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-50"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-tva-orange"></span>
             </span>
-          </div>
+          </>
         )}
       </button>
     </div>
