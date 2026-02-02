@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Menu, X, Terminal, ChevronRight, LayoutDashboard, Database, Users, FileText, Volume2, VolumeX, MessageSquare } from 'lucide-react';
+import { Clock, Menu, X, Terminal, ChevronRight, LayoutDashboard, Database, Users, FileText, MessageSquare } from 'lucide-react';
 import { ViewState } from '../types';
-import { toggleMute, isMuted } from '../utils/sound';
 
 interface HeaderProps {
   setView: (view: ViewState) => void;
@@ -11,18 +10,15 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(!isMuted());
 
   useEffect(() => {
     const handleScroll = () => {
-      // Use a slightly larger threshold for a deliberate transition
       setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -30,11 +26,6 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
       document.body.style.overflow = 'unset';
     }
   }, [mobileMenuOpen]);
-
-  const handleSoundToggle = () => {
-    const muted = toggleMute();
-    setSoundEnabled(!muted);
-  };
 
   const NavLink = ({ view, label }: { view: ViewState, label: string }) => (
     <button 
@@ -70,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
             {icon}
         </div>
         <div>
-            <div className={`font-sans font-bold ${currentView === view ? 'text-tva-orange' : 'text-tva-cream group-hover:text-tva-orange'}`}>{title}</div>
+            <div className={`font-sans font-bold ${currentView === view ? 'text-tva-orange' : 'text-gray-900 group-hover:text-tva-orange'}`}>{title}</div>
             <div className="text-xs text-gray-400 mt-1">{desc}</div>
         </div>
         <ChevronRight className={`ml-auto w-5 h-5 transition-transform duration-300 ${currentView === view ? 'text-tva-orange' : 'text-gray-300 group-hover:text-tva-orange group-hover:translate-x-1'}`} />
@@ -86,12 +77,11 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
           {/* Logo */}
           <button onClick={() => setView('home')} className="flex items-center gap-3 group relative z-50">
              <div className="relative w-10 h-10 bg-tva-orange rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:rotate-3 transition-all duration-700 ease-luxury overflow-hidden">
-               {/* Shine effect on logo */}
                <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shimmer" />
                <Clock className="text-white w-6 h-6 group-hover:animate-pulse" />
              </div>
              <div className="flex flex-col items-start">
-               <span className={`font-bold text-xl tracking-tight leading-none transition-colors duration-700 ${isScrolled ? 'text-tva-cream' : 'text-tva-cream'}`}>Time AI</span>
+               <span className="font-bold text-xl tracking-tight leading-none text-gray-900">Time AI</span>
                <span className="text-tva-orange font-medium text-[10px] uppercase tracking-widest leading-none mt-1">Enterprise Intelligence</span>
              </div>
           </button>
@@ -103,19 +93,11 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
             <NavLink view="intel" label="Blog" />
             <NavLink view="about" label="About Us" />
             
-            <div className="h-6 w-px bg-gray-200 mx-2"></div>
+            <div className="h-6 w-px bg-gray-200 mx-4"></div>
             
             <button 
-              onClick={handleSoundToggle}
-              className="p-2 text-gray-400 hover:text-tva-orange transition-colors duration-300 hover:scale-110"
-              title={soundEnabled ? "Mute Sound" : "Enable Sound"}
-            >
-              {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
-            </button>
-
-            <button 
               onClick={() => setView('contact')}
-              className="ml-4 px-6 py-2.5 bg-tva-orange text-white font-medium rounded-lg hover:bg-blue-600 hover:shadow-glow-blue transition-all duration-300 flex items-center gap-2 transform hover:-translate-y-0.5 shadow-md"
+              className="px-6 py-2.5 bg-tva-orange text-white font-medium rounded-lg hover:bg-red-700 hover:shadow-lg transition-all duration-300 flex items-center gap-2 transform hover:-translate-y-0.5 shadow-md"
             >
               <MessageSquare size={16} /> Contact Us
             </button>
@@ -123,14 +105,8 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
 
           {/* Mobile Toggle */}
           <div className="lg:hidden flex items-center gap-4 z-50">
-             <button 
-              onClick={handleSoundToggle}
-              className="text-gray-400 hover:text-tva-orange transition-colors"
-            >
-              {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-            </button>
             <button 
-              className="text-tva-cream p-2 hover:bg-gray-100 rounded-lg transition-colors" 
+              className="text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors" 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X /> : <Menu />}
@@ -140,7 +116,7 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
       </header>
 
       {/* Mobile Mega Menu Overlay */}
-      <div className={`fixed inset-0 z-40 bg-white/90 backdrop-blur-xl transition-all duration-700 ease-luxury lg:hidden flex flex-col ${mobileMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'}`}>
+      <div className={`fixed inset-0 z-40 bg-white/95 backdrop-blur-xl transition-all duration-700 ease-luxury lg:hidden flex flex-col ${mobileMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'}`}>
           <div className="flex-1 flex flex-col p-6 pt-24 overflow-y-auto">
               <div className="grid gap-4 max-w-md mx-auto w-full">
                   <div className="text-gray-400 font-bold text-xs uppercase tracking-widest mb-2 px-1 font-mono">System Navigation</div>

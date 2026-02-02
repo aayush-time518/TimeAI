@@ -47,7 +47,8 @@ export interface BlogPost {
   id: string;
   title: string;
   excerpt: string;
-  category: 'Strategy' | 'Engineering' | 'Case Study';
+  // Added 'Security' to category union type to support Security blog posts
+  category: 'Strategy' | 'Engineering' | 'Case Study' | 'Security';
   date: string;
   readTime: string;
   image?: string;
