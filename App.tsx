@@ -12,7 +12,6 @@ import { ViewState, BlogPost } from './types';
 import { CheckCircle, Mail, MapPin, Phone, FileText, ArrowRight, Ear, Loader2, AlertCircle, File, Search, Hash, Lock, Users, Zap, Target, Clock, X, Share2, Printer, Bookmark, Send, Code2, Cpu, GitBranch, AlertTriangle, TrendingUp, Layout, Database, Network, ShieldCheck, Bot, BrainCircuit, Box } from 'lucide-react';
 import { MinaCharacter } from './components/MinaCharacter';
 import { ScrollReveal } from './components/ScrollReveal';
-import { LoadingScreen } from './components/LoadingScreen';
 import { TechArchitecture } from './components/TechArchitecture';
 
 /* --- SECTIONS --- */
@@ -701,32 +700,25 @@ const ContactView: React.FC = () => (
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('home');
-  const [isLoading, setIsLoading] = useState(true);
 
   return (
-      <>
-        {isLoading ? (
-            <LoadingScreen onComplete={() => setIsLoading(false)} />
-        ) : (
-            <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-tva-orange selection:text-white overflow-x-hidden">
-                <Header setView={setView} currentView={view} />
-                
-                <main className="relative">
-                    {/* View Transition Wrapper */}
-                    <div key={view} className="animate-enter-view w-full min-h-screen">
-                        {view === 'home' && <HomeView setView={setView} />}
-                        {view === 'solutions' && <SolutionsView setView={setView} />}
-                        {view === 'intel' && <IntelView />}
-                        {view === 'about' && <AboutView />}
-                        {view === 'contact' && <ContactView />}
-                    </div>
-                </main>
-                
-                <Footer setView={setView} />
-                <MinaAssistant currentView={view} />
-            </div>
-        )}
-      </>
+      <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-tva-orange selection:text-white overflow-x-hidden opacity-0 animate-fade-in">
+          <Header setView={setView} currentView={view} />
+          
+          <main className="relative">
+              {/* View Transition Wrapper */}
+              <div key={view} className="animate-enter-view w-full min-h-screen">
+                  {view === 'home' && <HomeView setView={setView} />}
+                  {view === 'solutions' && <SolutionsView setView={setView} />}
+                  {view === 'intel' && <IntelView />}
+                  {view === 'about' && <AboutView />}
+                  {view === 'contact' && <ContactView />}
+              </div>
+          </main>
+          
+          <Footer setView={setView} />
+          <MinaAssistant currentView={view} />
+      </div>
   );
 };
 
