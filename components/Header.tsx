@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Menu, X, Terminal, ChevronRight, LayoutDashboard, Database, Users, FileText, MessageSquare } from 'lucide-react';
+import { Clock, Menu, X, Terminal, ChevronRight, LayoutDashboard, Database, Users, FileText, MessageSquare, Play } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface HeaderProps {
@@ -27,44 +27,65 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
     }
   }, [mobileMenuOpen]);
 
-  const NavLink = ({ view, label }: { view: ViewState, label: string }) => (
+  const handleDemoClick = () => {
+      setView('home');
+      setMobileMenuOpen(false);
+      setTimeout(() => {
+          const el = document.getElementById('live-demos');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+  };
+
+  const NavLink = ({ view, label, onClick }: { view?: ViewState, label: string, onClick?: () => void }) => (
     <button 
       onClick={() => {
-        setView(view);
-        setMobileMenuOpen(false);
-        window.scrollTo(0,0);
+        if (onClick) {
+            onClick();
+            return;
+        }
+        if (view) {
+            setView(view);
+            setMobileMenuOpen(false);
+            window.scrollTo(0,0);
+        }
       }}
       className={`
         relative font-sans font-medium text-sm tracking-wide transition-all duration-700 ease-luxury px-4 py-2 rounded-lg 
-        ${currentView === view 
+        ${view && currentView === view 
             ? 'text-tva-orange bg-tva-orange/5 font-bold' 
             : 'text-gray-500 hover:text-tva-orange hover:bg-gray-50'}
       `}
     >
       {label}
-      {currentView === view && (
+      {view && currentView === view && (
           <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-tva-orange rounded-full"></span>
       )}
     </button>
   );
 
-  const MobileNavLink = ({ view, title, desc, icon }: { view: ViewState, title: string, desc: string, icon: React.ReactNode }) => (
+  const MobileNavLink = ({ view, title, desc, icon, onClick }: { view?: ViewState, title: string, desc: string, icon: React.ReactNode, onClick?: () => void }) => (
     <button 
         onClick={() => {
-            setView(view);
-            setMobileMenuOpen(false);
-            window.scrollTo(0,0);
+            if (onClick) {
+                onClick();
+                return;
+            }
+            if (view) {
+                setView(view);
+                setMobileMenuOpen(false);
+                window.scrollTo(0,0);
+            }
         }}
-        className={`flex items-center gap-4 p-4 rounded-lg border transition-all duration-500 ease-luxury w-full text-left group ${currentView === view ? 'bg-tva-orange/10 border-tva-orange' : 'bg-white/80 border-gray-200 hover:border-tva-orange/50'}`}
+        className={`flex items-center gap-4 p-4 rounded-lg border transition-all duration-500 ease-luxury w-full text-left group ${view && currentView === view ? 'bg-tva-orange/10 border-tva-orange' : 'bg-white/80 border-gray-200 hover:border-tva-orange/50'}`}
     >
-        <div className={`p-3 rounded-md ${currentView === view ? 'bg-tva-orange text-white' : 'bg-gray-100 text-tva-orange group-hover:bg-tva-orange group-hover:text-white'} transition-colors duration-300`}>
+        <div className={`p-3 rounded-md ${view && currentView === view ? 'bg-tva-orange text-white' : 'bg-gray-100 text-tva-orange group-hover:bg-tva-orange group-hover:text-white'} transition-colors duration-300`}>
             {icon}
         </div>
         <div>
-            <div className={`font-sans font-bold ${currentView === view ? 'text-tva-orange' : 'text-gray-900 group-hover:text-tva-orange'}`}>{title}</div>
+            <div className={`font-sans font-bold ${view && currentView === view ? 'text-tva-orange' : 'text-gray-900 group-hover:text-tva-orange'}`}>{title}</div>
             <div className="text-xs text-gray-400 mt-1">{desc}</div>
         </div>
-        <ChevronRight className={`ml-auto w-5 h-5 transition-transform duration-300 ${currentView === view ? 'text-tva-orange' : 'text-gray-300 group-hover:text-tva-orange group-hover:translate-x-1'}`} />
+        <ChevronRight className={`ml-auto w-5 h-5 transition-transform duration-300 ${view && currentView === view ? 'text-tva-orange' : 'text-gray-300 group-hover:text-tva-orange group-hover:translate-x-1'}`} />
     </button>
   );
 
@@ -90,6 +111,7 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
           <nav className="hidden lg:flex items-center gap-1">
             <NavLink view="home" label="Home" />
             <NavLink view="solutions" label="Services" />
+            <NavLink label="Demo" onClick={handleDemoClick} />
             <NavLink view="intel" label="Blog" />
             <NavLink view="about" label="About Us" />
             
@@ -126,6 +148,12 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
                     title="Home" 
                     desc="Dashboard & Overview" 
                     icon={<LayoutDashboard size={20} />} 
+                  />
+                  <MobileNavLink 
+                    onClick={handleDemoClick}
+                    title="Live Demo" 
+                    desc="See the platform in action" 
+                    icon={<Play size={20} />} 
                   />
                   <MobileNavLink 
                     view="solutions" 

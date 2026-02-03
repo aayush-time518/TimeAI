@@ -72,24 +72,24 @@ const ServiceModal: React.FC<{ service: ServiceCardProps; onClose: () => void }>
       <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 ease-out-expo flex flex-col max-h-[90vh]">
         
         {/* Header */}
-        <div className="p-8 border-b border-gray-100 bg-white flex justify-between items-start">
-            <div className="flex gap-6">
-                <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-tva-orange">
+        <div className="p-6 md:p-8 border-b border-gray-100 bg-white flex justify-between items-start">
+            <div className="flex gap-4 md:gap-6">
+                <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-tva-orange shrink-0">
                     {React.cloneElement(service.icon as React.ReactElement<any>, { size: 32 })}
                 </div>
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-1">{service.title}</h2>
-                    <p className="text-sm text-gray-500 font-medium">{service.details.outcome}</p>
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">{service.title}</h2>
+                    <p className="text-xs md:text-sm text-gray-500 font-medium">{service.details.outcome}</p>
                 </div>
             </div>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-900 transition-colors">
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-900 transition-colors p-2">
                 <X size={24} />
             </button>
         </div>
 
         {/* Content */}
-        <div className="p-8 overflow-y-auto">
-            <div className="grid md:grid-cols-2 gap-12">
+        <div className="p-6 md:p-8 overflow-y-auto">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
                 <div className="space-y-6">
                     <h3 className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-4">Core Capabilities</h3>
                     <ul className="space-y-4">
@@ -207,10 +207,10 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
 
   return (
     <>
-      <section className="py-32 bg-white relative border-b border-gray-100">
+      <section className="py-24 md:py-32 bg-white relative border-b border-gray-100">
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="text-4xl font-sans font-bold text-gray-900 mb-6 tracking-tight">Enterprise Solutions</h2>
+            <h2 className="text-4xl md:text-5xl font-sans font-bold text-gray-900 mb-6 tracking-tight">Enterprise Solutions</h2>
             <p className="text-xl text-gray-500 font-normal leading-relaxed">
                 We don't just provide software; we provide <span className="text-tva-orange font-bold">clarity</span>. 
             </p>

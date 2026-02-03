@@ -1,5 +1,5 @@
-import React from 'react';
-import { Clock, Linkedin, Twitter, Mail, MapPin, ArrowRight, Send, Terminal } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, Linkedin, Twitter, Mail, MapPin, ArrowRight, Send, Terminal, AlertTriangle } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface FooterProps {
@@ -7,12 +7,19 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ setView }) => {
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'coming-soon'>('idle');
+
   const handleNav = (view: ViewState) => (e: React.MouseEvent) => {
     e.preventDefault();
     if (setView) {
       setView(view);
       window.scrollTo(0, 0);
     }
+  };
+
+  const handleSubscribe = () => {
+      setNewsletterStatus('coming-soon');
+      setTimeout(() => setNewsletterStatus('idle'), 3000);
   };
 
   return (
@@ -71,11 +78,15 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
                     </div>
                     <input 
                         type="email" 
-                        placeholder="ENTER_EMAIL..." 
-                        className="w-full bg-gray-50 border border-gray-200 text-tva-cream text-sm py-3 pl-10 pr-10 rounded-lg focus:border-tva-orange focus:ring-1 focus:ring-tva-orange focus:outline-none transition-all font-mono placeholder:text-gray-400"
+                        placeholder={newsletterStatus === 'coming-soon' ? "COMING SOON..." : "ENTER_EMAIL..."}
+                        disabled={newsletterStatus === 'coming-soon'}
+                        className="w-full bg-gray-50 border border-gray-200 text-tva-cream text-sm py-3 pl-10 pr-10 rounded-lg focus:border-tva-orange focus:ring-1 focus:ring-tva-orange focus:outline-none transition-all font-mono placeholder:text-gray-400 disabled:bg-gray-100 disabled:text-gray-400"
                     />
-                    <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-tva-orange hover:scale-110 transition-all">
-                        <Send size={16} />
+                    <button 
+                        onClick={handleSubscribe}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-tva-orange hover:scale-110 transition-all"
+                    >
+                        {newsletterStatus === 'coming-soon' ? <AlertTriangle size={16} className="text-amber-500" /> : <Send size={16} />}
                     </button>
                 </div>
             </div>

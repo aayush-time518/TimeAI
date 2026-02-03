@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, ArrowRight, TrendingUp, Zap, Scan, CheckCircle, Target, Box, Database } from 'lucide-react';
+import { Play, ArrowRight, TrendingUp, Zap, Scan, CheckCircle, Target, Box, Database, BarChart3 } from 'lucide-react';
 import { ViewState } from '../types';
 import { MinaCharacter } from './MinaCharacter';
 import { playSound } from '../utils/sound';
@@ -50,7 +50,7 @@ const HoloCube: React.FC<{ stage: number }> = ({ stage }) => {
              <div className={`absolute inset-0 border-2 rounded-lg backdrop-blur-sm transition-colors duration-200 flex items-center justify-center
                 ${isClean ? 'border-green-400 bg-green-400/10' : isHit ? 'border-white bg-white' : 'border-red-500 bg-red-500/10'}
              `}>
-                {isClean ? <Database className="text-green-500" size={32} /> : <Box className="text-red-500" size={32} />}
+                {isClean ? <BarChart3 className="text-green-500" size={32} /> : <Box className="text-red-500" size={32} />}
              </div>
              
              {/* Hit Flash Ring */}
@@ -62,7 +62,7 @@ const HoloCube: React.FC<{ stage: number }> = ({ stage }) => {
 };
 
 export const Hero: React.FC<HeroProps> = ({ setView }) => {
-  const phrases = ["Variance.", "Latency.", "Downtime.", "Inefficiency."];
+  const phrases = ["Blind Spots.", "Guesswork.", "Missed ROI.", "Stagnation."];
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [stage, setStage] = useState(0);
@@ -139,14 +139,8 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
 
   const minaState = getMinaState();
 
-  // Coordinates
-  // Mina Box Left: 5% (30px). 
-  // Gun Tip X (Absolute): ~46%. 
-  // Gun Tip Y (Absolute): ~47.7%.
-  // Target: 82% X, 45.6% Y.
-
   return (
-    <section className="relative min-h-[92vh] flex items-center justify-center bg-white py-32 lg:py-0 overflow-hidden">
+    <section className="relative min-h-[92vh] flex items-center justify-center bg-white py-20 lg:py-0 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-[0.03]" 
            style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
@@ -161,14 +155,14 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tva-orange opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-tva-orange"></span>
                 </span>
-                Active Patrol: Sector 7G
+                Analysis Active: Market Trends
               </div>
-              <h1 className="text-5xl sm:text-7xl font-sans font-bold leading-[1.05] tracking-tight text-gray-900 mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-sans font-bold leading-[1.05] tracking-tight text-gray-900 mb-6">
                 Eliminate <br />
                 <RollingText words={phrases} />
               </h1>
-              <p className="text-xl text-gray-500 font-light leading-relaxed">
-                 Watch Mina detect and neutralize supply chain anomalies in real-time. We stop the bleeding before you even know you're cut.
+              <p className="text-lg md:text-xl text-gray-500 font-light leading-relaxed">
+                 Turn raw data into executive confidence. We monitor your entire data estate to predict market shifts before they impact your bottom line.
               </p>
             </div>
             
@@ -177,11 +171,14 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                 onClick={() => setView('contact')}
                 className="px-10 py-5 bg-gray-900 text-white font-bold text-sm uppercase tracking-widest rounded-xl shadow-2xl hover:bg-tva-orange hover:shadow-glow-amber transition-all duration-300 flex items-center justify-center gap-3 transform hover:-translate-y-1"
               >
-                Start Pilot <ArrowRight size={16} />
+                Contact Us <ArrowRight size={16} />
               </button>
               
               <button 
-                onClick={() => setView('solutions')}
+                onClick={() => {
+                  const el = document.getElementById('live-demos');
+                  if(el) el.scrollIntoView({behavior: 'smooth'});
+                }}
                 className="px-10 py-5 bg-white border border-gray-200 text-gray-900 font-bold text-sm uppercase tracking-widest rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3"
               >
                 <Play size={16} className="fill-current" /> Live Demo
@@ -190,7 +187,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
           </div>
 
           {/* NARRATIVE STAGE */}
-          <div className="relative flex items-center justify-center order-1 lg:order-2 h-[600px] perspective-[1200px] group">
+          <div className="relative flex items-center justify-center order-1 lg:order-2 h-[400px] md:h-[600px] perspective-[1200px] group">
              <div 
                 ref={containerRef}
                 onMouseMove={handleMouseMove}
@@ -219,7 +216,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                 </div>
 
                 {/* 2. MINA */}
-                <div className="absolute bottom-24 left-[5%] w-64 h-64 transform translate-z-[40px] transition-transform duration-500 z-20">
+                <div className="absolute bottom-24 left-[5%] w-48 h-48 md:w-64 md:h-64 transform translate-z-[40px] transition-transform duration-500 z-20">
                     <MinaCharacter 
                         className="w-full h-full drop-shadow-2xl" 
                         variant={minaState.variant as any} 

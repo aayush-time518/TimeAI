@@ -12,16 +12,17 @@ import { ViewState, BlogPost } from './types';
 import { CheckCircle, Mail, MapPin, Phone, FileText, ArrowRight, Ear, Loader2, AlertCircle, File, Search, Hash, Lock, Users, Zap, Target, Clock, X, Share2, Printer, Bookmark, Send, Code2, Cpu, GitBranch, AlertTriangle, TrendingUp, Layout, Database, Network, ShieldCheck, Bot, BrainCircuit, Box } from 'lucide-react';
 import { MinaCharacter } from './components/MinaCharacter';
 import { ScrollReveal } from './components/ScrollReveal';
+import { LoadingScreen } from './components/LoadingScreen';
 import { TechArchitecture } from './components/TechArchitecture';
 
 /* --- SECTIONS --- */
 
 const MinaOriginSection: React.FC<{ setView: (v: ViewState) => void }> = ({ setView }) => (
-    <section className="py-32 bg-white relative overflow-hidden">
+    <section className="py-24 md:py-32 bg-white relative overflow-hidden">
         <div className="container mx-auto px-6 relative z-10">
-            <div className="grid md:grid-cols-2 gap-20 items-center">
+            <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
                 <ScrollReveal className="order-2 md:order-1 relative flex justify-center">
-                    <div className="w-64 h-64 relative">
+                    <div className="w-48 h-48 md:w-64 md:h-64 relative">
                          <div className="absolute inset-0 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
                          <MinaCharacter className="w-full h-full relative z-10" />
                     </div>
@@ -33,11 +34,11 @@ const MinaOriginSection: React.FC<{ setView: (v: ViewState) => void }> = ({ setV
                         <span>Always Listening</span>
                     </div>
                     
-                    <h2 className="text-4xl font-sans font-bold text-gray-900 leading-tight">
+                    <h2 className="text-3xl md:text-4xl font-sans font-bold text-gray-900 leading-tight">
                         Meet <span className="text-tva-orange">Mina</span>, your new Intelligence Architect.
                     </h2>
                     
-                    <div className="space-y-6 text-lg text-gray-500 font-light leading-relaxed">
+                    <div className="space-y-6 text-base md:text-lg text-gray-500 font-light leading-relaxed">
                         <p>
                             She isn't just a chatbot. Mina connects directly to your data streams—databases, APIs, and ERPs—to monitor variance in real-time.
                         </p>
@@ -82,19 +83,19 @@ const HomeView: React.FC<{ setView: (v: ViewState) => void }> = ({ setView }) =>
       <Industries />
     </ScrollReveal>
     <ScrollReveal className="relative z-20">
-      <section className="py-32 bg-tva-orange text-center relative overflow-hidden">
+      <section className="py-20 md:py-32 bg-tva-orange text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-white/5 opacity-50"></div>
           <div className="container mx-auto px-6 relative z-10">
-          <h2 className="text-5xl font-sans font-bold text-white mb-8 tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-sans font-bold text-white mb-8 tracking-tight">
               Unlock your data's potential.
           </h2>
-          <p className="text-white/80 text-xl mb-12 max-w-xl mx-auto font-light">
+          <p className="text-white/80 text-lg md:text-xl mb-12 max-w-xl mx-auto font-light">
               Join the Industry Leaders using Time AI to secure their future.
           </p>
           <div className="flex justify-center gap-4">
               <button 
                   onClick={() => setView('contact')}
-                  className="px-10 py-5 bg-white text-tva-orange font-bold uppercase tracking-wide rounded-xl hover:bg-gray-50 transition-colors shadow-2xl hover:shadow-xl hover:-translate-y-1 transform duration-300"
+                  className="px-8 py-4 md:px-10 md:py-5 bg-white text-tva-orange font-bold uppercase tracking-wide rounded-xl hover:bg-gray-50 transition-colors shadow-2xl hover:shadow-xl hover:-translate-y-1 transform duration-300"
               >
               Get Started
               </button>
@@ -151,18 +152,18 @@ const ArticleModal: React.FC<{ post: BlogPost; onClose: () => void }> = ({ post,
                      {/* Progress Bar */}
                     <div className="absolute bottom-0 left-0 h-[2px] bg-tva-orange transition-all duration-150 ease-out z-50" style={{ width: `${progress}%` }}></div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="p-2 bg-tva-orange/10 rounded-lg text-tva-orange">
+                    <div className="flex items-center gap-4 flex-1 overflow-hidden">
+                        <div className="p-2 bg-tva-orange/10 rounded-lg text-tva-orange shrink-0">
                             <FileText size={20} />
                         </div>
                         <div className="overflow-hidden">
                             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                                 <span>Record ID: {post.id}</span>
                             </div>
-                            <h2 className="text-tva-cream font-bold truncate max-w-[200px] md:max-w-md">{post.title}</h2>
+                            <h2 className="text-tva-cream font-bold truncate max-w-[200px] md:max-w-md text-sm md:text-base">{post.title}</h2>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 ml-4">
                          <button className="hidden md:flex p-2 hover:bg-gray-100 rounded text-gray-400 hover:text-tva-orange transition-colors" title="Print Record">
                             <Printer size={18} />
                          </button>
@@ -267,7 +268,7 @@ const IntelView: React.FC = () => {
                         Vector databases transformed search by allowing us to find "semantically similar" text. But when an executive asks, "How does the shortage in Taiwan affect our Q4 margins in Berlin?", a vector search fails. It finds documents about Taiwan and Berlin, but it misses the <em>causal relationship</em>.
                     </p>
                     <h3>Structured Reasoning</h3>
-                    <p>Knowledge Graphs (KGs) map entities and relationships (Node -&gt; Edge -&gt; Node). By combining RAG with KGs (GraphRAG), we allow the LLM to traverse these relationships logically, ensuring multi-hop reasoning that flat text retrieval simply cannot support.</p>
+                    <p>Knowledge Graphs (KGs) map entities and relationships (Node -> Edge -> Node). By combining RAG with KGs (GraphRAG), we allow the LLM to traverse these relationships logically, ensuring multi-hop reasoning that flat text retrieval simply cannot support.</p>
                 </>
             )
         },
@@ -700,25 +701,32 @@ const ContactView: React.FC = () => (
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('home');
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
-      <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-tva-orange selection:text-white overflow-x-hidden opacity-0 animate-fade-in">
-          <Header setView={setView} currentView={view} />
-          
-          <main className="relative">
-              {/* View Transition Wrapper */}
-              <div key={view} className="animate-enter-view w-full min-h-screen">
-                  {view === 'home' && <HomeView setView={setView} />}
-                  {view === 'solutions' && <SolutionsView setView={setView} />}
-                  {view === 'intel' && <IntelView />}
-                  {view === 'about' && <AboutView />}
-                  {view === 'contact' && <ContactView />}
-              </div>
-          </main>
-          
-          <Footer setView={setView} />
-          <MinaAssistant currentView={view} />
-      </div>
+      <>
+        {isLoading ? (
+            <LoadingScreen onComplete={() => setIsLoading(false)} />
+        ) : (
+            <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-tva-orange selection:text-white overflow-x-hidden">
+                <Header setView={setView} currentView={view} />
+                
+                <main className="relative">
+                    {/* View Transition Wrapper */}
+                    <div key={view} className="animate-enter-view w-full min-h-screen">
+                        {view === 'home' && <HomeView setView={setView} />}
+                        {view === 'solutions' && <SolutionsView setView={setView} />}
+                        {view === 'intel' && <IntelView />}
+                        {view === 'about' && <AboutView />}
+                        {view === 'contact' && <ContactView />}
+                    </div>
+                </main>
+                
+                <Footer setView={setView} />
+                <MinaAssistant currentView={view} />
+            </div>
+        )}
+      </>
   );
 };
 

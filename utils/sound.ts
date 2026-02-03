@@ -1,5 +1,6 @@
 
 let muted = false;
+let hasPlayedOnce = false;
 
 // Initialize from storage if available
 try {
@@ -22,7 +23,7 @@ export const toggleMute = () => {
 };
 
 export const playSound = (type: 'tick' | 'chime' | 'hover' | 'alert' | 'pop') => {
-  if (muted) return;
+  if (muted || hasPlayedOnce) return;
 
   // Prevent sounds if user hasn't interacted with page yet (browser policy), 
   // but usually click handlers allow this.
@@ -80,5 +81,11 @@ export const playSound = (type: 'tick' | 'chime' | 'hover' | 'alert' | 'pop') =>
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
     osc.start(now);
     osc.stop(now + 0.1);
+  }
+
+  // Auto-mute after the first significant sound interaction to respect user peace
+  if (type === 'pop' || type === 'chime' || type === 'alert') {
+      hasPlayedOnce = true;
+      muted = true;
   }
 };
