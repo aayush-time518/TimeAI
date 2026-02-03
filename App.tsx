@@ -268,7 +268,7 @@ const IntelView: React.FC = () => {
                         Vector databases transformed search by allowing us to find "semantically similar" text. But when an executive asks, "How does the shortage in Taiwan affect our Q4 margins in Berlin?", a vector search fails. It finds documents about Taiwan and Berlin, but it misses the <em>causal relationship</em>.
                     </p>
                     <h3>Structured Reasoning</h3>
-                    <p>Knowledge Graphs (KGs) map entities and relationships (Node -> Edge -> Node). By combining RAG with KGs (GraphRAG), we allow the LLM to traverse these relationships logically, ensuring multi-hop reasoning that flat text retrieval simply cannot support.</p>
+                    <p>Knowledge Graphs (KGs) map entities and relationships (Node {'->'} Edge {'->'} Node). By combining RAG with KGs (GraphRAG), we allow the LLM to traverse these relationships logically, ensuring multi-hop reasoning that flat text retrieval simply cannot support.</p>
                 </>
             )
         },
