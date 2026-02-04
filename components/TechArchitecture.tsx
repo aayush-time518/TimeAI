@@ -38,7 +38,7 @@ const RagSimulation: React.FC = () => {
                             ? 'bg-cyan-500 shadow-[0_0_10px_#06b6d4]' 
                             : 'bg-slate-700'
                         }`}></div>
-                        <span className={`text-[6px] md:text-[8px] font-bold tracking-widest ${
+                        <span className={`text-[8px] md:text-[10px] font-bold tracking-widest ${
                              (i === 0 && phase >= 0) || (i === 1 && phase >= 1) || (i === 2 && phase >= 3) || (i === 3 && phase >= 4)
                              ? 'text-cyan-400' 
                              : 'text-slate-700'
@@ -47,19 +47,19 @@ const RagSimulation: React.FC = () => {
                 ))}
             </div>
 
-            <div className="relative w-full h-full flex flex-col items-center justify-center pb-8 md:pb-12 pt-8">
+            <div className="relative w-full h-full flex flex-col items-center justify-center pb-4 md:pb-12 pt-8">
                 {/* Main Visual Flow */}
-                <div className="flex items-center justify-between w-full max-w-[300px] md:max-w-2xl px-1 md:px-4 relative z-10 gap-1 md:gap-4 mt-4">
+                <div className="flex items-center justify-between w-full max-w-[320px] md:max-w-2xl px-1 md:px-4 relative z-10 gap-1 md:gap-4 mt-4 scale-90 md:scale-100 origin-center">
                     
                     {/* 1. DOCUMENT SOURCE */}
                     <div className={`flex flex-col items-center gap-2 transition-all duration-700 shrink-0 ${phase >= 2 ? 'opacity-30 blur-[1px]' : 'opacity-100 scale-100'}`}>
-                        <div className="w-10 h-12 md:w-20 md:h-24 bg-slate-800 border border-slate-600 rounded-lg flex items-center justify-center relative overflow-hidden shadow-2xl transition-all">
-                            <FileText className="text-slate-400 w-5 h-5 md:w-10 md:h-10" />
+                        <div className="w-12 h-14 md:w-20 md:h-24 bg-slate-800 border border-slate-600 rounded-lg flex items-center justify-center relative overflow-hidden shadow-2xl transition-all">
+                            <FileText className="text-slate-400 w-6 h-6 md:w-10 md:h-10" />
                             {phase === 1 && (
                                 <div className="absolute top-0 left-0 w-full h-1 bg-cyan-400 shadow-[0_0_15px_#22d3ee] animate-[scanVertical_1.2s_linear_forwards]"></div>
                             )}
                         </div>
-                        <div className="text-[8px] md:text-xs font-mono text-slate-400 font-bold tracking-widest">DATA</div>
+                        <div className="text-[9px] md:text-xs font-mono text-slate-400 font-bold tracking-widest">DATA</div>
                     </div>
 
                     {/* CONNECTION LINE 1 */}
@@ -69,16 +69,16 @@ const RagSimulation: React.FC = () => {
 
                     {/* 2. VECTOR STORE (Central Hub) */}
                     <div className="relative group flex flex-col items-center gap-2 shrink-0">
-                        <div className={`w-14 h-14 md:w-28 md:h-28 rounded-full border-2 flex items-center justify-center bg-slate-900 transition-colors duration-500 ${phase >= 2 ? 'border-cyan-500 shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'border-slate-700'}`}>
-                            <Database className={`w-6 h-6 md:w-12 md:h-12 transition-colors duration-300 ${phase >= 2 ? 'text-cyan-400' : 'text-slate-600'}`} />
+                        <div className={`w-16 h-16 md:w-28 md:h-28 rounded-full border-2 flex items-center justify-center bg-slate-900 transition-colors duration-500 ${phase >= 2 ? 'border-cyan-500 shadow-[0_0_30px_rgba(6,182,212,0.3)]' : 'border-slate-700'}`}>
+                            <Database className={`w-7 h-7 md:w-12 md:h-12 transition-colors duration-300 ${phase >= 2 ? 'text-cyan-400' : 'text-slate-600'}`} />
                             {phase >= 2 && (
                                 <div className="absolute inset-[-4px] md:inset-[-12px] border border-cyan-500/30 rounded-full animate-[spin_4s_linear_infinite]"></div>
                             )}
                         </div>
-                        <div className="text-[8px] md:text-xs font-mono text-cyan-500 font-bold tracking-widest">VECTORS</div>
+                        <div className="text-[9px] md:text-xs font-mono text-cyan-500 font-bold tracking-widest">VECTORS</div>
                         
                         {/* Query Input Visualization */}
-                        <div className={`absolute -top-8 md:-top-16 left-1/2 -translate-x-1/2 bg-slate-800 text-cyan-400 text-[8px] md:text-xs px-2 py-0.5 md:px-3 md:py-1 rounded border border-cyan-900 whitespace-nowrap transition-all duration-500 ${phase === 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                        <div className={`absolute -top-10 md:-top-16 left-1/2 -translate-x-1/2 bg-slate-800 text-cyan-400 text-[9px] md:text-xs px-2 py-1 md:px-3 md:py-1 rounded border border-cyan-900 whitespace-nowrap transition-all duration-500 ${phase === 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                             <Search size={10} className="inline mr-1" />
                             "Revenue?"
                         </div>
@@ -91,15 +91,15 @@ const RagSimulation: React.FC = () => {
 
                     {/* 3. VERIFIED ANSWER */}
                     <div className={`flex flex-col items-center gap-2 transition-all duration-500 shrink-0 ${phase === 4 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>
-                        <div className="w-10 h-12 md:w-20 md:h-24 bg-slate-900 border border-green-500/50 rounded-lg p-1.5 md:p-2 shadow-[0_0_20px_rgba(34,197,94,0.2)] flex flex-col gap-1 md:gap-2">
-                            <div className="h-0.5 md:h-1.5 w-1/3 bg-green-500 rounded-full"></div>
+                        <div className="w-12 h-14 md:w-20 md:h-24 bg-slate-900 border border-green-500/50 rounded-lg p-2 md:p-2 shadow-[0_0_20px_rgba(34,197,94,0.2)] flex flex-col gap-1.5 md:gap-2">
+                            <div className="h-1 md:h-1.5 w-1/3 bg-green-500 rounded-full"></div>
                             <div className="h-0.5 md:h-1 w-full bg-slate-700 rounded-full"></div>
                             <div className="h-0.5 md:h-1 w-full bg-slate-700 rounded-full"></div>
-                            <div className="mt-auto flex items-center gap-1 text-[6px] md:text-[9px] text-green-400 font-bold uppercase">
+                            <div className="mt-auto flex items-center gap-1 text-[7px] md:text-[9px] text-green-400 font-bold uppercase">
                                 <CheckCircle2 size={8} /> Verified
                             </div>
                         </div>
-                        <div className="text-[8px] md:text-xs font-mono text-green-400 font-bold tracking-widest">INSIGHT</div>
+                        <div className="text-[9px] md:text-xs font-mono text-green-400 font-bold tracking-widest">INSIGHT</div>
                     </div>
                 </div>
             </div>
@@ -143,7 +143,7 @@ const GraphSimulation: React.FC = () => {
     const nodes = {
         supplier: [15, 20],
         factory: [40, 40],
-        logistics: [40, 65], // Moved up from 75
+        logistics: [40, 65],
         dc: [65, 40],
         store: [85, 40]
     };
@@ -154,7 +154,7 @@ const GraphSimulation: React.FC = () => {
              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px] opacity-30"></div>
 
              {/* Container specifically sized to maintain structure on mobile */}
-             <div className="relative w-full h-full max-w-3xl mx-auto scale-90 md:scale-100 origin-center">
+             <div className="relative w-full h-full max-w-3xl mx-auto md:scale-100 origin-center p-4">
                  <svg className="w-full h-full overflow-visible pointer-events-none">
                      <Line start={nodes.supplier} end={nodes.factory} active={true} color={alertStage >= 1 ? '#ef4444' : '#3b82f6'} />
                      <Line start={nodes.logistics} end={nodes.factory} active={true} color="#3b82f6" />
@@ -162,32 +162,32 @@ const GraphSimulation: React.FC = () => {
                      <Line start={nodes.dc} end={nodes.store} active={true} color={alertStage >= 3 ? '#f59e0b' : '#3b82f6'} />
                  </svg>
 
-                 {/* NODES - Scaled size for mobile using Tailwind classes */}
+                 {/* NODES - Text scaled up for readability on mobile */}
                  
                  {/* Supplier */}
                  <div className="absolute" style={{ left: '15%', top: '20%', transform: 'translate(-50%, -50%)' }}>
-                     <div className={`w-8 h-8 md:w-14 md:h-14 rounded-full border-2 flex items-center justify-center bg-slate-900 z-10 relative transition-all duration-300 ${alertStage >= 1 ? 'border-red-500 bg-red-500/10' : 'border-slate-600'}`}>
-                         <Zap className={`w-3 h-3 md:w-6 md:h-6 ${alertStage >= 1 ? 'text-red-500 animate-pulse' : 'text-slate-500'}`} />
+                     <div className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-2 flex items-center justify-center bg-slate-900 z-10 relative transition-all duration-300 ${alertStage >= 1 ? 'border-red-500 bg-red-500/10' : 'border-slate-600'}`}>
+                         <Zap className={`w-4 h-4 md:w-6 md:h-6 ${alertStage >= 1 ? 'text-red-500 animate-pulse' : 'text-slate-500'}`} />
                          {alertStage >= 1 && <div className="absolute inset-[-8px] bg-red-500/20 rounded-full animate-ping"></div>}
                      </div>
-                     <span className="absolute -top-5 md:-top-8 left-1/2 -translate-x-1/2 text-[7px] md:text-[10px] font-bold text-slate-400 uppercase whitespace-nowrap bg-slate-950/80 rounded px-1.5 py-0.5 border border-slate-800">Supplier</span>
+                     <span className="absolute -top-6 md:-top-8 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] font-bold text-slate-400 uppercase whitespace-nowrap bg-slate-950/80 rounded px-1.5 py-0.5 border border-slate-800">Supplier</span>
                  </div>
 
                  {/* Logistics */}
                  <div className="absolute" style={{ left: '40%', top: '65%', transform: 'translate(-50%, -50%)' }}>
-                     <div className="w-8 h-8 md:w-12 md:h-12 rounded-full border-2 border-slate-600 flex items-center justify-center bg-slate-900 z-10 relative">
-                         <Workflow className="w-3 h-3 md:w-5 md:h-5 text-blue-500" />
+                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-slate-600 flex items-center justify-center bg-slate-900 z-10 relative">
+                         <Workflow className="w-4 h-4 md:w-5 md:h-5 text-blue-500" />
                      </div>
-                     <span className="absolute -bottom-5 md:-bottom-8 left-1/2 -translate-x-1/2 text-[7px] md:text-[10px] font-bold text-slate-500 uppercase whitespace-nowrap bg-slate-950/80 px-1 rounded">Transit</span>
+                     <span className="absolute -bottom-6 md:-bottom-8 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] font-bold text-slate-500 uppercase whitespace-nowrap bg-slate-950/80 px-1 rounded">Transit</span>
                  </div>
 
                  {/* Factory */}
                  <div className="absolute" style={{ left: '40%', top: '40%', transform: 'translate(-50%, -50%)' }}>
-                     <div className={`w-10 h-10 md:w-16 md:h-16 rounded-full border-2 flex items-center justify-center bg-slate-900 z-10 relative transition-all duration-300 ${alertStage >= 2 ? 'border-amber-500' : 'border-slate-500'}`}>
-                         <Cpu className={`w-4 h-4 md:w-8 md:h-8 ${alertStage >= 2 ? 'text-amber-500' : 'text-slate-400'}`} />
+                     <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full border-2 flex items-center justify-center bg-slate-900 z-10 relative transition-all duration-300 ${alertStage >= 2 ? 'border-amber-500' : 'border-slate-500'}`}>
+                         <Cpu className={`w-5 h-5 md:w-8 md:h-8 ${alertStage >= 2 ? 'text-amber-500' : 'text-slate-400'}`} />
                      </div>
                      {alertStage === 2 && (
-                         <div className="absolute -bottom-6 md:-bottom-10 left-1/2 -translate-x-1/2 bg-amber-900/80 border border-amber-500/50 px-1.5 py-0.5 md:px-2 md:py-1 rounded text-[7px] md:text-[10px] text-amber-500 font-mono whitespace-nowrap animate-in slide-in-from-top-2 z-20">
+                         <div className="absolute -bottom-8 md:-bottom-10 left-1/2 -translate-x-1/2 bg-amber-900/80 border border-amber-500/50 px-2 py-1 rounded text-[9px] md:text-[10px] text-amber-500 font-mono whitespace-nowrap animate-in slide-in-from-top-2 z-20 shadow-lg">
                              ⚠ DELAY
                          </div>
                      )}
@@ -195,18 +195,18 @@ const GraphSimulation: React.FC = () => {
 
                  {/* DC */}
                  <div className="absolute" style={{ left: '65%', top: '40%', transform: 'translate(-50%, -50%)' }}>
-                     <div className={`w-8 h-8 md:w-14 md:h-14 rounded-full border-2 flex items-center justify-center bg-slate-900 z-10 relative transition-all duration-300 ${alertStage >= 3 ? 'border-amber-500' : 'border-slate-600'}`}>
-                         <Server className={`w-3 h-3 md:w-5 md:h-5 ${alertStage >= 3 ? 'text-amber-500' : 'text-slate-500'}`} />
+                     <div className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-2 flex items-center justify-center bg-slate-900 z-10 relative transition-all duration-300 ${alertStage >= 3 ? 'border-amber-500' : 'border-slate-600'}`}>
+                         <Server className={`w-4 h-4 md:w-5 md:h-5 ${alertStage >= 3 ? 'text-amber-500' : 'text-slate-500'}`} />
                      </div>
                  </div>
 
                  {/* Store */}
                  <div className="absolute" style={{ left: '85%', top: '40%', transform: 'translate(-50%, -50%)' }}>
-                     <div className={`w-8 h-8 md:w-14 md:h-14 rounded-full border-2 flex items-center justify-center bg-slate-900 z-10 relative transition-all duration-300 ${alertStage >= 3 ? 'border-red-500' : 'border-slate-600'}`}>
-                         <Target className={`w-3 h-3 md:w-5 md:h-5 ${alertStage >= 3 ? 'text-red-500' : 'text-slate-500'}`} />
+                     <div className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-2 flex items-center justify-center bg-slate-900 z-10 relative transition-all duration-300 ${alertStage >= 3 ? 'border-red-500' : 'border-slate-600'}`}>
+                         <Target className={`w-4 h-4 md:w-5 md:h-5 ${alertStage >= 3 ? 'text-red-500' : 'text-slate-500'}`} />
                      </div>
                       {alertStage === 3 && (
-                         <div className="absolute -top-6 md:-top-10 left-1/2 -translate-x-1/2 bg-red-900/80 border border-red-500/50 px-1.5 py-0.5 md:px-2 md:py-1 rounded text-[7px] md:text-[10px] text-red-500 font-mono whitespace-nowrap animate-pulse z-20">
+                         <div className="absolute -top-8 md:-top-10 left-1/2 -translate-x-1/2 bg-red-900/80 border border-red-500/50 px-2 py-1 rounded text-[9px] md:text-[10px] text-red-500 font-mono whitespace-nowrap animate-pulse z-20 shadow-lg">
                              CRITICAL
                          </div>
                      )}
@@ -217,8 +217,8 @@ const GraphSimulation: React.FC = () => {
              {/* HUD Overlay */}
              <div className="absolute top-3 left-3 flex flex-col gap-1 pointer-events-none">
                  <div className="flex items-center gap-2">
-                     <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${alertStage > 0 ? 'bg-red-500 animate-pulse' : 'bg-green-500'}`}></div>
-                     <span className="text-[7px] md:text-[10px] font-mono text-slate-400 uppercase">
+                     <div className={`w-2 h-2 rounded-full ${alertStage > 0 ? 'bg-red-500 animate-pulse' : 'bg-green-500'}`}></div>
+                     <span className="text-[9px] md:text-[10px] font-mono text-slate-400 uppercase">
                          STATUS: {alertStage === 0 ? 'OK' : 'FAIL'}
                      </span>
                  </div>
@@ -291,19 +291,19 @@ const FineTuneSimulation: React.FC = () => {
                 className="absolute top-0 bottom-0 w-0.5 bg-gradient-to-b from-transparent via-tva-orange to-transparent shadow-[0_0_20px_#f97316] z-20"
                 style={{ left: `${scanPos}%` }}
             >
-                <div className="absolute top-1/2 -left-3 bg-tva-orange text-black text-[8px] font-bold px-1 rounded rotate-90 whitespace-nowrap">
+                <div className="absolute top-1/2 -left-3 bg-tva-orange text-black text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded rotate-90 whitespace-nowrap">
                     CALIBRATING
                 </div>
             </div>
 
             <div className="absolute top-3 left-3 md:top-4 md:left-4">
-                <div className="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Base Model</div>
-                <div className="text-[8px] md:text-xs font-mono text-slate-600">"I cannot..."</div>
+                <div className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Base Model</div>
+                <div className="text-[9px] md:text-xs font-mono text-slate-600">"I cannot..."</div>
             </div>
             
             {/* Moved label to Top-Right to allow bottom space for overlay */}
             <div className="absolute top-3 right-3 md:top-4 md:right-4 text-right">
-                <div className="text-[8px] md:text-[10px] font-bold text-tva-orange uppercase tracking-widest mb-1">Fine-Tuned</div>
+                <div className="text-[9px] md:text-[10px] font-bold text-tva-orange uppercase tracking-widest mb-1">Fine-Tuned</div>
                 <div className="text-[9px] md:text-xs font-mono text-orange-200">"Variance is -4.2%"</div>
             </div>
         </div>
@@ -343,45 +343,45 @@ const WorkflowSimulation: React.FC = () => {
 
                 {/* Node 1: Webhook Trigger */}
                 <div className="absolute left-[15%] top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
-                    <div className={`w-8 h-8 md:w-14 md:h-14 bg-slate-800 rounded-lg border-2 flex items-center justify-center transition-all ${step >= 0 ? 'border-pink-500 shadow-[0_0_15px_#ec4899]' : 'border-slate-600'}`}>
+                    <div className={`w-10 h-10 md:w-14 md:h-14 bg-slate-800 rounded-lg border-2 flex items-center justify-center transition-all ${step >= 0 ? 'border-pink-500 shadow-[0_0_15px_#ec4899]' : 'border-slate-600'}`}>
                         <Zap size={16} className={step >= 0 ? "text-pink-500" : "text-slate-500"} />
                     </div>
-                    <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-900 px-1">Trigger</span>
+                    <span className="text-[9px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-900 px-1">Trigger</span>
                 </div>
 
                 {/* Node 2: Router (LangGraph) */}
                 <div className="absolute left-[40%] top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
-                    <div className={`w-10 h-10 md:w-16 md:h-16 bg-slate-800 rounded-full border-2 flex items-center justify-center transition-all ${step >= 1 ? 'border-pink-500 bg-pink-500/10' : 'border-slate-600'}`}>
+                    <div className={`w-12 h-12 md:w-16 md:h-16 bg-slate-800 rounded-full border-2 flex items-center justify-center transition-all ${step >= 1 ? 'border-pink-500 bg-pink-500/10' : 'border-slate-600'}`}>
                         <GitBranch size={20} className={step >= 1 ? "text-pink-500" : "text-slate-500"} />
                         {step === 1 && <div className="absolute inset-[-8px] border border-pink-500 rounded-full animate-ping opacity-50"></div>}
                     </div>
-                    <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-900 px-1">Router</span>
+                    <span className="text-[9px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-900 px-1">Router</span>
                 </div>
 
                 {/* Node 3: Action (n8n API) */}
                 <div className="absolute left-[75%] top-[35%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
-                    <div className={`w-8 h-8 md:w-14 md:h-14 bg-slate-800 rounded-lg border-2 flex items-center justify-center transition-all ${step >= 2 ? 'border-pink-500 bg-pink-500/10' : 'border-slate-600'}`}>
+                    <div className={`w-10 h-10 md:w-14 md:h-14 bg-slate-800 rounded-lg border-2 flex items-center justify-center transition-all ${step >= 2 ? 'border-pink-500 bg-pink-500/10' : 'border-slate-600'}`}>
                         <Settings size={16} className={step >= 2 ? "text-pink-500 animate-spin-slow" : "text-slate-500"} />
                     </div>
                     {step === 2 && (
-                        <div className="absolute -right-2 md:-right-16 top-0 bg-slate-800 border border-pink-500/50 text-[7px] md:text-[8px] text-pink-400 p-1.5 md:p-2 rounded font-mono z-20">
+                        <div className="absolute -right-2 md:-right-16 top-0 bg-slate-800 border border-pink-500/50 text-[9px] md:text-[8px] text-pink-400 p-1.5 md:p-2 rounded font-mono z-20">
                             200 OK
                         </div>
                     )}
-                    <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-900 px-1">API</span>
+                    <span className="text-[9px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-900 px-1">API</span>
                 </div>
 
                  {/* Node 4: Alternate */}
                  <div className="absolute left-[75%] top-[65%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 opacity-50">
-                    <div className="w-8 h-8 md:w-12 md:h-12 bg-slate-800 rounded-lg border border-slate-600 flex items-center justify-center">
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-slate-800 rounded-lg border border-slate-600 flex items-center justify-center">
                         <MessageSquare size={14} className="text-slate-500" />
                     </div>
-                    <span className="text-[8px] md:text-[9px] font-bold text-slate-500 uppercase tracking-widest bg-slate-900 px-1">Slack</span>
+                    <span className="text-[9px] md:text-[9px] font-bold text-slate-500 uppercase tracking-widest bg-slate-900 px-1">Slack</span>
                 </div>
             </div>
 
             <div className="absolute bottom-3 left-3 flex items-center gap-2 pointer-events-none">
-                <div className="text-[8px] md:text-[10px] font-mono text-pink-500 flex items-center gap-2">
+                <div className="text-[9px] md:text-[10px] font-mono text-pink-500 flex items-center gap-2">
                     <Share2 size={10} />
                     <span>WORKFLOW: {step >= 2 ? 'ACTIVE' : 'IDLE'}</span>
                 </div>
@@ -467,6 +467,24 @@ export const TechArchitecture: React.FC = () => {
     setProgress(0);
   };
 
+  // Reusable Info Content Component
+  const InfoCardContent = ({ data }: { data: any }) => (
+      <>
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-2 gap-2">
+             <h4 className="text-white font-bold text-lg flex items-center gap-2">
+                {data.icon}
+                {data.title}
+             </h4>
+             <div className="self-start md:self-auto flex items-center gap-1.5 px-2 py-1 bg-tva-orange/10 border border-tva-orange/30 rounded text-[10px] font-bold text-tva-orange uppercase tracking-widest">
+                <Target size={10} /> Goal: {data.goal}
+             </div>
+         </div>
+         <p className="text-slate-400 text-sm leading-relaxed border-l-2 border-slate-600 pl-3">
+             {data.details}
+         </p>
+      </>
+  );
+
   return (
     <section 
         className="py-12 md:py-24 bg-gray-50 border-y border-gray-200 relative"
@@ -496,7 +514,7 @@ export const TechArchitecture: React.FC = () => {
             {/* Visualization Stage (Dark 'Monitor' Look) */}
             {/* ON MOBILE: Order 1 (Top). ON DESKTOP: Order 2 (Right) */}
             <div className="lg:col-span-8 flex flex-col order-1 lg:order-2">
-                <div className="flex-1 bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-800 flex flex-col transform transition-transform duration-500 relative min-h-[360px] md:min-h-[500px]">
+                <div className="bg-slate-900 rounded-t-2xl lg:rounded-2xl shadow-2xl overflow-hidden border border-slate-800 flex flex-col transform transition-transform duration-500 relative min-h-[300px] md:min-h-[500px]">
                     
                     {/* HUD Header */}
                     <div className="bg-slate-950/50 p-3 md:p-4 border-b border-white/5 flex justify-between items-center backdrop-blur-sm shrink-0 z-20 relative">
@@ -519,25 +537,20 @@ export const TechArchitecture: React.FC = () => {
                             {methods[activeTab].component}
                          </div>
 
-                         {/* Info Overlay (Bottom) - Z-Index 20 */}
-                         <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-20">
-                             <div className="bg-slate-800/90 backdrop-blur-md border border-tva-orange/40 p-3 md:p-6 rounded-xl shadow-2xl animate-in slide-in-from-bottom-4 duration-500">
-                                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-2 gap-2">
-                                     <h4 className="text-white font-bold text-sm md:text-lg flex items-center gap-2">
-                                        {methods[activeTab].icon}
-                                        {methods[activeTab].title}
-                                     </h4>
-                                     <div className="self-start md:self-auto flex items-center gap-1.5 px-2 py-1 bg-tva-orange/10 border border-tva-orange/30 rounded text-[9px] md:text-[10px] font-bold text-tva-orange uppercase tracking-widest">
-                                        <Target size={10} /> Goal: {methods[activeTab].goal}
-                                     </div>
-                                 </div>
-                                 <p className="text-slate-400 text-[10px] md:text-sm leading-relaxed border-l-2 border-slate-600 pl-3">
-                                     {methods[activeTab].details}
-                                 </p>
+                         {/* DESKTOP OVERLAY (Hidden on Mobile) */}
+                         <div className="hidden lg:block absolute bottom-6 left-6 right-6 z-20">
+                             <div className="bg-slate-800/90 backdrop-blur-md border border-tva-orange/40 p-6 rounded-xl shadow-2xl animate-in slide-in-from-bottom-4 duration-500">
+                                 <InfoCardContent data={methods[activeTab]} />
                              </div>
                          </div>
                     </div>
+                </div>
 
+                {/* MOBILE INFO CARD (Visible only on Mobile/Tablet, outside the visual box) */}
+                <div className="lg:hidden bg-slate-900 border-x border-b border-slate-800 p-5 rounded-b-2xl shadow-xl mb-6 relative z-10">
+                     <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                         <InfoCardContent data={methods[activeTab]} />
+                     </div>
                 </div>
             </div>
 
