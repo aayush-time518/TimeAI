@@ -514,7 +514,7 @@ export const TechArchitecture: React.FC = () => {
             {/* Visualization Stage (Dark 'Monitor' Look) */}
             {/* ON MOBILE: Order 1 (Top). ON DESKTOP: Order 2 (Right) */}
             <div className="lg:col-span-8 flex flex-col order-1 lg:order-2">
-                <div className="bg-slate-900 rounded-t-2xl lg:rounded-2xl shadow-2xl overflow-hidden border border-slate-800 flex flex-col transform transition-transform duration-500 relative min-h-[300px] md:min-h-[500px]">
+                <div className="bg-slate-900 rounded-t-2xl lg:rounded-2xl shadow-2xl overflow-hidden border border-slate-800 flex flex-col transform transition-transform duration-500 relative min-h-[400px] md:min-h-[550px] lg:min-h-[700px]">
                     
                     {/* HUD Header */}
                     <div className="bg-slate-950/50 p-3 md:p-4 border-b border-white/5 flex justify-between items-center backdrop-blur-sm shrink-0 z-20 relative">
@@ -532,8 +532,8 @@ export const TechArchitecture: React.FC = () => {
                     {/* Simulation Area */}
                     <div className="flex-1 relative flex items-center justify-center bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-90 overflow-hidden">
                         
-                         {/* Active Simulation - Z-Index 10 */}
-                         <div className="absolute inset-0 z-10">
+                         {/* Active Simulation - Z-Index 10. Added bottom constraint for Desktop to avoid text overlap */}
+                         <div className="absolute inset-0 z-10 lg:bottom-[160px]">
                             {methods[activeTab].component}
                          </div>
 
