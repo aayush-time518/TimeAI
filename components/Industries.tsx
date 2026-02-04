@@ -32,17 +32,26 @@ const TiltCard: React.FC<{
         setRotation({ x: 0, y: 0 }); // Reset to flat
     };
 
+    const handleClick = () => {
+        if (hoveredIndex === index) {
+            setHoveredIndex(null);
+        } else {
+            setHoveredIndex(index);
+        }
+    }
+
     return (
         <div 
             ref={cardRef}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onClick={handleClick}
             style={{
                 perspective: '1000px',
                 zIndex: hoveredIndex === index ? 50 : 10
             }}
-            className="relative group cursor-default"
+            className="relative group cursor-pointer"
         >
             <div 
                 className="w-20 h-20 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all duration-300 ease-out shadow-sm border border-gray-100 bg-white"

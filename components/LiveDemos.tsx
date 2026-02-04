@@ -43,7 +43,7 @@ const WORKFLOWS: Record<WorkflowId, WorkflowData> = {
     input: {
       label: "Vendor Invoice (PDF)",
       icon: <FileText size={32} className="text-gray-400" />,
-      preview: "INV-2024-001.pdf"
+      preview: "INV-2026-001.pdf"
     },
     steps: [
       { id: 'ocr', label: "Optical Character Recognition", duration: 800 },

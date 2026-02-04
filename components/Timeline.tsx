@@ -47,13 +47,15 @@ export const Timeline: React.FC = () => {
          </div>
 
          <div className="grid md:grid-cols-4 gap-8 relative">
-             {/* Subtle Connecting Line (Desktop) */}
-             <div className="hidden md:block absolute top-12 left-[12%] right-[12%] h-[2px] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 -z-0"></div>
+             {/* Connecting Line with Animated Data Stream */}
+             <div className="hidden md:block absolute top-12 left-[12%] right-[12%] h-[2px] bg-gray-200 -z-0 overflow-hidden rounded-full">
+                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-tva-orange/80 to-transparent w-1/3 animate-[shimmer_2s_infinite]"></div>
+             </div>
 
              {STEPS.map((step, idx) => (
                  <div key={idx} className="relative group">
                      {/* Card Container */}
-                     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 hover:border-tva-orange/30 transition-all duration-500 ease-out h-full flex flex-col items-start relative z-10">
+                     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:border-tva-orange/30 transition-all duration-500 ease-out h-full flex flex-col items-start relative z-10 group-hover:bg-gradient-to-b group-hover:from-white group-hover:to-orange-50/10">
                          
                          {/* Number Badge */}
                          <div className="absolute top-6 right-6 text-4xl font-bold text-gray-100 font-mono group-hover:text-tva-orange/10 transition-colors">
@@ -61,8 +63,9 @@ export const Timeline: React.FC = () => {
                          </div>
 
                          {/* Icon Box */}
-                         <div className="w-14 h-14 rounded-xl bg-gray-50 text-gray-500 flex items-center justify-center mb-6 border border-gray-100 group-hover:bg-tva-orange group-hover:text-white group-hover:border-tva-orange transition-all duration-500 shadow-sm">
+                         <div className="w-14 h-14 rounded-xl bg-gray-50 text-gray-500 flex items-center justify-center mb-6 border border-gray-100 group-hover:bg-tva-orange group-hover:text-white group-hover:border-tva-orange transition-all duration-500 shadow-sm relative overflow-hidden">
                              {step.icon}
+                             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                          </div>
 
                          <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-tva-orange transition-colors">

@@ -19,7 +19,7 @@ const RollingText: React.FC<{ words: string[] }> = ({ words }) => {
   }, [words]);
 
   return (
-    <span className="inline-grid overflow-hidden text-left align-bottom pb-1 h-[1.1em]">
+    <span className="inline-grid overflow-hidden text-left align-bottom h-[1.3em] whitespace-nowrap">
       {words.map((word, i) => (
         <span
           key={i}
@@ -45,12 +45,12 @@ const HoloCube: React.FC<{ stage: number }> = ({ stage }) => {
     const isClean = stage >= 3;
 
     return (
-        <div className={`relative w-24 h-24 transform-style-3d transition-all duration-300 ${isHit ? 'animate-shake brightness-200 scale-90' : 'animate-float'}`}>
+        <div className={`relative w-16 h-16 md:w-24 md:h-24 transform-style-3d transition-all duration-300 ${isHit ? 'animate-shake brightness-200 scale-90' : 'animate-float'}`}>
              <div className={`absolute inset-4 rounded-sm opacity-50 blur-md ${isClean ? 'bg-green-400' : isHit ? 'bg-white' : 'bg-red-500 animate-pulse'}`}></div>
              <div className={`absolute inset-0 border-2 rounded-lg backdrop-blur-sm transition-colors duration-200 flex items-center justify-center
                 ${isClean ? 'border-green-400 bg-green-400/10' : isHit ? 'border-white bg-white' : 'border-red-500 bg-red-500/10'}
              `}>
-                {isClean ? <BarChart3 className="text-green-500" size={32} /> : <Box className="text-red-500" size={32} />}
+                {isClean ? <BarChart3 className="text-green-500 w-6 h-6 md:w-8 md:h-8" /> : <Box className="text-red-500 w-6 h-6 md:w-8 md:h-8" />}
              </div>
              
              {/* Hit Flash Ring */}
@@ -62,7 +62,7 @@ const HoloCube: React.FC<{ stage: number }> = ({ stage }) => {
 };
 
 export const Hero: React.FC<HeroProps> = ({ setView }) => {
-  const phrases = ["Blind Spots.", "Guesswork.", "Missed ROI.", "Stagnation."];
+  const phrases = ["Sentiment.", "Decisions.", "Growth.", "Future."];
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [stage, setStage] = useState(0);
@@ -140,36 +140,46 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
   const minaState = getMinaState();
 
   return (
-    <section className="relative min-h-[92vh] flex items-center justify-center bg-white py-20 lg:py-0 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" 
-           style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
+    <section className="relative min-h-[90vh] flex items-center justify-center bg-white py-12 md:py-24 lg:py-0 overflow-hidden perspective-[2000px]">
+      
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.4]" 
+           style={{ 
+             backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.03) 0%, transparent 50%), radial-gradient(#000 0.5px, transparent 0.5px)', 
+             backgroundSize: '100% 100%, 32px 32px' 
+           }}>
       </div>
+      
+      {/* Gradient Floor Fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent pointer-events-none z-0"></div>
 
       <div className="container mx-auto px-6 h-full flex flex-col justify-center relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           
-          <div className="space-y-10 flex flex-col justify-center order-2 lg:order-1 max-w-xl">
+          <div className="space-y-6 md:space-y-8 flex flex-col justify-center order-2 lg:order-1 max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out-expo">
-              <div className="inline-flex items-center gap-3 px-4 py-2 mb-8 bg-gray-50 border border-gray-200 rounded-full text-xs font-bold uppercase tracking-widest text-gray-900">
+              <div className="inline-flex items-center gap-2 md:gap-3 px-3 py-1.5 md:px-4 md:py-2 mb-6 md:mb-8 bg-gray-50 border border-gray-200 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest text-gray-900 shadow-sm hover:shadow-md transition-shadow cursor-default">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tva-orange opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-tva-orange"></span>
                 </span>
                 Analysis Active: Market Trends
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-sans font-bold leading-[1.05] tracking-tight text-gray-900 mb-6">
-                Eliminate <br />
-                <RollingText words={phrases} />
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-sans font-bold leading-[1.1] tracking-tight text-gray-900 mb-6 drop-shadow-sm">
+                <span className="block">Accelerate your</span>
+                <span className="block mt-1">
+                  <RollingText words={phrases} />
+                </span>
               </h1>
-              <p className="text-lg md:text-xl text-gray-500 font-light leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-gray-500 font-light leading-relaxed max-w-lg mx-auto lg:mx-0">
                  Turn raw data into executive confidence. We monitor your entire data estate to predict market shifts before they impact your bottom line.
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out-expo delay-100">
+            <div className="flex flex-col sm:flex-row gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out-expo delay-100 justify-center lg:justify-start">
               <button 
                 onClick={() => setView('contact')}
-                className="px-10 py-5 bg-gray-900 text-white font-bold text-sm uppercase tracking-widest rounded-xl shadow-2xl hover:bg-tva-orange hover:shadow-glow-amber transition-all duration-300 flex items-center justify-center gap-3 transform hover:-translate-y-1"
+                className="px-8 py-4 bg-gray-900 text-white font-bold text-sm uppercase tracking-widest rounded-xl shadow-xl shadow-gray-900/10 hover:bg-tva-orange hover:shadow-glow-amber transition-all duration-300 flex items-center justify-center gap-3 transform hover:-translate-y-1 active:scale-95"
               >
                 Contact Us <ArrowRight size={16} />
               </button>
@@ -179,7 +189,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                   const el = document.getElementById('live-demos');
                   if(el) el.scrollIntoView({behavior: 'smooth'});
                 }}
-                className="px-10 py-5 bg-white border border-gray-200 text-gray-900 font-bold text-sm uppercase tracking-widest rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3"
+                className="px-8 py-4 bg-white border border-gray-200 text-gray-900 font-bold text-sm uppercase tracking-widest rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3 active:scale-95 hover:border-gray-300 shadow-sm hover:shadow-md"
               >
                 <Play size={16} className="fill-current" /> Live Demo
               </button>
@@ -187,13 +197,13 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
           </div>
 
           {/* NARRATIVE STAGE */}
-          <div className="relative flex items-center justify-center order-1 lg:order-2 h-[400px] md:h-[600px] perspective-[1200px] group">
+          <div className="relative flex items-center justify-center order-1 lg:order-2 h-[300px] md:h-[500px] lg:h-[600px] perspective-[1200px] group w-full">
              <div 
                 ref={containerRef}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 className={`
-                    relative w-full max-w-[600px] aspect-[4/3] transition-all duration-100 ease-out
+                    relative w-full max-w-[500px] aspect-[4/3] transition-all duration-100 ease-out
                     ${stage === 2 ? 'translate-x-[-15px] rotate-y-3' : ''} /* Heavy 3D Recoil */
                 `}
                 style={{ 
@@ -201,12 +211,13 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                     transformStyle: 'preserve-3d'
                 }}
              >
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/50 pointer-events-none rounded-3xl transform translate-z-[1px]"></div>
+                {/* 3D Glass Panel Background */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-white/60 pointer-events-none rounded-3xl transform translate-z-[1px] border border-white/40 shadow-2xl backdrop-blur-[2px]"></div>
 
-                {/* 1. Base */}
-                <div className="absolute bottom-16 left-0 right-0 h-40 transform translate-z-[-20px]">
-                     <div className="w-full h-full bg-gradient-to-r from-transparent via-gray-50 to-transparent flex items-center justify-center relative overflow-hidden rounded-[100%] border-t border-gray-200/50 shadow-inner">
-                         <div className={`absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(0,0,0,0.05)_50%,transparent_100%)] bg-[size:50px_100%] ${stage !== 4 ? 'animate-[shimmer_1s_linear_infinite]' : 'animate-[shimmer_0.2s_linear_infinite]'}`}></div>
+                {/* 1. Base / Floor */}
+                <div className="absolute bottom-12 md:bottom-16 left-0 right-0 h-32 md:h-40 transform translate-z-[-20px] scale-90 opacity-80">
+                     <div className="w-full h-full bg-gradient-to-r from-transparent via-gray-100 to-transparent flex items-center justify-center relative overflow-hidden rounded-[100%] border-t border-gray-200 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+                         <div className={`absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(0,0,0,0.03)_50%,transparent_100%)] bg-[size:50px_100%] ${stage !== 4 ? 'animate-[shimmer_1s_linear_infinite]' : 'animate-[shimmer_0.2s_linear_infinite]'}`}></div>
                          
                          {/* Dynamic Lighting from Beam */}
                          {stage === 2 && (
@@ -216,7 +227,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                 </div>
 
                 {/* 2. MINA */}
-                <div className="absolute bottom-24 left-[5%] w-48 h-48 md:w-64 md:h-64 transform translate-z-[40px] transition-transform duration-500 z-20">
+                <div className="absolute bottom-20 md:bottom-24 left-[5%] w-40 h-40 md:w-64 md:h-64 transform translate-z-[40px] transition-transform duration-500 z-20">
                     <MinaCharacter 
                         className="w-full h-full drop-shadow-2xl" 
                         variant={minaState.variant as any} 

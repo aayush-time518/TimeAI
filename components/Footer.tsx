@@ -94,7 +94,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
         </div>
         
         <div className="border-t border-gray-100 pt-8 text-center text-gray-400 text-xs flex flex-col md:flex-row justify-between items-center gap-4">
-          <span className="font-mono opacity-70">&copy; {new Date().getFullYear()} Time AI Solutions.</span>
+          <span className="font-mono opacity-70">&copy; 2026 Time AI Solutions.</span>
           <span className="flex items-center gap-2 px-3 py-1 bg-green-50 rounded-full border border-green-100">
              {/* Radar Ping Effect */}
             <span className="relative flex h-2 w-2">
