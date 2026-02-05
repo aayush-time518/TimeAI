@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, ArrowRight, TrendingUp, Zap, Scan, CheckCircle, Target, Box, Database, BarChart3 } from 'lucide-react';
+import { Play, ArrowRight, TrendingUp, Zap, Scan, CheckCircle, Target, Box, Database, BarChart3, Activity, Terminal, LineChart, Sparkles } from 'lucide-react';
 import { ViewState } from '../types';
 import { MinaCharacter } from './MinaCharacter';
 import { playSound } from '../utils/sound';
@@ -39,23 +40,77 @@ const RollingText: React.FC<{ words: string[] }> = ({ words }) => {
   );
 };
 
-/* --- 3D HOLO CUBE --- */
-const HoloCube: React.FC<{ stage: number }> = ({ stage }) => {
+/* --- DATA ANOMALY (MESSY DATA -> DASHBOARD) --- */
+const EnergyAnomaly: React.FC<{ stage: number }> = ({ stage }) => {
     const isHit = stage === 2;
     const isClean = stage >= 3;
 
     return (
-        <div className={`relative w-16 h-16 md:w-24 md:h-24 transform-style-3d transition-all duration-300 ${isHit ? 'animate-shake brightness-200 scale-90' : 'animate-float'}`}>
-             <div className={`absolute inset-4 rounded-sm opacity-50 blur-md ${isClean ? 'bg-green-400' : isHit ? 'bg-white' : 'bg-red-500 animate-pulse'}`}></div>
-             <div className={`absolute inset-0 border-2 rounded-lg backdrop-blur-sm transition-colors duration-200 flex items-center justify-center
-                ${isClean ? 'border-green-400 bg-green-400/10' : isHit ? 'border-white bg-white' : 'border-red-500 bg-red-500/10'}
+        <div className={`relative w-24 h-24 md:w-32 md:h-32 transform-style-3d transition-all duration-500 ${isHit ? 'scale-90 brightness-200' : 'animate-float'}`}>
+             
+             {/* 1. THE GLOW CORE */}
+             <div className={`absolute inset-[-10px] rounded-full blur-2xl transition-all duration-700 ${
+                 isClean ? 'bg-green-400/20' : isHit ? 'bg-white' : 'bg-red-500/10'
+             }`}></div>
+             
+             {/* 2. THE CONTAINER */}
+             <div className={`absolute inset-0 border rounded-2xl transition-all duration-700 flex flex-col items-center justify-center overflow-hidden
+                ${isClean ? 'border-green-400 bg-white/95 shadow-xl' : isHit ? 'border-white bg-white scale-110' : 'border-red-500/40 bg-slate-900/90 backdrop-blur-md'}
              `}>
-                {isClean ? <BarChart3 className="text-green-500 w-6 h-6 md:w-8 md:h-8" /> : <Box className="text-red-500 w-6 h-6 md:w-8 md:h-8" />}
+                
+                {isClean ? (
+                    /* --- PHASE: CLEAN DASHBOARD --- */
+                    <div className="w-full h-full p-2.5 flex flex-col gap-1.5 animate-in zoom-in-95 duration-500">
+                        <div className="flex items-center justify-between">
+                            <div className="flex gap-0.5">
+                                <Sparkles size={10} className="text-green-500" />
+                                <span className="text-[7px] font-black text-green-600 uppercase tracking-widest">Optimized</span>
+                            </div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                        </div>
+                        {/* Beautiful Mini Chart */}
+                        <div className="flex-1 flex items-end gap-1 px-0.5 pb-0.5">
+                            <div className="flex-1 bg-green-100 rounded-t-[1px]" style={{ height: '30%' }}></div>
+                            <div className="flex-1 bg-green-200 rounded-t-[1px]" style={{ height: '55%' }}></div>
+                            <div className="flex-1 bg-green-400 rounded-t-[1px] animate-[shimmer_2s_infinite]" style={{ height: '95%' }}></div>
+                            <div className="flex-1 bg-green-600 rounded-t-[1px]" style={{ height: '70%' }}></div>
+                            <div className="flex-1 bg-green-300 rounded-t-[1px]" style={{ height: '85%' }}></div>
+                        </div>
+                        <div className="h-4 bg-green-50 rounded flex items-center px-1.5">
+                             <TrendingUp size={10} className="text-green-600 mr-1" />
+                             <span className="text-[6px] md:text-[7px] font-mono text-green-700 font-bold">+31.4% GROWTH</span>
+                        </div>
+                    </div>
+                ) : (
+                    /* --- PHASE: MESSY DATA --- */
+                    <div className="relative w-full h-full flex flex-col items-center justify-center p-3">
+                        <div className="text-[7px] font-mono text-red-500/80 leading-tight w-full truncate text-center">
+                            {["0x8F FF AA", "LAT_SPIKE", "ERR_U32", "NULL_PTR"].map((t, i) => (
+                                <div key={i} className={`animate-pulse`} style={{ animationDelay: `${i*0.15}s` }}>
+                                  {t}
+                                </div>
+                            ))}
+                        </div>
+                        <Activity className={`text-red-500 w-6 h-6 mt-1.5 opacity-50 animate-pulse ${isHit ? 'opacity-0' : ''}`} />
+                        {/* Glitch Overlay */}
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-red-500/30 animate-[scanVertical_1s_linear_infinite]"></div>
+                    </div>
+                )}
              </div>
+
+             {/* Orbital Particles (Messy Phase) */}
+             {!isClean && !isHit && (
+                 <div className="absolute inset-[-15px] animate-spin-slow opacity-40">
+                     <div className="w-1 h-1 bg-red-400 rounded-full absolute top-0 left-1/2"></div>
+                     <div className="w-1 h-1 bg-red-600 rounded-full absolute bottom-0 left-1/2"></div>
+                     <div className="w-1 h-1 bg-white rounded-full absolute left-0 top-1/2"></div>
+                 </div>
+             )}
              
              {/* Hit Flash Ring */}
              {isHit && (
-                <div className="absolute inset-[-20px] border-4 border-white rounded-full animate-ping opacity-50"></div>
+                <div className="absolute inset-[-40px] border-2 border-white rounded-full animate-ping opacity-60 z-50"></div>
              )}
         </div>
     );
@@ -88,7 +143,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                     playSound('pop'); 
                     
                     // Spawn Hit Particles
-                    const newParticles = Array.from({length: 8}).map((_, i) => ({
+                    const newParticles = Array.from({length: 12}).map((_, i) => ({
                         id: i,
                         x: (Math.random() - 0.5) * 60,
                         y: (Math.random() - 0.5) * 60
@@ -102,11 +157,11 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                         timeout = setTimeout(() => {
                             setStage(4); // Exit
                             timeout = setTimeout(cycle, 1500);
-                        }, 1000);
-                    }, 300);
+                        }, 2500); 
+                    }, 400);
                 }, 800); 
             }, 1000);
-        }, 3000);
+        }, 2000);
     };
 
     cycle();
@@ -118,7 +173,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    setRotate({ x: (y / rect.height) * -6, y: (x / rect.width) * 6 });
+    setRotate({ x: (y / rect.height) * -4, y: (x / rect.width) * 4 });
   };
 
   const handleMouseLeave = () => {
@@ -128,10 +183,10 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
   const getMinaState = () => {
       switch(true) {
           case stage === 0: return { variant: 'walking', eyeTarget: null, showScanner: false };
-          case stage === 1: return { variant: 'alert', eyeTarget: { x: 80, y: 50 }, showScanner: false };
-          case stage === 1.5: return { variant: 'aiming', eyeTarget: { x: 80, y: 50 }, showScanner: true };
-          case stage === 2: return { variant: 'firing', eyeTarget: { x: 80, y: 50 }, showScanner: false };
-          case stage === 3: return { variant: 'success', eyeTarget: { x: 50, y: 20 }, showScanner: false };
+          case stage === 1: return { variant: 'alert', eyeTarget: { x: 85, y: 45 }, showScanner: false };
+          case stage === 1.5: return { variant: 'aiming', eyeTarget: { x: 85, y: 45 }, showScanner: true };
+          case stage === 2: return { variant: 'firing', eyeTarget: { x: 85, y: 45 }, showScanner: false };
+          case stage === 3: return { variant: 'success', eyeTarget: { x: 60, y: 30 }, showScanner: false };
           case stage === 4: return { variant: 'success', eyeTarget: { x: 0, y: 50 }, showScanner: false };
           default: return { variant: 'idle', eyeTarget: null, showScanner: false };
       }
@@ -140,21 +195,22 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
   const minaState = getMinaState();
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center bg-white py-12 md:py-24 lg:py-0 overflow-hidden perspective-[2000px]">
+    <section className="relative min-h-[90vh] md:min-h-[95vh] flex items-center justify-center bg-white py-12 md:py-24 lg:py-0 overflow-hidden perspective-[2000px]">
       
       {/* Dynamic Background */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.4]" 
+      <div className="absolute inset-0 pointer-events-none opacity-[0.2]" 
            style={{ 
-             backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.03) 0%, transparent 50%), radial-gradient(#000 0.5px, transparent 0.5px)', 
-             backgroundSize: '100% 100%, 32px 32px' 
+             backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.04) 0%, transparent 60%), radial-gradient(#000 0.5px, transparent 0.5px)', 
+             backgroundSize: '100% 100%, 40px 40px' 
            }}>
       </div>
       
-      {/* Gradient Floor Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent pointer-events-none z-0"></div>
+      {/* Ambient background blur circles */}
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-red-50 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-50 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
 
       <div className="container mx-auto px-6 h-full flex flex-col justify-center relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           
           <div className="space-y-6 md:space-y-8 flex flex-col justify-center order-2 lg:order-1 max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out-expo">
@@ -163,7 +219,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tva-orange opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-tva-orange"></span>
                 </span>
-                Analysis Active: Market Trends
+                Intelligence Engine v4.2 Active
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-sans font-bold leading-[1.1] tracking-tight text-gray-900 mb-6 drop-shadow-sm">
                 <span className="block">Accelerate your</span>
@@ -172,7 +228,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                 </span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-gray-500 font-light leading-relaxed max-w-lg mx-auto lg:mx-0">
-                 Turn raw data into executive confidence. We monitor your entire data estate to predict market shifts before they impact your bottom line.
+                 Turn chaotic data into executive velocity. We monitor your entire architecture to predict market shifts before they impact your rhythm.
               </p>
             </div>
             
@@ -196,127 +252,110 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
             </div>
           </div>
 
-          {/* NARRATIVE STAGE */}
           <div className="relative flex items-center justify-center order-1 lg:order-2 h-[300px] md:h-[500px] lg:h-[600px] perspective-[1200px] group w-full">
              <div 
                 ref={containerRef}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 className={`
-                    relative w-full max-w-[500px] aspect-[4/3] transition-all duration-100 ease-out
-                    ${stage === 2 ? 'translate-x-[-15px] rotate-y-3' : ''} /* Heavy 3D Recoil */
+                    relative w-full max-w-[500px] aspect-[4/3] transition-all duration-150 ease-out
+                    ${stage === 2 ? 'translate-x-[-15px]' : ''}
                 `}
                 style={{ 
                     transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
                     transformStyle: 'preserve-3d'
                 }}
              >
-                {/* 3D Glass Panel Background */}
-                <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-white/60 pointer-events-none rounded-3xl transform translate-z-[1px] border border-white/40 shadow-2xl backdrop-blur-[2px]"></div>
-
-                {/* 1. Base / Floor */}
-                <div className="absolute bottom-12 md:bottom-16 left-0 right-0 h-32 md:h-40 transform translate-z-[-20px] scale-90 opacity-80">
-                     <div className="w-full h-full bg-gradient-to-r from-transparent via-gray-100 to-transparent flex items-center justify-center relative overflow-hidden rounded-[100%] border-t border-gray-200 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-                         <div className={`absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(0,0,0,0.03)_50%,transparent_100%)] bg-[size:50px_100%] ${stage !== 4 ? 'animate-[shimmer_1s_linear_infinite]' : 'animate-[shimmer_0.2s_linear_infinite]'}`}></div>
-                         
-                         {/* Dynamic Lighting from Beam */}
-                         {stage === 2 && (
-                             <div className="absolute inset-0 bg-blue-400/20 animate-pulse mix-blend-overlay"></div>
-                         )}
-                     </div>
+                {/* Base Shadow Floor */}
+                <div className="absolute bottom-10 md:bottom-20 left-1/2 -translate-x-1/2 w-[80%] h-24 md:h-32 transform translate-z-[-20px] scale-95 opacity-50 blur-xl">
+                     <div className="w-full h-full bg-gray-200 rounded-[100%]"></div>
                 </div>
 
-                {/* 2. MINA */}
-                <div className="absolute bottom-20 md:bottom-24 left-[5%] w-40 h-40 md:w-64 md:h-64 transform translate-z-[40px] transition-transform duration-500 z-20">
+                {/* MINA CHARACTER */}
+                <div className="absolute bottom-24 md:bottom-32 left-[5%] w-40 h-40 md:w-64 md:h-64 transform translate-z-[40px] transition-transform duration-500 z-20">
                     <MinaCharacter 
-                        className="w-full h-full drop-shadow-2xl" 
+                        className="w-full h-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.12)]" 
                         variant={minaState.variant as any} 
                         eyeTarget={minaState.eyeTarget}
                         showScanner={minaState.showScanner}
                     />
                 </div>
 
-                {/* 3. TARGET (Holo Cube) */}
+                {/* THE TARGET (REDUCED SIZE FOR GUN SPACE) */}
                 <div 
                     className={`
-                        absolute top-[35%] right-[10%] transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] transform translate-z-[60px] z-20
+                        absolute top-[20%] right-[5%] transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] transform translate-z-[100px] z-30
                         ${stage === 0 ? 'translate-x-[250%] opacity-0 duration-0' : ''} 
-                        ${stage === 1 ? 'translate-x-0 duration-700 opacity-100' : ''}
+                        ${stage === 1 ? 'translate-x-0 duration-800 opacity-100' : ''}
                         ${stage >= 2 && stage < 4 ? 'translate-x-0 duration-0' : ''}
-                        ${stage === 4 ? 'translate-x-[-300%] opacity-0 duration-500 ease-in' : ''}
+                        ${stage === 4 ? 'translate-x-[-300%] opacity-0 duration-700 ease-in' : ''}
                     `}
                 >
-                     {/* Lock On Reticle */}
                      {stage === 1.5 && (
-                         <div className="absolute inset-[-40px] border-2 border-tva-orange border-dashed rounded-full animate-spin-slow opacity-60 pointer-events-none scale-110"></div>
+                         <div className="absolute inset-[-30px] border border-tva-orange/30 border-dashed rounded-full animate-[spin_4s_linear_infinite] pointer-events-none"></div>
                      )}
-                     <HoloCube stage={stage} />
+                     <EnergyAnomaly stage={stage} />
                 </div>
 
-                {/* 4. BEAM, LASER SIGHT & PARTICLES */}
+                {/* BEAM & EFFECTS */}
                 <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
                     <svg className="w-full h-full overflow-visible">
                          <defs>
                              <filter id="plasma" x="-50%" y="-50%" width="200%" height="200%">
-                                 <feGaussianBlur stdDeviation="4" result="blur" />
+                                 <feGaussianBlur stdDeviation="6" result="blur" />
                                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
                              </filter>
                              <linearGradient id="beamCore" x1="0" y1="0" x2="1" y2="0">
-                                 <stop offset="0%" stopColor="#fff" stopOpacity="0.9" />
-                                 <stop offset="100%" stopColor="#60a5fa" stopOpacity="0" />
+                                 <stop offset="0%" stopColor="#fff" stopOpacity="0.95" />
+                                 <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.1" />
                              </linearGradient>
                          </defs>
                          
-                         {/* LASER SIGHT (Stage 1.5) */}
+                         {/* LASER SIGHT (AIMS AT REDUCED TARGET) */}
                          {stage === 1.5 && (
                              <>
                                 <line 
-                                    x1="46%" y1="47.7%" 
-                                    x2="82%" y2="45.6%" 
+                                    x1="40%" y1="48%" 
+                                    x2="80%" y2="38%" 
                                     stroke="#dc2626" 
                                     strokeWidth="1.5" 
-                                    strokeDasharray="2 4"
+                                    strokeDasharray="4 8"
                                     opacity="0.6"
-                                    className="animate-[scanSweep_0.5s_linear_infinite]"
+                                    className="animate-[scanSweep_0.3s_linear_infinite]"
                                 />
-                                {/* Gathering Charge Particles */}
-                                <circle cx="46%" cy="47.7%" r="20" fill="url(#beamCore)" opacity="0.1" className="animate-ping" />
+                                <circle cx="40%" cy="48%" r="20" fill="url(#beamCore)" opacity="0.1" className="animate-ping" />
                              </>
                          )}
 
-                         {/* FIRE BEAM (Stage 2) */}
+                         {/* FIRE BEAM */}
                          {stage === 2 && (
                             <>
-                                 {/* Outer Glow */}
                                  <line 
-                                    x1="46%" y1="47.7%" 
-                                    x2="82%" y2="45.6%" 
+                                    x1="40%" y1="48%" 
+                                    x2="80%" y2="38%" 
                                     stroke="#3b82f6" 
                                     strokeWidth="16" 
                                     strokeLinecap="round"
-                                    opacity="0.5"
+                                    opacity="0.4"
                                     filter="url(#plasma)"
-                                    className="animate-[beamFire_0.1s_ease-out_forwards]" 
+                                    className="animate-[beamFire_0.07s_ease-out_forwards]" 
                                  />
                                  
-                                 {/* Core Plasma */}
                                  <line 
-                                    x1="46%" y1="47.7%" 
-                                    x2="82%" y2="45.6%" 
+                                    x1="40%" y1="48%" 
+                                    x2="80%" y2="38%" 
                                     stroke="url(#beamCore)" 
                                     strokeWidth="6" 
                                     strokeLinecap="round"
-                                    className="animate-[beamFire_0.05s_ease-out_forwards]" 
+                                    className="animate-[beamFire_0.03s_ease-out_forwards]" 
                                  />
                                  
-                                 {/* Muzzle Flash */}
-                                 <circle cx="46%" cy="47.7%" r="25" fill="#fff" filter="url(#plasma)" className="animate-[shockwave_0.15s_ease-out_forwards]" />
+                                 <circle cx="40%" cy="48%" r="25" fill="#fff" filter="url(#plasma)" className="animate-[shockwave_0.1s_ease-out_forwards]" />
                                  
-                                 {/* Impact Debris Particles */}
                                  {particles.map((p) => (
                                      <circle 
                                         key={p.id}
-                                        cx="82%" cy="45.6%" r="2" fill="#fff"
+                                        cx="80%" cy="38%" r="2" fill="#fff"
                                         className="animate-[floatBubble_0.4s_ease-out_forwards]"
                                         style={{ transform: `translate(${p.x}px, ${p.y}px)` }}
                                      />

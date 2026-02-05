@@ -1,5 +1,6 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Sparkles, RefreshCw, ChevronDown, BarChart3, Search, Calendar, Cpu, Loader2, TrendingUp, Zap, BrainCircuit, Activity, Database, Layers, FileText, AlertTriangle, Bot, Workflow, Target, Clock, ShieldCheck, Users, UserCog, Lock, Terminal } from 'lucide-react';
+import { MessageSquare, X, Send, ChevronDown, Linkedin, ExternalLink, Target } from 'lucide-react';
 import { sendMessageToMina } from '../services/geminiService';
 import { ChatMessage, ViewState } from '../types';
 import { MinaCharacter } from './MinaCharacter';
@@ -12,51 +13,11 @@ interface MinaAssistantProps {
 export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: "Systems online. I am Mina, your Intelligence Architect. How can I optimize your workflow?" }
+    { role: 'model', text: "Hi! I'm Mina. I help run the architecture side here. How can I help you today?" }
   ]);
   const [input, setInput] = useState('');
-  const [assistantState, setAssistantState] = useState<'idle' | 'thinking' | 'talking'>('idle');
-  const [loadingText, setLoadingText] = useState("Initializing...");
+  const [assistantState, setAssistantState] = useState<'idle' | 'talking'>('idle');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Context-aware suggestions based on currentView
-  const getSuggestions = (view: ViewState) => {
-    switch (view) {
-      case 'solutions':
-        return [
-           { icon: <TrendingUp size={12} />, text: "Forecasting Accuracy?" },
-           { icon: <BrainCircuit size={12} />, text: "Neural Architecture" },
-           { icon: <Bot size={12} />, text: "Autonomous Agents" },
-        ];
-      case 'intel':
-        return [
-           { icon: <FileText size={12} />, text: "RAG Strategy" },
-           { icon: <Search size={12} />, text: "Logistics Case Study" },
-           { icon: <ShieldCheck size={12} />, text: "Security Protocols" },
-        ];
-      case 'about':
-        return [
-           { icon: <Target size={12} />, text: "Company Mission" },
-           { icon: <Clock size={12} />, text: "Implementation Time" },
-           { icon: <Users size={12} />, text: "Client References" },
-        ];
-      case 'contact':
-        return [
-           { icon: <Zap size={12} />, text: "Start Pilot" },
-           { icon: <UserCog size={12} />, text: "Speak to Human" },
-           { icon: <Calendar size={12} />, text: "Schedule Audit" },
-        ];
-      case 'home':
-      default:
-        return [
-            { icon: <TrendingUp size={12} />, text: "Predict Revenue" },
-            { icon: <Activity size={12} />, text: "Supply Chain Risk" },
-            { icon: <FileText size={12} />, text: "Draft Report" },
-        ];
-    }
-  };
-
-  const suggestions = getSuggestions(currentView);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -65,25 +26,6 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
   useEffect(() => {
     scrollToBottom();
   }, [messages, assistantState]);
-
-  // Cycle loading text for "thinking" state
-  useEffect(() => {
-    if (assistantState === 'thinking') {
-        const texts = [
-            "ACCESSING_DATALAKE...", 
-            "CALCULATING_VARIANCE...", 
-            "OPTIMIZING_VECTORS...", 
-            "GENERATING_INSIGHT...", 
-        ];
-        let i = 0;
-        setLoadingText(texts[0]); // Reset immediately
-        const interval = setInterval(() => {
-            i = (i + 1) % texts.length;
-            setLoadingText(texts[i]);
-        }, 800);
-        return () => clearInterval(interval);
-    }
-  }, [assistantState]);
 
   const toggleChat = () => {
     if (!isOpen) playSound('chime');
@@ -96,25 +38,17 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
 
     playSound('pop');
     setInput('');
-    setAssistantState('thinking');
+    setAssistantState('talking');
     
-    // Add user message
     setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
-    
-    // Add placeholder for model response
     setMessages(prev => [...prev, { role: 'model', text: '', isStreaming: true }]);
 
     try {
       const stream = sendMessageToMina(textToSend);
       let fullResponse = '';
-      let hasStartedTalking = false;
 
       for await (const chunk of stream) {
         if (chunk) {
-          if (!hasStartedTalking) {
-              setAssistantState('talking');
-              hasStartedTalking = true;
-          }
           fullResponse += chunk;
           setMessages(prev => {
             const newMsgs = [...prev];
@@ -133,14 +67,13 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
         if (lastMsg) lastMsg.isStreaming = false;
         return newMsgs;
       });
-      playSound('chime');
 
     } catch (e) {
       setMessages(prev => {
          const newMsgs = [...prev];
          const lastMsg = newMsgs[newMsgs.length - 1];
          if (lastMsg.role === 'model') {
-             lastMsg.text = "Connection interrupted. Please try again.";
+             lastMsg.text = "Connection's acting up. Shoot us a message on LinkedIn: https://www.linkedin.com/company/time-ai/";
              lastMsg.isStreaming = false;
          }
          return newMsgs;
@@ -150,125 +83,87 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
     }
   };
 
+  const MessageContent: React.FC<{ text: string }> = ({ text }) => {
+    const hasLinkedIn = text.toLowerCase().includes('linkedin.com/company/time-ai');
+    
+    if (hasLinkedIn) {
+        return (
+            <div className="space-y-4">
+                <p>{text.split('https://')[0]}</p>
+                <a 
+                    href="https://www.linkedin.com/company/time-ai/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-3 p-4 bg-slate-900 text-white rounded-xl shadow-lg hover:bg-tva-orange transition-all group"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-white/10 rounded-lg">
+                            <Linkedin size={18} />
+                        </div>
+                        <div className="text-left">
+                            <div className="text-[10px] font-black uppercase tracking-widest opacity-60">Human Support</div>
+                            <div className="text-sm font-bold">Connect on LinkedIn</div>
+                        </div>
+                    </div>
+                    <ExternalLink size={16} className="opacity-50 group-hover:opacity-100 transition-opacity" />
+                </a>
+            </div>
+        );
+    }
+
+    return <div>{text}</div>;
+  };
+
   return (
     <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end pointer-events-none font-sans isolate">
-      {/* Chat Window HUD */}
       <div className={`
-        w-[calc(100vw-2rem)] md:w-[420px] 
-        bg-white/95 backdrop-blur-xl 
-        shadow-[0_0_50px_-12px_rgba(0,0,0,0.25),0_0_0_1px_rgba(0,0,0,0.05)] 
+        w-[calc(100vw-2rem)] md:w-[360px] 
+        bg-white/98 backdrop-blur-xl 
+        shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3),0_0_0_1px_rgba(0,0,0,0.05)] 
         rounded-2xl overflow-hidden pointer-events-auto flex flex-col 
         transition-all duration-500 ease-out-expo origin-bottom-right
-        ${isOpen ? 'opacity-100 translate-y-0 scale-100 h-[650px] max-h-[85vh]' : 'opacity-0 translate-y-10 scale-95 h-0 invisible'}
+        ${isOpen ? 'opacity-100 translate-y-0 scale-100 h-[520px] max-h-[70vh]' : 'opacity-0 translate-y-10 scale-95 h-0 invisible'}
       `}>
           
-          {/* Header - Dark Tech Look */}
-          <div className="bg-slate-950 p-0 shrink-0 relative overflow-hidden">
-            {/* Ambient Background Glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-tva-orange/10 to-blue-600/10"></div>
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-
-            <div className="relative z-10 p-4 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                     {/* Character Portal */}
-                     <div className="relative w-12 h-12 shrink-0 group cursor-pointer" onClick={() => playSound('tick')}>
-                        <div className="absolute inset-0 bg-gradient-to-tr from-tva-orange to-amber-500 rounded-full animate-spin-slow opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                        <div className="absolute inset-0.5 bg-slate-900 rounded-full flex items-center justify-center border border-white/10 overflow-hidden">
-                             <MinaCharacter className="w-full h-full scale-125 translate-y-1" variant={assistantState} />
-                        </div>
-                        {/* Status Dot */}
-                        <div className={`absolute bottom-0 right-0 w-3 h-3 border-2 border-slate-950 rounded-full ${assistantState !== 'idle' ? 'bg-amber-400 animate-pulse' : 'bg-green-500 shadow-[0_0_8px_#22c55e]'}`}></div>
-                     </div>
-                     
-                     <div>
-                        <h3 className="font-bold text-white text-base tracking-tight leading-none mb-1">Mina <span className="text-slate-500 font-normal">v2.4</span></h3>
-                        <div className="flex items-center gap-2">
-                            <span className={`text-[10px] font-mono uppercase tracking-wider flex items-center gap-1.5 ${assistantState === 'idle' ? 'text-slate-400' : 'text-amber-400'}`}>
-                                {assistantState === 'idle' ? (
-                                    <>
-                                        <Activity size={10} /> System Online
-                                    </>
-                                ) : (
-                                    <>
-                                        <Cpu size={10} className="animate-spin" /> Processing
-                                    </>
-                                )}
-                            </span>
-                        </div>
-                     </div>
-                </div>
-
-                {/* Close Button */}
-                <button 
-                    onClick={toggleChat}
-                    className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors border border-white/5"
-                >
-                    <ChevronDown size={18} />
-                </button>
+          <div className="bg-white p-4 shrink-0 relative flex items-center justify-between border-b border-gray-100">
+            <div className="flex items-center gap-3">
+                 <div className="relative w-9 h-9 shrink-0">
+                    <div className="absolute inset-0 bg-slate-100 rounded-full"></div>
+                    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-full">
+                         <MinaCharacter className="w-full h-full scale-125 translate-y-1" variant={assistantState} />
+                    </div>
+                 </div>
+                 <div>
+                    <h3 className="font-bold text-gray-900 text-sm tracking-tight leading-none">Mina</h3>
+                    <p className="text-[10px] text-gray-400 font-medium mt-1">Direct Chat</p>
+                 </div>
             </div>
-            
-            {/* Active Progress Line */}
-            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-white/10 overflow-hidden">
-                 {assistantState !== 'idle' && (
-                    <div className="absolute inset-0 bg-tva-orange w-1/2 animate-[shimmer_1s_infinite]"></div>
-                 )}
-            </div>
+            <button onClick={toggleChat} className="text-gray-400 hover:text-gray-600 transition-colors">
+                <ChevronDown size={20} />
+            </button>
           </div>
 
-          {/* Messages Area - Grid Background */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-slate-50 relative scroll-smooth">
-             {/* Technical Grid Pattern */}
-             <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
-             
-             {/* Security Badge */}
-             <div className="flex justify-center my-2 relative z-10">
-                 <div className="px-3 py-1 bg-white/50 backdrop-blur-sm border border-slate-200 rounded-full flex items-center gap-1.5">
-                     <Lock size={10} className="text-slate-400" />
-                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Encrypted Uplink</span>
-                 </div>
-             </div>
-            
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white relative">
             {messages.map((msg, idx) => (
               <div 
                 key={idx} 
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300 relative z-10`}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200`}
               >
-                {msg.role === 'model' && (
-                    <div className="w-6 h-6 rounded-full bg-white border border-gray-200 p-1 mr-2 mt-1 shrink-0 shadow-sm flex items-center justify-center text-tva-orange">
-                        <Sparkles size={12} />
-                    </div>
-                )}
                 <div 
-                  className={`max-w-[85%] rounded-2xl px-5 py-3 text-sm leading-relaxed shadow-sm relative ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                     msg.role === 'user' 
-                      ? 'bg-gradient-to-br from-tva-orange to-red-600 text-white rounded-br-none' 
-                      : 'bg-white text-gray-700 border border-gray-100 rounded-bl-none'
+                      ? 'bg-slate-900 text-white rounded-br-none shadow-sm' 
+                      : 'bg-gray-100 text-gray-700 rounded-bl-none'
                   }`}
                 >
-                  {/* Loading State: High-Tech Processing */}
-                  {msg.isStreaming && !msg.text && (
-                      <div className="flex flex-col gap-2 min-w-[140px] py-1">
-                          <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-tva-orange uppercase tracking-widest">
-                              <Loader2 className="animate-spin" size={10} />
-                              <span className="animate-pulse">{loadingText}</span>
-                          </div>
-                          
-                          {/* Animated Matrix Bar */}
-                          <div className="flex gap-0.5 h-1 items-center bg-gray-100 rounded-full overflow-hidden w-full">
-                              <div className="h-full bg-tva-orange animate-[shimmer_1s_infinite] w-full origin-left transform scale-x-50"></div>
-                          </div>
+                  {msg.isStreaming && !msg.text ? (
+                      <div className="flex gap-1 py-1.5">
+                          <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce"></span>
+                          <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                          <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                       </div>
-                  )}
-
-                  {/* Message Content */}
-                  {msg.text && (
-                      <div className={msg.role === 'model' ? "markdown-prose" : ""}>
-                          {msg.text}
-                          {/* Enhanced Cursor */}
-                          {msg.isStreaming && (
-                              <span className="inline-block w-1.5 h-3.5 bg-tva-orange ml-1 align-middle animate-pulse"></span>
-                          )}
-                      </div>
+                  ) : (
+                      <MessageContent text={msg.text} />
                   )}
                 </div>
               </div>
@@ -276,80 +171,36 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area - Control Deck */}
-          <div className="p-4 bg-white border-t border-gray-100 shrink-0 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)] z-20">
-             
-             {/* Quick Actions (Chips) */}
-             {messages.length < 4 && assistantState === 'idle' && (
-                <div className="flex gap-2 overflow-x-auto pb-3 mb-1 no-scrollbar mask-fade-right">
-                    {suggestions.map((s, i) => (
-                        <button 
-                            key={i}
-                            onClick={() => handleSend(s.text)}
-                            className="whitespace-nowrap px-3 py-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-[11px] font-bold uppercase tracking-wide rounded hover:border-tva-orange hover:text-tva-orange hover:bg-orange-50 transition-all flex-shrink-0 flex items-center gap-2 shadow-sm group"
-                        >
-                            <span className="text-slate-400 group-hover:text-tva-orange transition-colors">{s.icon}</span>
-                            {s.text}
-                        </button>
-                    ))}
-                </div>
-             )}
-
+          <div className="p-4 bg-white shrink-0">
             <div className="relative flex items-center gap-2">
-              <div className="absolute left-3 text-gray-300">
-                  <Terminal size={16} />
-              </div>
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Execute command..."
+                placeholder="Message Mina..."
                 disabled={assistantState !== 'idle'}
-                className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl pl-10 pr-12 py-3.5 focus:outline-none focus:ring-2 focus:ring-tva-orange/20 focus:border-tva-orange transition-all disabled:opacity-50 font-medium placeholder:text-gray-400"
+                className="w-full bg-gray-100 border-none text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-slate-300 transition-all disabled:opacity-50"
               />
               <button 
                 onClick={() => handleSend()}
                 disabled={assistantState !== 'idle' || !input.trim()}
-                className={`
-                    absolute right-2 p-2 rounded-lg transition-all transform duration-300
-                    ${assistantState !== 'idle' || !input.trim() 
-                        ? 'bg-gray-200 text-gray-400 scale-90' 
-                        : 'bg-tva-orange text-white shadow-lg hover:scale-105 hover:bg-red-600'}
-                `}
+                className="absolute right-2 p-2 text-slate-900 hover:text-tva-orange disabled:opacity-0 transition-all"
               >
-                {assistantState !== 'idle' ? <RefreshCw size={16} className="animate-spin" /> : <Send size={16} />}
+                <Send size={18} />
               </button>
-            </div>
-            
-            <div className="flex justify-between items-center mt-3 px-1">
-                <span className="text-[9px] text-gray-300 font-bold uppercase tracking-widest">
-                    Time AI // Neural Engine v3.0
-                </span>
-                <span className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_5px_#22c55e]"></span>
             </div>
           </div>
       </div>
 
-      {/* Launcher Button */}
       <button
         onClick={toggleChat}
         className={`
-            pointer-events-auto group relative flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full shadow-[0_10px_30px_-10px_rgba(220,38,38,0.5)] transition-all duration-500 ease-out-expo
-            ${isOpen ? 'bg-white text-slate-400 rotate-90 scale-90 ring-4 ring-gray-100' : 'bg-gradient-to-br from-tva-orange to-red-600 text-white hover:scale-110 hover:-translate-y-1 ring-4 ring-white/50'}
+            pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300
+            ${isOpen ? 'bg-white text-slate-400 scale-90' : 'bg-slate-950 text-white hover:scale-105'}
         `}
       >
-        {isOpen ? (
-          <X size={28} />
-        ) : (
-          <>
-            <MessageSquare size={26} className="fill-current" />
-            <span className="absolute -top-1 -right-1 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
-            </span>
-          </>
-        )}
+        {isOpen ? <X size={24} /> : <MessageSquare size={24} className="fill-current" />}
       </button>
     </div>
   );

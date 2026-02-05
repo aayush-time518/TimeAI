@@ -27,7 +27,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
   const handleTwitterToggle = (e: React.MouseEvent) => {
       e.preventDefault();
       setTwitterComingSoon(true);
-      setTimeout(() => setTwitterComingSoon(false), 4000);
+      setTimeout(() => setTwitterComingSoon(false), 2000);
   };
 
   return (
@@ -54,7 +54,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
                 href="https://www.linkedin.com/company/time-ai/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-tva-orange transition-colors cursor-pointer relative z-10"
+                className="text-gray-400 hover:text-tva-orange transition-colors"
                 title="LinkedIn"
               >
                 <Linkedin size={20} />
@@ -62,20 +62,14 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
               <div className="relative">
                 <button 
                   onClick={handleTwitterToggle}
-                  className={`transition-colors duration-300 cursor-pointer relative z-10 ${twitterComingSoon ? 'text-amber-500' : 'text-gray-400 hover:text-gray-600'}`}
+                  className={`transition-colors duration-300 ${twitterComingSoon ? 'text-amber-500' : 'text-gray-400 hover:text-gray-600'}`}
                   title="Twitter Feed"
                 >
                   <Twitter size={20} />
                 </button>
                 {twitterComingSoon && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-2 bg-amber-500 text-white text-xs font-black uppercase tracking-widest rounded-lg whitespace-nowrap shadow-lg z-50 animate-in fade-in zoom-in duration-300">
-                    <div className="flex items-center gap-2">
-                      <Timer size={12} className="animate-spin-slow" />
-                      <span>Coming Soon</span>
-                    </div>
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1">
-                      <div className="border-4 border-transparent border-t-amber-500"></div>
-                    </div>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-amber-500 text-white text-[8px] font-black uppercase tracking-widest rounded whitespace-nowrap animate-in fade-in zoom-in duration-200">
+                    Coming Soon
                   </div>
                 )}
               </div>

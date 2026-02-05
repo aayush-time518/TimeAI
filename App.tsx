@@ -341,7 +341,7 @@ run_sudo apt update && run_sudo apt upgrade -y
                         Vector databases transformed search by allowing us to find "semantically similar" text. But they often miss causal relationships.
                     </p>
                     <h3>Structured Reasoning</h3>
-                    <p>Knowledge Graphs (KGs) map entities and relationships (Node {'->'} Edge {'->'} Node). By combining RAG with KGs (GraphRAG), we allow the LLM to traverse these relationships logically, ensuring multi-hop reasoning that flat text retrieval simply cannot support.</p>
+                    <p>Knowledge Graphs (KGs) map entities and relationships logically. By combining RAG with KGs (GraphRAG), we allow the LLM to traverse these relationships ensuring multi-hop reasoning.</p>
                 </>
             )
         },
