@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Clock, Linkedin, Twitter, Mail, MapPin, ArrowRight, Send, Terminal, AlertTriangle } from 'lucide-react';
+import { Clock, Linkedin, Twitter, Mail, MapPin, ArrowRight, Send, Terminal, AlertTriangle, Timer } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface FooterProps {
@@ -8,6 +9,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ setView }) => {
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'coming-soon'>('idle');
+  const [twitterComingSoon, setTwitterComingSoon] = useState(false);
 
   const handleNav = (view: ViewState) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -20,6 +22,12 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
   const handleSubscribe = () => {
       setNewsletterStatus('coming-soon');
       setTimeout(() => setNewsletterStatus('idle'), 3000);
+  };
+
+  const handleTwitterToggle = (e: React.MouseEvent) => {
+      e.preventDefault();
+      setTwitterComingSoon(true);
+      setTimeout(() => setTwitterComingSoon(false), 4000);
   };
 
   return (
@@ -41,9 +49,36 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
               <br/>
               Miami-based, globally deployed.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="text-gray-400 hover:text-tva-orange transition-colors"><Linkedin size={20} /></a>
-              <a href="#" className="text-gray-400 hover:text-tva-orange transition-colors"><Twitter size={20} /></a>
+            <div className="flex gap-4 items-center">
+              <a 
+                href="https://www.linkedin.com/company/time-ai/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-400 hover:text-tva-orange transition-colors cursor-pointer relative z-10"
+                title="LinkedIn"
+              >
+                <Linkedin size={20} />
+              </a>
+              <div className="relative">
+                <button 
+                  onClick={handleTwitterToggle}
+                  className={`transition-colors duration-300 cursor-pointer relative z-10 ${twitterComingSoon ? 'text-amber-500' : 'text-gray-400 hover:text-gray-600'}`}
+                  title="Twitter Feed"
+                >
+                  <Twitter size={20} />
+                </button>
+                {twitterComingSoon && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-2 bg-amber-500 text-white text-xs font-black uppercase tracking-widest rounded-lg whitespace-nowrap shadow-lg z-50 animate-in fade-in zoom-in duration-300">
+                    <div className="flex items-center gap-2">
+                      <Timer size={12} className="animate-spin-slow" />
+                      <span>Coming Soon</span>
+                    </div>
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1">
+                      <div className="border-4 border-transparent border-t-amber-500"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -72,7 +107,6 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             <p className="text-xs text-gray-500 mb-4">Subscribe for critical intelligence updates.</p>
             <div className="flex flex-col gap-2">
                 <div className="relative group">
-                    {/* Command Line Style Input */}
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Terminal size={14} className="text-tva-orange" />
                     </div>
@@ -96,7 +130,6 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
         <div className="border-t border-gray-100 pt-8 text-center text-gray-400 text-xs flex flex-col md:flex-row justify-between items-center gap-4">
           <span className="font-mono opacity-70">&copy; 2026 Time AI Solutions.</span>
           <span className="flex items-center gap-2 px-3 py-1 bg-green-50 rounded-full border border-green-100">
-             {/* Radar Ping Effect */}
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
