@@ -94,7 +94,7 @@ const EnergyAnomaly: React.FC<{ stage: number }> = ({ stage }) => {
                         <Activity className={`text-red-500 w-6 h-6 mt-1.5 opacity-50 animate-pulse ${isHit ? 'opacity-0' : ''}`} />
                         {/* Glitch Overlay */}
                         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-red-500/30 animate-[scanVertical_1s_linear_infinite]"></div>
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-red-500/30 animate-[scanVertical_1.s_linear_infinite]"></div>
                     </div>
                 )}
              </div>
@@ -117,7 +117,7 @@ const EnergyAnomaly: React.FC<{ stage: number }> = ({ stage }) => {
 };
 
 export const Hero: React.FC<HeroProps> = ({ setView }) => {
-  const phrases = ["Sentiment.", "Decisions.", "Growth.", "Future."];
+  const phrases = ["Automation.", "Data Analysis.", "Chatbots.", "Intelligence.", "Efficiency."];
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [stage, setStage] = useState(0);
@@ -205,7 +205,6 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
            }}>
       </div>
       
-      {/* Ambient background blur circles */}
       <div className="absolute top-1/4 -left-20 w-96 h-96 bg-red-50 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
       <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-50 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
 
@@ -214,21 +213,14 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
           
           <div className="space-y-6 md:space-y-8 flex flex-col justify-center order-2 lg:order-1 max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out-expo">
-              <div className="inline-flex items-center gap-2 md:gap-3 px-3 py-1.5 md:px-4 md:py-2 mb-6 md:mb-8 bg-gray-50 border border-gray-200 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest text-gray-900 shadow-sm hover:shadow-md transition-shadow cursor-default">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-tva-orange opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-tva-orange"></span>
-                </span>
-                Intelligence Engine v4.2 Active
-              </div>
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-sans font-bold leading-[1.1] tracking-tight text-gray-900 mb-6 drop-shadow-sm">
-                <span className="block">Accelerate your</span>
+                <span className="block">Accelerate with</span>
                 <span className="block mt-1">
                   <RollingText words={phrases} />
                 </span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-gray-500 font-light leading-relaxed max-w-lg mx-auto lg:mx-0">
-                 Turn chaotic data into executive velocity. We monitor your entire architecture to predict market shifts before they impact your rhythm.
+                 We build and implement custom AI agents, perform deep data analysis, and architect automated workflows that turn manual processes into autonomous results.
               </p>
             </div>
             
@@ -247,7 +239,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                 }}
                 className="px-8 py-4 bg-white border border-gray-200 text-gray-900 font-bold text-sm uppercase tracking-widest rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3 active:scale-95 hover:border-gray-300 shadow-sm hover:shadow-md"
               >
-                <Play size={16} className="fill-current" /> Live Demo
+                <Play size={16} className="fill-current" /> See Solutions
               </button>
             </div>
           </div>
@@ -266,12 +258,10 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                     transformStyle: 'preserve-3d'
                 }}
              >
-                {/* Base Shadow Floor */}
                 <div className="absolute bottom-10 md:bottom-20 left-1/2 -translate-x-1/2 w-[80%] h-24 md:h-32 transform translate-z-[-20px] scale-95 opacity-50 blur-xl">
                      <div className="w-full h-full bg-gray-200 rounded-[100%]"></div>
                 </div>
 
-                {/* MINA CHARACTER */}
                 <div className="absolute bottom-24 md:bottom-32 left-[5%] w-40 h-40 md:w-64 md:h-64 transform translate-z-[40px] transition-transform duration-500 z-20">
                     <MinaCharacter 
                         className="w-full h-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.12)]" 
@@ -281,7 +271,6 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                     />
                 </div>
 
-                {/* THE TARGET (REDUCED SIZE FOR GUN SPACE) */}
                 <div 
                     className={`
                         absolute top-[20%] right-[5%] transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] transform translate-z-[100px] z-30
@@ -297,7 +286,6 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                      <EnergyAnomaly stage={stage} />
                 </div>
 
-                {/* BEAM & EFFECTS */}
                 <div className="absolute inset-0 pointer-events-none z-50 overflow-visible">
                     <svg className="w-full h-full overflow-visible">
                          <defs>
@@ -311,7 +299,6 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                              </linearGradient>
                          </defs>
                          
-                         {/* LASER SIGHT (AIMS AT REDUCED TARGET) */}
                          {stage === 1.5 && (
                              <>
                                 <line 
@@ -327,7 +314,6 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                              </>
                          )}
 
-                         {/* FIRE BEAM */}
                          {stage === 2 && (
                             <>
                                  <line 

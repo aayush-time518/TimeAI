@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Clock, Menu, X, Terminal, ChevronRight, LayoutDashboard, Database, Users, FileText, MessageSquare, Play } from 'lucide-react';
 import { ViewState } from '../types';
@@ -26,15 +27,6 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
       document.body.style.overflow = 'unset';
     }
   }, [mobileMenuOpen]);
-
-  const handleDemoClick = () => {
-      setView('home');
-      setMobileMenuOpen(false);
-      setTimeout(() => {
-          const el = document.getElementById('live-demos');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-  };
 
   const NavLink = ({ view, label, onClick }: { view?: ViewState, label: string, onClick?: () => void }) => (
     <button 
@@ -111,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
           <nav className="hidden lg:flex items-center gap-1">
             <NavLink view="home" label="Home" />
             <NavLink view="solutions" label="Services" />
-            <NavLink label="Demo" onClick={handleDemoClick} />
+            <NavLink view="demo" label="Demo" />
             <NavLink view="intel" label="Blog" />
             <NavLink view="about" label="About Us" />
             
@@ -156,9 +148,9 @@ export const Header: React.FC<HeaderProps> = ({ setView, currentView }) => {
                     icon={<LayoutDashboard size={20} />} 
                   />
                   <MobileNavLink 
-                    onClick={handleDemoClick}
-                    title="Live Demo" 
-                    desc="See the platform in action" 
+                    view="demo"
+                    title="Demo" 
+                    desc="Live System Simulations" 
                     icon={<Play size={20} />} 
                   />
                   <MobileNavLink 

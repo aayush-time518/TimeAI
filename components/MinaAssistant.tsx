@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, ChevronDown, Linkedin, ExternalLink, Target } from 'lucide-react';
+import { MessageSquare, X, Send, ChevronDown, Linkedin, ExternalLink, Target, Zap, Activity, Sparkles } from 'lucide-react';
 import { sendMessageToMina } from '../services/geminiService';
 import { ChatMessage, ViewState } from '../types';
 import { MinaCharacter } from './MinaCharacter';
@@ -10,6 +10,15 @@ interface MinaAssistantProps {
   currentView: ViewState;
 }
 
+const VIEW_SUGGESTIONS: Record<ViewState, string[]> = {
+  home: ["What is Time AI?", "How does the 48h audit work?", "Show me ROI examples"],
+  solutions: ["RAG Chatbot architecture", "Dynamic Forecasting specs", "Bespoke ML fine-tuning"],
+  demo: ["Explain AP Automation demo", "Logistics Risk simulation", "Human vs AI time delta"],
+  intel: ["Read about RAG security", "Supply chain case studies", "Llama 3 fine-tuning guide"],
+  about: ["Where is the team based?", "Our technical philosophy", "SOC2 security standards"],
+  contact: ["Schedule a strategy call", "LinkedIn technical feed", "Request a custom demo"]
+};
+
 export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -17,7 +26,10 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
   ]);
   const [input, setInput] = useState('');
   const [assistantState, setAssistantState] = useState<'idle' | 'talking'>('idle');
+  const [latency, setLatency] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const suggestions = VIEW_SUGGESTIONS[currentView] || VIEW_SUGGESTIONS.home;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -32,6 +44,23 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
     setIsOpen(!isOpen);
   };
 
+  const getLocalReply = (text: string): string | null => {
+    const t = text.toLowerCase().trim();
+    if (t === 'hi' || t === 'hello' || t === 'hey' || t === 'hlo') {
+      return "Hi there! Good to see you. How can I help with your AI architecture today?";
+    }
+    if (t.includes('how are you')) {
+      return "Doing well! Keeping busy with some new model alignments for a client in Miami. How are things on your end?";
+    }
+    if (t.includes('who are you') || t.includes('your name') || t.includes('what are you')) {
+      return "I'm Mina, a Senior Strategy Architect at Time AI Solutions. I help bridge the gap between high-level business goals and technical AI implementation.";
+    }
+    if (t === 'thanks' || t === 'thank you') {
+      return "Happy to help. Let me know if you have more questions about our RAG pipelines or agentic workflows.";
+    }
+    return null;
+  };
+
   const handleSend = async (textOverride?: string) => {
     const textToSend = textOverride || input;
     if (!textToSend.trim() || assistantState !== 'idle') return;
@@ -39,8 +68,32 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
     playSound('pop');
     setInput('');
     setAssistantState('talking');
+    setLatency(null);
     
     setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
+    
+    // Check for local reply first
+    const localReply = getLocalReply(textToSend);
+    if (localReply) {
+      setMessages(prev => [...prev, { role: 'model', text: '', isStreaming: true }]);
+      // Small simulated delay for realism
+      await new Promise(r => setTimeout(r, 400));
+      setMessages(prev => {
+        const newMsgs = [...prev];
+        const lastMsg = newMsgs[newMsgs.length - 1];
+        if (lastMsg) {
+          lastMsg.text = localReply;
+          lastMsg.isStreaming = false;
+        }
+        return newMsgs;
+      });
+      setLatency(120); // Simulated sub-second latency for local
+      setAssistantState('idle');
+      return;
+    }
+
+    // Proceed to Gemini API
+    const startTime = Date.now();
     setMessages(prev => [...prev, { role: 'model', text: '', isStreaming: true }]);
 
     try {
@@ -49,6 +102,9 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
 
       for await (const chunk of stream) {
         if (chunk) {
+          if (fullResponse === '') {
+             setLatency(Date.now() - startTime);
+          }
           fullResponse += chunk;
           setMessages(prev => {
             const newMsgs = [...prev];
@@ -117,17 +173,17 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
   return (
     <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end pointer-events-none font-sans isolate">
       <div className={`
-        w-[calc(100vw-2rem)] md:w-[360px] 
+        w-[calc(100vw-2rem)] md:w-[380px] 
         bg-white/98 backdrop-blur-xl 
         shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3),0_0_0_1px_rgba(0,0,0,0.05)] 
         rounded-2xl overflow-hidden pointer-events-auto flex flex-col 
         transition-all duration-500 ease-out-expo origin-bottom-right
-        ${isOpen ? 'opacity-100 translate-y-0 scale-100 h-[520px] max-h-[70vh]' : 'opacity-0 translate-y-10 scale-95 h-0 invisible'}
+        ${isOpen ? 'opacity-100 translate-y-0 scale-100 h-[560px] max-h-[75vh]' : 'opacity-0 translate-y-10 scale-95 h-0 invisible'}
       `}>
           
           <div className="bg-white p-4 shrink-0 relative flex items-center justify-between border-b border-gray-100">
             <div className="flex items-center gap-3">
-                 <div className="relative w-9 h-9 shrink-0">
+                 <div className="relative w-10 h-10 shrink-0">
                     <div className="absolute inset-0 bg-slate-100 rounded-full"></div>
                     <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-full">
                          <MinaCharacter className="w-full h-full scale-125 translate-y-1" variant={assistantState} />
@@ -135,43 +191,79 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
                  </div>
                  <div>
                     <h3 className="font-bold text-gray-900 text-sm tracking-tight leading-none">Mina</h3>
-                    <p className="text-[10px] text-gray-400 font-medium mt-1">Direct Chat</p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                        <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Protocol Active</span>
+                    </div>
                  </div>
             </div>
-            <button onClick={toggleChat} className="text-gray-400 hover:text-gray-600 transition-colors">
-                <ChevronDown size={20} />
-            </button>
+            <div className="flex items-center gap-3">
+                {latency && (
+                    <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 border border-gray-100 rounded-md animate-in fade-in duration-500">
+                        <Zap size={10} className="text-tva-orange" />
+                        <span className="text-[8px] font-mono font-bold text-gray-500">{latency}ms</span>
+                    </div>
+                )}
+                <button onClick={toggleChat} className="text-gray-400 hover:text-gray-600 transition-colors">
+                    <ChevronDown size={20} />
+                </button>
+            </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white relative">
+          <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-white relative">
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+            
             {messages.map((msg, idx) => (
               <div 
                 key={idx} 
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200`}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-enter-view duration-300`}
               >
-                <div 
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                    msg.role === 'user' 
-                      ? 'bg-slate-900 text-white rounded-br-none shadow-sm' 
-                      : 'bg-gray-100 text-gray-700 rounded-bl-none'
-                  }`}
-                >
-                  {msg.isStreaming && !msg.text ? (
-                      <div className="flex gap-1 py-1.5">
-                          <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce"></span>
-                          <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                          <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                      </div>
-                  ) : (
-                      <MessageContent text={msg.text} />
-                  )}
+                <div className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} max-w-[85%]`}>
+                    <div 
+                        className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                            msg.role === 'user' 
+                            ? 'bg-slate-900 text-white rounded-br-none shadow-sm' 
+                            : 'bg-gray-100 text-gray-700 rounded-bl-none border border-gray-200/50'
+                        }`}
+                    >
+                        {msg.isStreaming && !msg.text ? (
+                            <div className="flex gap-1.5 py-1.5">
+                                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
+                                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                            </div>
+                        ) : (
+                            <MessageContent text={msg.text} />
+                        )}
+                    </div>
+                    {msg.role === 'model' && idx === messages.length - 1 && !msg.isStreaming && (
+                        <div className="mt-1 flex items-center gap-1 text-[8px] font-mono text-gray-400 uppercase tracking-tighter ml-1">
+                            <Activity size={8} /> Sync Verified
+                        </div>
+                    )}
                 </div>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 bg-white shrink-0">
+          <div className="p-4 bg-white shrink-0 border-t border-gray-50">
+            {/* Contextual Suggestions Chips */}
+            <div className="flex flex-wrap gap-2 mb-4">
+                {suggestions.map((s, i) => (
+                    <button
+                        key={i}
+                        onClick={() => handleSend(s)}
+                        disabled={assistantState !== 'idle'}
+                        className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-[11px] font-bold text-gray-600 hover:border-tva-orange hover:text-tva-orange transition-all animate-in fade-in slide-in-from-bottom-2 duration-500 disabled:opacity-30 flex items-center gap-1.5"
+                        style={{ animationDelay: `${i * 100}ms` }}
+                    >
+                        <Sparkles size={10} className="text-tva-orange" />
+                        {s}
+                    </button>
+                ))}
+            </div>
+
             <div className="relative flex items-center gap-2">
               <input
                 type="text"
@@ -180,15 +272,18 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Message Mina..."
                 disabled={assistantState !== 'idle'}
-                className="w-full bg-gray-100 border-none text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-slate-300 transition-all disabled:opacity-50"
+                className="w-full bg-gray-100 border-none text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:ring-1 focus:ring-slate-300 transition-all disabled:opacity-50 font-medium"
               />
               <button 
                 onClick={() => handleSend()}
                 disabled={assistantState !== 'idle' || !input.trim()}
-                className="absolute right-2 p-2 text-slate-900 hover:text-tva-orange disabled:opacity-0 transition-all"
+                className="absolute right-2 p-2 text-slate-900 hover:text-tva-orange disabled:opacity-0 transition-all transform hover:scale-110 active:scale-95"
               >
                 <Send size={18} />
               </button>
+            </div>
+            <div className="mt-3 text-center">
+                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Protocol: Gemini-3-Flash-Preview</p>
             </div>
           </div>
       </div>
@@ -196,8 +291,8 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
       <button
         onClick={toggleChat}
         className={`
-            pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300
-            ${isOpen ? 'bg-white text-slate-400 scale-90' : 'bg-slate-950 text-white hover:scale-105'}
+            pointer-events-auto flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 transform
+            ${isOpen ? 'bg-white text-slate-400 scale-90 rotate-90' : 'bg-slate-950 text-white hover:scale-110 hover:shadow-tva-orange/20'}
         `}
       >
         {isOpen ? <X size={24} /> : <MessageSquare size={24} className="fill-current" />}

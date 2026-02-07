@@ -1,6 +1,7 @@
+
 import React from 'react';
 
-export type ViewState = 'home' | 'solutions' | 'intel' | 'about' | 'contact';
+export type ViewState = 'home' | 'solutions' | 'intel' | 'about' | 'contact' | 'demo';
 
 export interface ServiceDetail {
   features: string[];

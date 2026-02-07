@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Header } from './components/Header';
@@ -9,7 +10,7 @@ import { Industries } from './components/Industries';
 import { Footer } from './components/Footer';
 import { MinaAssistant } from './components/MinaAssistant';
 import { ViewState, BlogPost } from './types';
-import { CheckCircle, Mail, MapPin, Phone, FileText, ArrowRight, Ear, Loader2, AlertCircle, File, Search, Hash, Lock, Users, Zap, Target, Clock, X, Share2, Printer, Bookmark, Send, Code2, Cpu, GitBranch, AlertTriangle, TrendingUp, Layout, Database, Network, ShieldCheck, Bot, BrainCircuit, Box, Sparkles, MessageSquareCode, Linkedin, Twitter, ExternalLink, Timer } from 'lucide-react';
+import { CheckCircle, Mail, MapPin, Phone, FileText, ArrowRight, Ear, Loader2, AlertCircle, File, Search, Hash, Lock, Users, Zap, Target, Clock, X, Share2, Printer, Bookmark, Send, Code2, Cpu, GitBranch, AlertTriangle, TrendingUp, Layout, Database, Network, ShieldCheck, Bot, BrainCircuit, Box, Sparkles, MessageSquareCode, Linkedin, Twitter, ExternalLink, Timer, Play } from 'lucide-react';
 import { MinaCharacter } from './components/MinaCharacter';
 import { ScrollReveal } from './components/ScrollReveal';
 import { LoadingScreen } from './components/LoadingScreen';
@@ -30,7 +31,7 @@ const MinaOriginSection: React.FC<{ setView: (v: ViewState) => void }> = ({ setV
                 
                 <ScrollReveal delay={200} className="order-1 md:order-2 space-y-8 text-center md:text-left">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest rounded-full">
-                        <Ear size={14} />
+                        < Ear size={14} />
                         <span>Intelligence Architect</span>
                     </div>
                     
@@ -40,10 +41,10 @@ const MinaOriginSection: React.FC<{ setView: (v: ViewState) => void }> = ({ setV
                     
                     <div className="space-y-6 text-base md:text-lg text-gray-500 font-light leading-relaxed">
                         <p>
-                            Mina is the cognitive interface for your enterprise. By leveraging deep Natural Language Processing (NLP), she parses unstructured data streams—emails, logs, and reports—to extract intent and maintain operational rhythm.
+                            Mina is the professional interface for your enterprise. By leveraging Natural Language Processing (NLP), she parses data streams—emails, logs, and reports—to extract intent and maintain operational flow.
                         </p>
                         <p>
-                            She monitors the fine-grained variance of your data estate, ensuring your architecture remains optimized and resilient against market latency.
+                            She monitors the performance of your systems, ensuring your architecture remains optimized and resilient against market latency.
                         </p>
                     </div>
 
@@ -73,9 +74,6 @@ const HomeView: React.FC<{ setView: (v: ViewState) => void }> = ({ setView }) =>
       <TechArchitecture />
     </ScrollReveal>
     <ScrollReveal>
-      <LiveDemos />
-    </ScrollReveal>
-    <ScrollReveal>
       <Timeline />
     </ScrollReveal>
     <MinaOriginSection setView={setView} />
@@ -87,10 +85,10 @@ const HomeView: React.FC<{ setView: (v: ViewState) => void }> = ({ setView }) =>
           <div className="absolute inset-0 bg-white/5 opacity-50"></div>
           <div className="container mx-auto px-6 relative z-10">
           <h2 className="text-3xl md:text-5xl font-sans font-bold text-white mb-8 tracking-tight">
-              Unlock your data's potential.
+              Ready to automate?
           </h2>
           <p className="text-white/80 text-lg md:text-xl mb-12 max-w-xl mx-auto font-light">
-              Join the Industry Leaders using Time AI to secure their future.
+              Join the companies using Time AI to secure their technical operations.
           </p>
           <div className="flex justify-center gap-4">
               <button 
@@ -117,6 +115,38 @@ const SolutionsView: React.FC<{ setView: (v: ViewState) => void }> = ({ setView 
           <TechArchitecture />
       </div>
   );
+};
+
+const DemoView: React.FC = () => {
+    return (
+        <div className="min-h-screen bg-white pt-24 md:pt-32 pb-20">
+            <div className="container mx-auto px-6 text-center mb-12 md:mb-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 border border-gray-200 rounded-full mb-6">
+                    <Play size={12} className="text-tva-orange" />
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Demo</span>
+                </div>
+                <h1 className="text-4xl md:text-6xl font-sans font-bold text-gray-900 mb-6 tracking-tight">
+                    Live <span className="text-tva-orange">System Simulations</span>
+                </h1>
+                <p className="text-lg text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">
+                    Interactive technical demonstrations of our autonomous agent patterns and high-velocity workflow architectures in real-time environments.
+                </p>
+            </div>
+            <LiveDemos />
+            <div className="mt-20 container mx-auto px-6">
+                <div className="bg-gray-900 rounded-3xl p-8 md:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden relative">
+                    <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+                    <div className="relative z-10 space-y-4">
+                        <h2 className="text-2xl md:text-3xl font-bold">Custom Architecture for Your Stack?</h2>
+                        <p className="text-gray-400 font-light text-lg">Every business logic is unique. Let's build your custom protocol.</p>
+                    </div>
+                    <a href="mailto:admin@time-ai.net" className="relative z-10 px-8 py-4 bg-tva-orange text-white font-bold rounded-xl hover:scale-105 transition-transform shadow-lg shadow-orange-500/20 active:scale-95">
+                        Schedule an Audit
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 /* --- ARTICLE READER COMPONENT --- */
@@ -155,7 +185,7 @@ const ArticleModal: React.FC<{ post: BlogPost; onClose: () => void }> = ({ post,
                             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                                 <span>Record ID: {post.id}</span>
                             </div>
-                            <h2 className="text-gray-900 font-bold truncate max-w-[200px] md:max-w-md text-sm md:text-base">{post.title}</h2>
+                            <h2 className="text-gray-900 font-bold whitespace-normal md:max-w-md text-sm md:text-base">{post.title}</h2>
                         </div>
                     </div>
                     <div className="flex items-center gap-2 ml-4">
@@ -288,7 +318,6 @@ curl -fsSL https://tailscale.com/install.sh | sh</code></pre>
 
                     <h3>Method 2: Automated Script Setup</h3>
                     <p>For quick deployment, use this automated bash script:</p>
-                    {/* Fixed: Escape curly braces in the bash script to avoid JSX parser errors */}
                     <pre><code>{`#!/bin/bash
 SUDOPASS="server1"
 run_sudo() {
@@ -306,7 +335,7 @@ run_sudo apt update && run_sudo apt upgrade -y
                     <ul>
                         <li><strong>Use SSH Keys:</strong> For production, disable password auth.</li>
                         <li><strong>Enable Fail2Ban:</strong> Automatically block repeated failed attempts.</li>
-                        <li><strong>Monitor Logs:</strong> Check <code>/var/log/auth.log</code> regularly.</li>
+                        <li><strong>Monitor Logs:</strong> Check /var/log/auth.log regularly.</li>
                     </ul>
                 </>
             )
@@ -347,7 +376,7 @@ run_sudo apt update && run_sudo apt upgrade -y
         },
         {
             id: 'SC-PREDICT',
-            title: "Predictive Supply Chain: Beating the Bullwhip Effect",
+            title: "Dynamic Supply Chain: Beating the Bullwhip Effect",
             excerpt: "How a global logistics firm used our forecasting models to predict shortages 14 days in advance.",
             category: 'Case Study',
             date: "SEP 28, 2026",
@@ -613,7 +642,7 @@ run_sudo apt update && run_sudo apt upgrade -y
                                 <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 group-hover:text-tva-orange transition-colors leading-tight">
                                     {post.title}
                                 </h3>
-                                <p className="text-gray-500 text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
+                                <p className="text-gray-500 text-sm leading-relaxed mb-6 flex-grow whitespace-normal">
                                     {post.excerpt}
                                 </p>
                                 <div className="pt-6 border-t border-gray-100 flex items-center justify-between">
@@ -654,7 +683,7 @@ const AboutView: React.FC = () => (
                     Engineering <span className="text-tva-orange">Time</span>.
                 </h1>
                 <p className="text-xl md:text-2xl text-gray-500 max-w-3xl mx-auto leading-relaxed font-light">
-                    Transforming raw data into operational precision through the alchemy of deep Natural Language Processing.
+                    Transforming raw data into operational precision through the application of deep Natural Language Processing.
                 </p>
             </ScrollReveal>
             
@@ -666,7 +695,10 @@ const AboutView: React.FC = () => (
                         </div>
                         <h2 className="text-2xl md:text-3xl font-sans font-bold text-gray-900">From Streams to Strategy.</h2>
                         <p className="text-lg text-gray-600 leading-relaxed font-light">
-                            Time AI Solutions is an Enterprise Intelligence Architect based in Miami. We specialize in sub-second inference and autonomous workflows that turn dormant data into active, actionable insight. 
+                            Time AI Solutions is an AI Implementation partner based in Miami. We specialize in sub-second inference and autonomous workflows that turn dormant data into active, actionable insight. 
+                        </p>
+                        <p className="text-lg text-gray-600 leading-relaxed font-light font-mono text-sm border-l-2 border-tva-orange/20 pl-6 py-2">
+                            PRIMARY_EMAIL: admin@time-ai.net
                         </p>
                         <p className="text-lg text-gray-600 leading-relaxed font-light">
                             In a world of information overflow, we provide the filters. Our architecture is designed to identify the critical variance in your metrics before they escalate into operational bottlenecks.
@@ -675,11 +707,11 @@ const AboutView: React.FC = () => (
 
                     <div className="space-y-8">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100">
-                             <MessageSquareCode size={12} /> NLP Mastery
+                             <MessageSquareCode size={12} /> Technical Mastery
                         </div>
                         <h2 className="text-2xl md:text-3xl font-sans font-bold text-gray-900">Unstructured Mastery.</h2>
                         <p className="text-lg text-gray-600 leading-relaxed font-light">
-                            We are pioneers in the application of Natural Language Processing for the enterprise. By bridging the gap between human communication and machine logic, we allow businesses to query their internal knowledge bases as naturally as asking a colleague.
+                            We are specialists in the application of Natural Language Processing for the enterprise. By bridging the gap between human communication and machine logic, we allow businesses to query their internal knowledge bases as naturally as asking a colleague.
                         </p>
                         <p className="text-lg text-gray-600 leading-relaxed font-light">
                             Whether it's Knowledge Graphs for causal reasoning or RAG pipelines for contextual memory, every system we deploy is hardened for high-stakes decisions and millisecond-level precision.
@@ -700,7 +732,7 @@ const AboutView: React.FC = () => (
         
         <ScrollReveal className="py-24 bg-gray-50 border-t border-gray-100">
             <div className="container mx-auto px-6 text-center">
-                 <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.3em] mb-4">V3.0 DEPLOYMENT // THE FUTURE IS NOW</p>
+                 <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.3em] mb-4">THE FUTURE IS NOW</p>
                  <div className="h-px w-24 bg-gray-200 mx-auto"></div>
             </div>
         </ScrollReveal>
@@ -718,73 +750,91 @@ const ContactView: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 pt-28 md:pt-32 pb-20 flex items-center justify-center">
-            <div className="container mx-auto px-6 max-w-4xl">
+            <div className="container mx-auto px-6 max-w-5xl">
                 <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-gray-200 flex flex-col md:flex-row">
                     
                     {/* Branding Side */}
-                    <div className="bg-tva-orange p-10 md:p-16 text-white md:w-2/5 flex flex-col justify-between relative overflow-hidden">
+                    <div className="bg-tva-orange p-10 md:p-16 text-white md:w-2/5 flex flex-col justify-between relative overflow-hidden shrink-0">
                         <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
                         <div className="relative z-10">
                             <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center mb-8">
                                 <Clock size={24} className="text-white" />
                             </div>
-                            <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-4">Initialize<br/>Uplink</h2>
-                            <p className="text-white/80 font-light text-lg">
-                                Ready to transform your data streams into operational velocity?
+                            <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-4">Start a<br/>Project</h2>
+                            <p className="text-white/80 font-light text-lg mb-8">
+                                Ready to transform your data streams into operational velocity? Reach out directly via our strategy team.
                             </p>
+                            <div className="p-4 bg-white/10 rounded-2xl border border-white/20 backdrop-blur-sm">
+                                <div className="text-[10px] font-black uppercase tracking-widest text-white/60 mb-2">Primary Email</div>
+                                <div className="text-lg font-mono font-bold truncate">admin@time-ai.net</div>
+                            </div>
                         </div>
                         
                         <div className="relative z-10 pt-12">
                              <div className="flex items-center gap-2 text-xs font-mono text-white/60">
                                 <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                                PROTOCOL ACTIVE
+                                READY FOR AUDIT
                              </div>
                         </div>
                     </div>
 
                     {/* Interaction Side */}
                     <div className="p-10 md:p-16 bg-white flex-1 flex flex-col justify-center text-center md:text-left">
-                        <h3 className="text-gray-400 text-xs font-bold uppercase tracking-[0.3em] mb-8">Primary Channel</h3>
+                        <h3 className="text-gray-400 text-xs font-bold uppercase tracking-[0.3em] mb-8">Direct Channels</h3>
                         
-                        <div className="space-y-6">
+                        <div className="space-y-4">
+                            <a 
+                                href="mailto:admin@time-ai.net" 
+                                className="group flex items-center gap-6 p-6 bg-gray-50 border border-gray-100 rounded-3xl hover:border-tva-orange/40 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                            >
+                                <div className="w-14 h-14 bg-tva-orange rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                                    <Mail size={24} />
+                                </div>
+                                <div className="flex-1 text-left">
+                                    <h4 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-tva-orange transition-colors">Email Our Team</h4>
+                                    <p className="text-gray-500 text-sm mt-1 font-mono">admin@time-ai.net</p>
+                                </div>
+                                <ExternalLink size={18} className="text-gray-300 group-hover:text-tva-orange transition-colors" />
+                            </a>
+
                             <a 
                                 href="https://www.linkedin.com/company/time-ai/" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="group flex items-center gap-6 p-6 md:p-8 bg-gray-50 border border-gray-100 rounded-3xl hover:border-tva-orange/40 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                                className="group flex items-center gap-6 p-6 bg-gray-50 border border-gray-100 rounded-3xl hover:border-tva-orange/40 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                             >
-                                <div className="w-14 h-14 md:w-16 md:h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform">
-                                    <Linkedin size={28} />
+                                <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform">
+                                    <Linkedin size={24} />
                                 </div>
-                                <div className="flex-1">
-                                    <h4 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-tva-orange transition-colors">Message Us on LinkedIn</h4>
-                                    <p className="text-gray-500 text-sm mt-1">Direct access to our senior architects.</p>
+                                <div className="flex-1 text-left">
+                                    <h4 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-tva-orange transition-colors">Business Network</h4>
+                                    <p className="text-gray-500 text-sm mt-1">Message Us on LinkedIn</p>
                                 </div>
-                                <ExternalLink size={20} className="text-gray-300 group-hover:text-tva-orange transition-colors" />
+                                <ExternalLink size={18} className="text-gray-300 group-hover:text-tva-orange transition-colors" />
                             </a>
 
                             <button 
                                 onClick={handleTwitterClick}
-                                className={`group w-full flex items-center gap-6 p-6 md:p-8 bg-gray-50 border border-gray-100 rounded-3xl transition-all duration-300 relative overflow-hidden ${twitterPulse ? 'ring-2 ring-amber-400 border-amber-400' : 'hover:border-gray-300'}`}
+                                className={`group w-full flex items-center gap-6 p-6 bg-gray-50 border border-gray-100 rounded-3xl transition-all duration-300 relative overflow-hidden ${twitterPulse ? 'ring-2 ring-amber-400 border-amber-400' : 'hover:border-gray-300'}`}
                             >
-                                <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center text-white shrink-0 transition-all ${twitterPulse ? 'bg-amber-500 scale-105' : 'bg-gray-400 group-hover:bg-gray-500'}`}>
-                                    <Twitter size={28} />
+                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shrink-0 transition-all ${twitterPulse ? 'bg-amber-500 scale-105' : 'bg-gray-400 group-hover:bg-gray-500'}`}>
+                                    <Twitter size={24} />
                                 </div>
                                 <div className="flex-1 text-left">
                                     <div className="flex items-center gap-2">
-                                        <h4 className="text-xl md:text-2xl font-bold text-gray-900">Briefings on Twitter</h4>
+                                        <h4 className="text-lg md:text-xl font-bold text-gray-900">Technical Feed</h4>
                                         <span className="px-2 py-0.5 bg-gray-200 text-gray-500 text-[10px] font-black uppercase rounded tracking-widest">SOON</span>
                                     </div>
-                                    <p className="text-gray-500 text-sm mt-1">Real-time intelligence and log updates.</p>
+                                    <p className="text-gray-500 text-sm mt-1">Follow Our Engineering Log</p>
                                 </div>
                                 
                                 {twitterPulse && (
                                     <div className="absolute inset-0 bg-white/95 backdrop-blur-sm flex items-center justify-center p-6 text-center animate-in fade-in duration-300">
                                         <div className="flex flex-col items-center gap-2">
                                             <div className="flex items-center gap-2 text-amber-600 font-bold text-sm uppercase tracking-[0.2em]">
-                                                <Timer size={16} className="animate-spin-slow" /> Mina is Synchronizing
+                                                <Timer size={16} className="animate-spin-slow" /> Synchronization...
                                             </div>
-                                            <p className="text-gray-600 text-xs font-medium">Twitter Uplink will be activated in a future timeline.</p>
+                                            <p className="text-gray-600 text-xs font-medium">Connection will be active in a future timeline.</p>
                                         </div>
                                     </div>
                                 )}
@@ -809,17 +859,16 @@ const App: React.FC = () => {
 
   return (
       <>
-        {isLoading ? (
-            <LoadingScreen onComplete={() => setIsLoading(false)} />
-        ) : (
+        <LoadingScreen onComplete={() => setIsLoading(false)} />
+        {!isLoading && (
             <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-tva-orange selection:text-white overflow-x-hidden">
                 <Header setView={setView} currentView={view} />
                 <main className="relative">
                     <div key={view} className="animate-enter-view w-full min-h-screen">
                         {view === 'home' && <HomeView setView={setView} />}
                         {view === 'solutions' && <SolutionsView setView={setView} />}
+                        {view === 'demo' && <DemoView />}
                         {view === 'intel' && <IntelView />}
-                        {/* Fixed: Corrected malformed AboutView component call */}
                         {view === 'about' && <AboutView />}
                         {view === 'contact' && <ContactView />}
                     </div>
