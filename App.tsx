@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Header } from './components/Header';
@@ -10,11 +9,13 @@ import { Industries } from './components/Industries';
 import { Footer } from './components/Footer';
 import { MinaAssistant } from './components/MinaAssistant';
 import { ViewState, BlogPost } from './types';
-import { CheckCircle, Mail, MapPin, Phone, FileText, ArrowRight, Ear, Loader2, AlertCircle, File, Search, Hash, Lock, Users, Zap, Target, Clock, X, Share2, Printer, Bookmark, Send, Code2, Cpu, GitBranch, AlertTriangle, TrendingUp, Layout, Database, Network, ShieldCheck, Bot, BrainCircuit, Box, Sparkles, MessageSquareCode, Linkedin, Twitter, ExternalLink, Timer, Play } from 'lucide-react';
+import { CheckCircle, FileText, ArrowRight, Ear, Loader2, Search, Clock, X, Share2, Printer, Target, Play, ShieldCheck, Sparkles, MessageSquareCode, Linkedin, Twitter, ExternalLink, Timer, MessageSquare } from 'lucide-react';
 import { MinaCharacter } from './components/MinaCharacter';
 import { ScrollReveal } from './components/ScrollReveal';
 import { LoadingScreen } from './components/LoadingScreen';
 import { TechArchitecture } from './components/TechArchitecture';
+import { posts } from './data/blogPosts';
+import { MarkdownRenderer } from './components/MarkdownRenderer';
 
 /* --- SECTIONS --- */
 
@@ -208,7 +209,7 @@ const ArticleModal: React.FC<{ post: BlogPost; onClose: () => void }> = ({ post,
                 <div 
                     ref={contentRef}
                     onScroll={handleScroll}
-                    className="flex-1 overflow-y-auto p-6 md:p-12 font-serif scroll-smooth"
+                    className="flex-1 overflow-y-auto p-6 md:p-12 font-sans scroll-smooth"
                 >
                     <div className="max-w-3xl mx-auto">
                         <div className="flex flex-wrap items-center gap-3 mb-6">
@@ -220,18 +221,7 @@ const ArticleModal: React.FC<{ post: BlogPost; onClose: () => void }> = ({ post,
                         <h1 className="text-2xl md:text-5xl font-sans font-bold text-gray-900 mb-8 leading-tight">
                             {post.title}
                         </h1>
-                        <div className="prose prose-lg max-w-none 
-                            prose-headings:font-sans prose-headings:font-bold prose-headings:text-gray-900 prose-headings:mt-8
-                            prose-p:text-gray-600 prose-p:font-sans prose-p:leading-relaxed prose-p:mb-6
-                            prose-strong:text-gray-900 prose-strong:font-bold
-                            prose-ul:my-6 prose-ul:space-y-3 prose-ul:list-none prose-ul:pl-0
-                            prose-li:pl-6 prose-li:relative
-                            prose-pre:bg-gray-900 prose-pre:rounded-lg prose-pre:p-4 prose-pre:my-8 prose-pre:border prose-pre:border-gray-800
-                            prose-code:text-tva-orange prose-code:bg-orange-50 prose-code:px-1 prose-code:rounded prose-code:font-mono prose-code:text-sm
-                            prose-blockquote:border-l-4 prose-blockquote:border-tva-orange prose-blockquote:bg-blue-50/50 prose-blockquote:px-6 md:prose-blockquote:px-8 prose-blockquote:py-6 prose-blockquote:not-italic prose-blockquote:text-gray-700 prose-blockquote:rounded-r-lg prose-blockquote:my-8
-                        ">
-                            {post.content}
-                        </div>
+                        <MarkdownRenderer content={post.markdown || ''} />
                     </div>
                 </div>
                 
@@ -252,327 +242,6 @@ const IntelView: React.FC = () => {
     const [visibleCount, setVisibleCount] = useState(6);
 
     const categories = ['All', 'Strategy', 'Engineering', 'Case Study', 'Security'];
-
-    const posts: BlogPost[] = [
-        {
-            id: 'SSH-TAILSCALE-2025',
-            title: "Ubuntu SSH & Tailscale Setup Guide",
-            excerpt: "Complete guide to enable SSH and setup Tailscale on Ubuntu Server for remote access without router configuration.",
-            category: 'Engineering',
-            date: "NOV 29, 2025",
-            readTime: "12 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        This comprehensive guide will walk you through setting up SSH and Tailscale on your Ubuntu server, enabling secure remote access without complex router configurations.
-                    </p>
-                    
-                    <h3>Why This Setup?</h3>
-                    <ul>
-                        <li><strong>SSH:</strong> Secure Shell protocol for remote server access.</li>
-                        <li><strong>Tailscale:</strong> Zero-config VPN that creates a secure network between your devices.</li>
-                        <li><strong>No Router Config:</strong> Bypass port forwarding and firewall complexities.</li>
-                    </ul>
-
-                    <h3>Prerequisites</h3>
-                    <p>Before starting, ensure you have:</p>
-                    <ul>
-                        <li>Ubuntu 20.04 or newer installed</li>
-                        <li>Sudo privileges on the server</li>
-                        <li>Active internet connection</li>
-                    </ul>
-
-                    <h3>Method 1: Manual Step-by-Step Setup</h3>
-                    
-                    <p><strong>Step 1: Update System Packages</strong></p>
-                    <pre><code>sudo apt update && sudo apt upgrade -y</code></pre>
-                    
-                    <p><strong>Step 2: Install OpenSSH Server</strong></p>
-                    <pre><code>sudo apt install openssh-server -y</code></pre>
-                    
-                    <p><strong>Step 3: Start and Enable SSH Service</strong></p>
-                    <pre><code>sudo systemctl start ssh
-sudo systemctl enable ssh</code></pre>
-                    
-                    <p><strong>Step 4: Configure Firewall for SSH</strong></p>
-                    <pre><code>sudo ufw allow ssh
-sudo ufw reload
-sudo ufw status</code></pre>
-
-                    <p><strong>Step 5: Configure SSH for Password Authentication</strong></p>
-                    <p>Edit the SSH configuration file:</p>
-                    <pre><code>sudo nano /etc/ssh/sshd_config</code></pre>
-                    <p>Find and modify these lines:</p>
-                    <pre><code>PasswordAuthentication yes
-PermitRootLogin no</code></pre>
-                    <blockquote><strong>Security note:</strong> Disabling root login and using password authentication for simplicity. For production, consider SSH keys.</blockquote>
-
-                    <p><strong>Step 7: Install Tailscale</strong></p>
-                    <pre><code>sudo apt-get update
-sudo apt-get install curl -y
-curl -fsSL https://tailscale.com/install.sh | sh</code></pre>
-                    
-                    <p><strong>Step 9: Connect to Tailscale Network</strong></p>
-                    <pre><code>sudo tailscale up</code></pre>
-                    <p>Follow the authentication link provided in the terminal to log in with your Tailscale account.</p>
-
-                    <h3>Method 2: Automated Script Setup</h3>
-                    <p>For quick deployment, use this automated bash script:</p>
-                    <pre><code>{`#!/bin/bash
-SUDOPASS="server1"
-run_sudo() {
-  echo "$SUDOPASS" | sudo -S "$@"
-}
-echo "=== Updating system ==="
-run_sudo apt update && run_sudo apt upgrade -y
-# ... rest of script ...`}</code></pre>
-
-                    <h3>Troubleshooting</h3>
-                    <p><strong>SSH Connection Refused:</strong> Check if SSH service is running using <code>sudo systemctl status ssh</code>.</p>
-                    <p><strong>Tailscale Not Connecting:</strong> Verify Tailscale is running with <code>sudo systemctl status tailscaled</code>.</p>
-                    
-                    <h3>Security Best Practices</h3>
-                    <ul>
-                        <li><strong>Use SSH Keys:</strong> For production, disable password auth.</li>
-                        <li><strong>Enable Fail2Ban:</strong> Automatically block repeated failed attempts.</li>
-                        <li><strong>Monitor Logs:</strong> Check /var/log/auth.log regularly.</li>
-                    </ul>
-                </>
-            )
-        },
-        {
-            id: 'RAG-2026',
-            title: "How RAG Chatbots Reduce Support Load by 70%",
-            excerpt: "Transforming internal knowledge bases into active conversation partners using Retrieval-Augmented Generation.",
-            category: 'Engineering',
-            date: "OCT 12, 2026",
-            readTime: "8 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        The search bar is dead. In the modern enterprise, employees waste an average of 1.8 hours daily looking for specific information buried in PDFs, SharePoint drives, and email chains.
-                    </p>
-                    <h3>The Hallucination Problem</h3>
-                    <p>Early adoption of LLMs failed because generic models make things up. RAG changes the architecture by allowing the AI to 'read' your specific policy documents in real-time before answering, ensuring accuracy and citing sources.</p>
-                </>
-            )
-        },
-        {
-            id: 'KG-VS-VEC',
-            title: "Why Vector Databases Aren't Enough: Enter Knowledge Graphs",
-            excerpt: "Vectors handle similarity, but Knowledge Graphs handle logic. Why you need both for enterprise reasoning.",
-            category: 'Engineering',
-            date: "OCT 20, 2026",
-            readTime: "10 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        Vector databases transformed search by allowing us to find "semantically similar" text. But they often miss causal relationships.
-                    </p>
-                    <h3>Structured Reasoning</h3>
-                    <p>Knowledge Graphs (KGs) map entities and relationships logically. By combining RAG with KGs (GraphRAG), we allow the LLM to traverse these relationships ensuring multi-hop reasoning.</p>
-                </>
-            )
-        },
-        {
-            id: 'SC-PREDICT',
-            title: "Dynamic Supply Chain: Beating the Bullwhip Effect",
-            excerpt: "How a global logistics firm used our forecasting models to predict shortages 14 days in advance.",
-            category: 'Case Study',
-            date: "SEP 28, 2026",
-            readTime: "12 MIN READ",
-            content: (
-                 <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        The "Bullwhip Effect" destroys margins through oscillating ripples up the supply chain.
-                    </p>
-                    <h3>Temporal Fusion Transformers</h3>
-                    <p>Time AI implemented a TFT model that ingested multi-modal signals including Google Trends and weather patterns to stabilize ordering cycles.</p>
-                 </>
-            )
-        },
-        {
-            id: 'FINE-TUNE',
-            title: "Fine-Tuning Llama 3 for Legal Compliance",
-            excerpt: "Generic models are too chatty. Here is how we forced a model to speak 'Lawyer' with 99% syntax accuracy.",
-            category: 'Engineering',
-            date: "OCT 05, 2026",
-            readTime: "15 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        RAG is for knowledge; Fine-Tuning is for behavior.
-                    </p>
-                    <p>We used LoRA to fine-tune Llama 3 on 5,000 successful contracts, resulting in a model that drafts with extreme precision.</p>
-                </>
-            )
-        },
-        {
-            id: 'UI-GEN',
-            title: "The End of Dashboards? Enter 'Active' UI",
-            excerpt: "Why static charts are dying and how generative UI builds dashboards on the fly based on user intent.",
-            category: 'Strategy',
-            date: "SEP 15, 2026",
-            readTime: "6 MIN READ",
-            content: (
-                <>
-                     <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        Active UI generates React components in real-time based on the executive's query, eliminating noise.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'AGENT-FINTECH',
-            title: "The ROI of Agentic Workflows in Fintech",
-            excerpt: "Moving beyond 'chat' to 'action'. How autonomous agents are reconciling ledgers without human oversight.",
-            category: 'Case Study',
-            date: "AUG 22, 2026",
-            readTime: "9 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        Agents don't just talk; they execute transactions and reconcile accounts.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'SEC-GENAI',
-            title: "Security in the Age of Generative AI",
-            excerpt: "Prompt injection, data leakage, and poisoning. How we harden enterprise LLM deployments.",
-            category: 'Security',
-            date: "NOV 01, 2026",
-            readTime: "7 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        We deploy PII masking middleware and RBAC for vector stores to secure corporate intelligence.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'HEALTH-HIPAA',
-            title: "Healthcare: HIPAA-Compliant AI Architectures",
-            excerpt: "Deploying generative AI in environments where privacy is paramount. A look at on-premise deployments.",
-            category: 'Case Study',
-            date: "JUL 15, 2026",
-            readTime: "11 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        Fully air-gapped solutions using open-weights models for automated note transcription.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'LATENCY-KILLER',
-            title: "Latency: The Silent Killer of AI Adoption",
-            excerpt: "If your bot takes 5 seconds to reply, users will abandon it. Optimization techniques for sub-second inference.",
-            category: 'Engineering',
-            date: "JUN 30, 2026",
-            readTime: "5 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        Sub-400ms inference through speculative decoding and semantic caching.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'MULTI-MODAL',
-            title: "Multi-Modal AI: Beyond Text",
-            excerpt: "Processing invoices, blueprints, and X-rays. Why 2027 is the year of 'Vision-Language Models'.",
-            category: 'Strategy',
-            date: "NOV 10, 2026",
-            readTime: "6 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        Ingesting schematics and video feeds to identify safety violations in real-time.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'HITL-NECESSITY',
-            title: "The 'Human-in-the-Loop' Necessity",
-            excerpt: "Why fully autonomous AI is a myth for high-stakes decisions, and how to build efficient review interfaces.",
-            category: 'Strategy',
-            date: "MAY 12, 2026",
-            readTime: "8 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        AI suggests; humans decide. Every high-stakes transaction includes a review queue.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'DSPY-PROMPT',
-            title: "Prompt Engineering is Dead. Long Live DSPy.",
-            excerpt: "Stop hand-writing prompts. Start compiling them. How we programmatically optimize LLM inputs.",
-            category: 'Engineering',
-            date: "AUG 05, 2026",
-            readTime: "14 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        Programmatically optimizing LLM instructions through automated compilation.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'ONPREM-CLOUD',
-            title: "On-Premise vs. Cloud AI: A CTO's Guide",
-            excerpt: "Cost, control, and compliance. The framework we use to help Fortune 500s decide where to host.",
-            category: 'Strategy',
-            date: "APR 20, 2026",
-            readTime: "10 MIN READ",
-            content: (
-                 <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        A detailed TCO analysis of renting GPU vs. capital expenditure on H100 clusters.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'MANU-PREDICT',
-            title: "Predictive Maintenance in Manufacturing",
-            excerpt: "Listening to the vibrations of machines. How acoustic AI prevents million-dollar line stoppages.",
-            category: 'Case Study',
-            date: "MAR 15, 2026",
-            readTime: "7 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        Motors hum differently before they fail. We identify these spectrogram anomalies.
-                    </p>
-                </>
-            )
-        },
-        {
-            id: 'TOOL-CALLING',
-            title: "From Chatbot to Actionbot",
-            excerpt: "The architecture of agency. Connecting LLMs to REST APIs to perform CRUD operations safely.",
-            category: 'Engineering',
-            date: "FEB 28, 2026",
-            readTime: "9 MIN READ",
-            content: (
-                <>
-                    <p className="lead text-xl text-gray-600 font-sans border-b border-gray-100 pb-6 mb-8">
-                        Implementing the 'Sandbox Pattern' for safe database interaction via LLM.
-                    </p>
-                </>
-            )
-        }
-    ];
 
     const filteredPosts = posts.filter(post => {
         const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
@@ -680,7 +349,7 @@ const AboutView: React.FC = () => (
         <section className="pt-32 pb-20 px-6 container mx-auto">
             <ScrollReveal className="text-center mb-16 md:mb-24">
                 <h1 className="text-5xl md:text-8xl font-sans font-bold text-gray-900 mb-8 tracking-tighter">
-                    Engineering <span className="text-tva-orange">Time</span>.
+                    Engineering <span className="text-tva-orange">Time</span>
                 </h1>
                 <p className="text-xl md:text-2xl text-gray-500 max-w-3xl mx-auto leading-relaxed font-light">
                     Transforming raw data into operational precision through the application of deep Natural Language Processing.
@@ -740,14 +409,6 @@ const AboutView: React.FC = () => (
 );
 
 const ContactView: React.FC = () => {
-    const [twitterPulse, setTwitterPulse] = useState(false);
-
-    const handleTwitterClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        setTwitterPulse(true);
-        setTimeout(() => setTwitterPulse(false), 3000);
-    };
-
     return (
         <div className="min-h-screen bg-gray-50 pt-28 md:pt-32 pb-20 flex items-center justify-center">
             <div className="container mx-auto px-6 max-w-5xl">
@@ -788,7 +449,7 @@ const ContactView: React.FC = () => {
                                 className="group flex items-center gap-6 p-6 bg-gray-50 border border-gray-100 rounded-3xl hover:border-tva-orange/40 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                             >
                                 <div className="w-14 h-14 bg-tva-orange rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
-                                    <Mail size={24} />
+                                    <MessageSquare size={24} />
                                 </div>
                                 <div className="flex-1 text-left">
                                     <h4 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-tva-orange transition-colors">Email Our Team</h4>
@@ -814,10 +475,9 @@ const ContactView: React.FC = () => {
                             </a>
 
                             <button 
-                                onClick={handleTwitterClick}
-                                className={`group w-full flex items-center gap-6 p-6 bg-gray-50 border border-gray-100 rounded-3xl transition-all duration-300 relative overflow-hidden ${twitterPulse ? 'ring-2 ring-amber-400 border-amber-400' : 'hover:border-gray-300'}`}
+                                className={`group w-full flex items-center gap-6 p-6 bg-gray-50 border border-gray-100 rounded-3xl transition-all duration-300 relative overflow-hidden`}
                             >
-                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shrink-0 transition-all ${twitterPulse ? 'bg-amber-500 scale-105' : 'bg-gray-400 group-hover:bg-gray-500'}`}>
+                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shrink-0 transition-all bg-gray-400 group-hover:bg-gray-500`}>
                                     <Twitter size={24} />
                                 </div>
                                 <div className="flex-1 text-left">
@@ -827,17 +487,6 @@ const ContactView: React.FC = () => {
                                     </div>
                                     <p className="text-gray-500 text-sm mt-1">Follow Our Engineering Log</p>
                                 </div>
-                                
-                                {twitterPulse && (
-                                    <div className="absolute inset-0 bg-white/95 backdrop-blur-sm flex items-center justify-center p-6 text-center animate-in fade-in duration-300">
-                                        <div className="flex flex-col items-center gap-2">
-                                            <div className="flex items-center gap-2 text-amber-600 font-bold text-sm uppercase tracking-[0.2em]">
-                                                <Timer size={16} className="animate-spin-slow" /> Synchronization...
-                                            </div>
-                                            <p className="text-gray-600 text-xs font-medium">Connection will be active in a future timeline.</p>
-                                        </div>
-                                    </div>
-                                )}
                             </button>
                         </div>
 

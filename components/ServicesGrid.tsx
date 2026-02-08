@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ArrowRight, LayoutDashboard, TrendingUp, Workflow, BrainCircuit, Radar, Bot, Power, Check, ChevronRight, Server } from 'lucide-react';
+import { X, ArrowRight, LayoutDashboard, TrendingUp, Workflow, BrainCircuit, Radar, Bot, Power, Check, ChevronRight, Server, BadgeDollarSign, Calculator, LineChart, DatabaseZap, Layers } from 'lucide-react';
 import { ServiceCardProps, ViewState } from '../types';
 import { playSound } from '../utils/sound';
 
@@ -194,7 +194,18 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
       }
     },
     {
-      title: "Dynamic Forecasting",
+      title: "Pricing Strategy",
+      description: "Optimize revenue through high-precision elastic modeling and econometric simulations that identify the ideal price point for maximum ROI.",
+      icon: <BadgeDollarSign size={24} />,
+      visualType: 'pricing',
+      details: {
+        features: ["Dynamic price elasticity modeling", "Competitor real-time variance tracking", "Econometric ROI simulations", "Automated A/B price test orchestration"],
+        techStack: ["Python (Statsmodels)", "Causal ML", "BigQuery ML", "Prophet Forecasting"],
+        outcome: "Maximize gross margins by up to 18%."
+      }
+    },
+    {
+      title: "Demand Forecasting",
       description: "Master temporal complexity with predictive engines that identify demand signals and market variance before they impact margins.",
       icon: <TrendingUp size={24} />,
       visualType: 'analytics',
@@ -205,7 +216,7 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
       }
     },
     {
-      title: "Active Dashboards",
+      title: "Dashboards",
       description: "Transform static metrics into command centers with generative UI that builds real-time KPI visualizations based on user intent.",
       icon: <LayoutDashboard size={24} />,
       visualType: 'analytics',
@@ -227,25 +238,25 @@ export const ServicesGrid: React.FC<{ setView: (view: ViewState) => void }> = ({
       }
     },
     {
-      title: "Bespoke ML Solutions",
-      description: "Build proprietary domain mastery through bespoke model fine-tuning (LoRA/QLoRA) and DPO alignment tailored to your unique challenges.",
+      title: "ML Solutions",
+      description: "Build proprietary domain mastery through model fine-tuning (LoRA/QLoRA) and DPO alignment tailored to your unique challenges.",
       icon: <BrainCircuit size={24} />,
       visualType: 'analytics',
       details: {
-        features: ["Proprietary domain model mastery", "Bespoke fine-tuning for legal/med/fin", "Alignment via Direct Preference Opt (DPO)", "High-efficiency 4-bit quantization"],
+        features: ["Proprietary domain model mastery", "Fine-tuning for specialized sectors", "Alignment via Direct Preference Opt (DPO)", "High-efficiency 4-bit quantization"],
         techStack: ["PyTorch", "LoRA/QLoRA Adapters", "Unsloth Kernels", "DPO Alignment"],
         outcome: "Deploy specialized models that outperform generic LLMs."
       }
     },
     {
-      title: "Data Infrastructure",
-      description: "Architect a hardened foundation for AI with automated, SOC2-compliant ETL pipelines that ensure zero-latency data availability.",
-      icon: <Server size={24} />,
+      title: "Data Pipelines",
+      description: "Automate the flow of enterprise intelligence with robust ELT/ETL pipelines designed for high-availability and zero-loss stream processing.",
+      icon: <DatabaseZap size={24} />,
       visualType: 'analytics',
       details: {
-        features: ["Hardened SOC2 data architecture", "Automated sub-second ETL flows", "Multi-region secure data availability", "Zero-trust PII masking layers"],
-        techStack: ["AWS/Azure Private Cloud", "Airflow Pipelines", "Terraform IaC", "Docker"],
-        outcome: "Establish a production-ready intelligence backbone."
+        features: ["Automated ELT/ETL orchestration", "Real-time stream processing", "Data lakehouse architecture", "Automated schema drift detection"],
+        techStack: ["Apache Airflow", "dbt", "Snowflake", "Google Cloud Pub/Sub"],
+        outcome: "Achieve 99.9% data pipeline reliability."
       }
     }
   ];

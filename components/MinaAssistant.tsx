@@ -11,18 +11,18 @@ interface MinaAssistantProps {
 }
 
 const VIEW_SUGGESTIONS: Record<ViewState, string[]> = {
-  home: ["What is Time AI?", "How does the 48h audit work?", "Show me ROI examples"],
-  solutions: ["RAG Chatbot architecture", "Dynamic Forecasting specs", "Bespoke ML fine-tuning"],
-  demo: ["Explain AP Automation demo", "Logistics Risk simulation", "Human vs AI time delta"],
-  intel: ["Read about RAG security", "Supply chain case studies", "Llama 3 fine-tuning guide"],
-  about: ["Where is the team based?", "Our technical philosophy", "SOC2 security standards"],
-  contact: ["Schedule a strategy call", "LinkedIn technical feed", "Request a custom demo"]
+  home: ["Architectural ROI", "48h System Audit", "Agentic Case Studies"],
+  solutions: ["Hardened RAG Pipelines", "Forecasting Specs", "LangGraph Orchestration", "PEFT Model Alignment"],
+  demo: ["Sub-second AP Automation", "Signal Fusion Logic", "Contextual Drafting"],
+  intel: ["NLP Technical Briefs", "LLM Security Patterns", "Retail Intelligence Study"],
+  about: ["Our Miami HQ & Team", "Engineering Methodology", "Security Standards & SOC2"],
+  contact: ["Audit My Infrastructure", "Technical Consultation", "Strategic Partnership"]
 };
 
 export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: "Hi! I'm Mina. I help run the architecture side here. How can I help you today?" }
+    { role: 'model', text: "Hello. I'm Mina, Strategy Lead at Time AI. I'm currently auditing some reasoning loops, but I have a moment to discuss your architecture. Where is the most friction in your stack?" }
   ]);
   const [input, setInput] = useState('');
   const [assistantState, setAssistantState] = useState<'idle' | 'talking'>('idle');
@@ -47,16 +47,16 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
   const getLocalReply = (text: string): string | null => {
     const t = text.toLowerCase().trim();
     if (t === 'hi' || t === 'hello' || t === 'hey' || t === 'hlo') {
-      return "Hi there! Good to see you. How can I help with your AI architecture today?";
+      return "Hello. It's a good time to talk shop. Are you looking into RAG optimization or perhaps autonomous workflow orchestration?";
     }
     if (t.includes('how are you')) {
-      return "Doing well! Keeping busy with some new model alignments for a client in Miami. How are things on your end?";
+      return "Focused. We're currently benchmarking some new LoRA adapters for a fintech deployment in Miami. The results are promising. How can I help you optimize your stack today?";
     }
     if (t.includes('who are you') || t.includes('your name') || t.includes('what are you')) {
-      return "I'm Mina, a Senior Strategy Architect at Time AI Solutions. I help bridge the gap between high-level business goals and technical AI implementation.";
+      return "I'm Mina. I specialize in mapping unstructured business data to high-velocity AI pipelines. My focus is ensuring that every deployment is a hardened operational asset.";
     }
     if (t === 'thanks' || t === 'thank you') {
-      return "Happy to help. Let me know if you have more questions about our RAG pipelines or agentic workflows.";
+      return "Strategic precision is our goal. Let me know if you want to dive deeper into the technical specs of our agentic loops or forecasting models.";
     }
     return null;
   };
@@ -72,12 +72,10 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
     
     setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
     
-    // Check for local reply first
     const localReply = getLocalReply(textToSend);
     if (localReply) {
       setMessages(prev => [...prev, { role: 'model', text: '', isStreaming: true }]);
-      // Small simulated delay for realism
-      await new Promise(r => setTimeout(r, 400));
+      await new Promise(r => setTimeout(r, 450));
       setMessages(prev => {
         const newMsgs = [...prev];
         const lastMsg = newMsgs[newMsgs.length - 1];
@@ -87,12 +85,11 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
         }
         return newMsgs;
       });
-      setLatency(120); // Simulated sub-second latency for local
+      setLatency(142); 
       setAssistantState('idle');
       return;
     }
 
-    // Proceed to Gemini API
     const startTime = Date.now();
     setMessages(prev => [...prev, { role: 'model', text: '', isStreaming: true }]);
 
@@ -129,7 +126,7 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
          const newMsgs = [...prev];
          const lastMsg = newMsgs[newMsgs.length - 1];
          if (lastMsg.role === 'model') {
-             lastMsg.text = "Connection's acting up. Shoot us a message on LinkedIn: https://www.linkedin.com/company/time-ai/";
+             lastMsg.text = "Inference session timeout. Please reach out to our technical team on LinkedIn for high-priority support: https://www.linkedin.com/company/time-ai/";
              lastMsg.isStreaming = false;
          }
          return newMsgs;
@@ -158,7 +155,7 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
                         </div>
                         <div className="text-left">
                             <div className="text-[10px] font-black uppercase tracking-widest opacity-60">Human Support</div>
-                            <div className="text-sm font-bold">Connect on LinkedIn</div>
+                            <div className="text-sm font-bold">Strategic Partnership</div>
                         </div>
                     </div>
                     <ExternalLink size={16} className="opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -192,8 +189,8 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
                  <div>
                     <h3 className="font-bold text-gray-900 text-sm tracking-tight leading-none">Mina</h3>
                     <div className="flex items-center gap-2 mt-1.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                        <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Protocol Active</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
+                        <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Architect Verified</span>
                     </div>
                  </div>
             </div>
@@ -238,7 +235,7 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
                     </div>
                     {msg.role === 'model' && idx === messages.length - 1 && !msg.isStreaming && (
                         <div className="mt-1 flex items-center gap-1 text-[8px] font-mono text-gray-400 uppercase tracking-tighter ml-1">
-                            <Activity size={8} /> Sync Verified
+                            <Activity size={8} /> Logic Synced
                         </div>
                     )}
                 </div>
@@ -248,17 +245,16 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
           </div>
 
           <div className="p-4 bg-white shrink-0 border-t border-gray-50">
-            {/* Contextual Suggestions Chips */}
             <div className="flex flex-wrap gap-2 mb-4">
                 {suggestions.map((s, i) => (
                     <button
                         key={i}
                         onClick={() => handleSend(s)}
                         disabled={assistantState !== 'idle'}
-                        className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-[11px] font-bold text-gray-600 hover:border-tva-orange hover:text-tva-orange transition-all animate-in fade-in slide-in-from-bottom-2 duration-500 disabled:opacity-30 flex items-center gap-1.5"
+                        className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-[10px] font-bold text-gray-600 hover:border-tva-orange hover:text-tva-orange transition-all animate-in fade-in slide-in-from-bottom-2 duration-500 disabled:opacity-30 flex items-center gap-1.5"
                         style={{ animationDelay: `${i * 100}ms` }}
                     >
-                        <Sparkles size={10} className="text-tva-orange" />
+                        <Target size={10} className="text-tva-orange" />
                         {s}
                     </button>
                 ))}
@@ -270,7 +266,7 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Message Mina..."
+                placeholder="Consult Mina..."
                 disabled={assistantState !== 'idle'}
                 className="w-full bg-gray-100 border-none text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:ring-1 focus:ring-slate-300 transition-all disabled:opacity-50 font-medium"
               />
@@ -283,7 +279,7 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
               </button>
             </div>
             <div className="mt-3 text-center">
-                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Protocol: Gemini-3-Flash-Preview</p>
+                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Deployment Engine: Gemini-3-Flash</p>
             </div>
           </div>
       </div>

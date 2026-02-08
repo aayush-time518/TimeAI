@@ -125,7 +125,7 @@ const TiltCard: React.FC<{
             {/* Tooltip HUD */}
             <div 
                 className={`
-                    absolute top-full mt-4 left-1/2 -translate-x-1/2 w-72 md:w-80 
+                    absolute top-full mt-4 left-1/2 -translate-x-1/2 w-[260px] sm:w-80 
                     bg-white/95 backdrop-blur-xl rounded-2xl p-5 shadow-2xl border border-gray-100
                     transition-all duration-500 ease-out origin-top pointer-events-none
                     ${isActive ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-4 invisible'}
@@ -134,7 +134,7 @@ const TiltCard: React.FC<{
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <div className={`w-1.5 h-1.5 rounded-full ${accentColors[industry.color]}`}></div>
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active Intelligence</span>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active System</span>
                     </div>
                     <div className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-50 border border-gray-100 rounded text-[9px] font-mono text-gray-500">
                         <Activity size={10} /> {industry.stat}
@@ -142,27 +142,26 @@ const TiltCard: React.FC<{
                 </div>
 
                 <div className="space-y-3">
-                    <div className="flex flex-col gap-1">
-                        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">Industry Head</h4>
+                    <div className="flex flex-col gap-1 text-left">
+                        <h4 className="text-[8px] font-bold text-gray-400 uppercase tracking-[0.2em]">Industry</h4>
                         <p className="text-sm font-bold text-gray-900">{industry.name}</p>
                     </div>
                     <div className="h-px bg-gray-100 w-full"></div>
-                    <h4 className="text-xs font-bold text-gray-900 flex items-center gap-2">
-                        <Zap size={14} className={colors[industry.color].split(' ')[0]} />
-                        Core Use Case
+                    <h4 className="text-[10px] font-bold text-gray-900 flex items-center gap-2">
+                        <Zap size={12} className={colors[industry.color].split(' ')[0]} />
+                        Core Logic
                     </h4>
-                    <p className="text-xs text-gray-500 leading-relaxed font-medium">
+                    <p className="text-[11px] text-gray-500 leading-relaxed font-medium text-left">
                         {industry.useCase}
                     </p>
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
-                    <div className="flex gap-2">
-                        <div className="w-1 h-1 rounded-full bg-gray-200"></div>
+                    <div className="flex gap-1.5">
                         <div className="w-1 h-1 rounded-full bg-gray-200"></div>
                         <div className="w-1 h-1 rounded-full bg-gray-200"></div>
                     </div>
-                    <span className="text-[9px] font-bold text-tva-orange uppercase tracking-wider">Time Optimized // Secured</span>
+                    <span className="text-[8px] font-bold text-tva-orange uppercase tracking-wider">SECURED</span>
                 </div>
 
                 {/* Arrow */}
@@ -187,7 +186,7 @@ export const Industries: React.FC = () => {
         <div className="max-w-2xl mx-auto text-center mb-16 md:mb-24">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 border border-gray-100 rounded-full mb-6">
                 <Globe size={12} className="text-gray-400" />
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Cross-Domain Expertise</span>
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Global Domain Presence</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-sans font-bold text-gray-900 mb-6 tracking-tight">
                 Trusted by <span className="text-tva-orange">Industry Leaders</span>
@@ -197,7 +196,7 @@ export const Industries: React.FC = () => {
             </p>
         </div>
         
-        <div className="flex flex-wrap justify-center items-center gap-4 md:gap-12 lg:gap-16">
+        <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-12 lg:gap-16">
           {IndustryData.map((ind, i) => (
             <TiltCard 
                 key={i} 

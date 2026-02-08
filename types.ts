@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export type ViewState = 'home' | 'solutions' | 'intel' | 'about' | 'contact' | 'demo';
@@ -14,7 +13,7 @@ export interface ServiceCardProps {
   description: string;
   icon: React.ReactNode;
   delay?: number;
-  details: ServiceDetail; // Added specific details for the modal
+  details: ServiceDetail;
   onClick?: () => void;
 }
 
@@ -48,10 +47,9 @@ export interface BlogPost {
   id: string;
   title: string;
   excerpt: string;
-  // Added 'Security' to category union type to support Security blog posts
   category: 'Strategy' | 'Engineering' | 'Case Study' | 'Security';
   date: string;
   readTime: string;
   image?: string;
-  content?: React.ReactNode; // Updated to support rich content
+  markdown?: string;
 }
