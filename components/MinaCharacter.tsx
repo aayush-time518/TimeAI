@@ -554,12 +554,12 @@ export const MinaCharacter: React.FC<MinaCharacterProps> = ({ className, variant
         {/* --- EMOTIONS --- */}
         {isAlert && (
              <div className="absolute top-[-20%] right-[-15%] animate-float-bubble z-50">
-                 <div className="bg-white border-4 border-tva-orange text-tva-orange font-black rounded-full w-16 h-16 flex items-center justify-center text-4xl shadow-xl pb-1">!</div>
+                 <div className="bg-white border-4 border-gray-700 text-gray-900 font-black rounded-full w-16 h-16 flex items-center justify-center text-4xl shadow-xl pb-1">!</div>
              </div>
         )}
         {isSuccess && (
              <div className="absolute top-[-20%] right-[-15%] animate-float-bubble z-50">
-                 <div className="bg-white border-4 border-green-500 text-green-500 font-black rounded-full w-16 h-16 flex items-center justify-center text-4xl shadow-xl">✓</div>
+                 <div className="bg-white border-4 border-gray-700 text-gray-900 font-black rounded-full w-16 h-16 flex items-center justify-center text-4xl shadow-xl">✓</div>
              </div>
         )}
 

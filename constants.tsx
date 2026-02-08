@@ -3,7 +3,7 @@ import React from 'react';
 
 export const CATEGORY_COLORS = {
   Focus: 'bg-chrono-500',
-  Meeting: 'bg-amber-500',
+  Meeting: 'bg-gray-700',
   Admin: 'bg-slate-500',
   Personal: 'bg-emerald-500',
 };

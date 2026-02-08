@@ -15,29 +15,49 @@ export const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete
   }, [onComplete]);
 
   return (
-    <div 
-      className={`fixed inset-0 z-[100] bg-white flex items-center justify-center transition-opacity duration-500 ${
-        exiting ? 'opacity-0 pointer-events-none' : 'opacity-100'
-      }`}
+    <div
+      className={`fixed inset-0 z-[100] bg-gradient-to-br from-white via-amber-50/15 to-yellow-50/20 flex items-center justify-center transition-opacity duration-1000 ${exiting ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
     >
-      <div className="flex flex-col items-center gap-6 animate-in fade-in zoom-in duration-700">
-        
-        {/* Simple Logo */}
-        <div className="relative">
-             <div className="absolute inset-0 bg-tva-orange/30 blur-xl rounded-full scale-150 opacity-50"></div>
-             <div className="relative w-24 h-24 bg-gradient-to-br from-tva-orange to-orange-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-orange-500/20 transform rotate-3">
-                <Clock className="w-12 h-12 text-white" strokeWidth={2.5} />
-             </div>
+      {/* Background Atmosphere (Blurred Video) */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <video
+          src="/time_ai_vid.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover opacity-30 scale-110"
+          style={{ filter: 'saturate(1.3) contrast(1.2) brightness(1.05) blur(64px)' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-amber-50/20 via-yellow-50/10 to-white/5 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-white/30"></div>
+      </div>
+
+      {/* Main Content Container */}
+      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full p-6">
+
+        {/* Featured Video (Clean & Contained) */}
+        <div className="relative w-full max-w-5xl aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-gray-900/10 ring-1 ring-white/5 bg-black/40 backdrop-blur-sm">
+          <video
+            src="/time_ai_vid.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            style={{ filter: 'saturate(1.3) contrast(1.2) brightness(1.05)' }}
+          />
         </div>
 
-        {/* Minimal Text & Loader */}
-        <div className="flex flex-col items-center gap-3">
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight font-sans">Time AI</h1>
-            <div className="flex gap-1.5">
-                <div className="w-2 h-2 bg-gray-200 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                <div className="w-2 h-2 bg-gray-200 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                <div className="w-2 h-2 bg-gray-200 rounded-full animate-bounce"></div>
-            </div>
+        {/* Loading Indicator */}
+        <div className="mt-12 flex flex-col items-center gap-4">
+          <h1 className="text-2xl font-black text-gray-900 tracking-tight font-sans opacity-90 drop-shadow-sm">Time AI</h1>
+          <div className="flex gap-2">
+            <div className="w-2.5 h-2.5 bg-gray-700 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+            <div className="w-2.5 h-2.5 bg-gray-700 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+            <div className="w-2.5 h-2.5 bg-gray-700 rounded-full animate-bounce"></div>
+          </div>
         </div>
 
       </div>

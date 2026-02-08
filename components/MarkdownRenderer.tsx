@@ -24,11 +24,11 @@ const CodeBlock: React.FC<{ code: string; language?: string }> = ({ code, langua
             // Variables/Properties
             .replace(/(--[a-zA-Z0-9_-]+)/g, '<span class="text-sky-400">$1</span>')
             // CLI/Common Keywords
-            .replace(/\b(sudo|apt|install|systemctl|nano|echo|curl|sh|bash|if|then|else|fi|for|in|do|done|while|chmod|chown|python3|pip|git|launch|init|deploy|accelerate)\b/g, '<span class="text-tva-orange font-bold">$1</span>')
+            .replace(/\b(sudo|apt|install|systemctl|nano|echo|curl|sh|bash|if|then|else|fi|for|in|do|done|while|chmod|chown|python3|pip|git|launch|init|deploy|accelerate)\b/g, '<span class="text-gray-400 font-bold">$1</span>')
             // Python keywords
-            .replace(/\b(def|return|if|else|import|from|as|class|with|try|except|finally|raise|yield)\b/g, '<span class="text-purple-400 font-bold">$1</span>')
+            .replace(/\b(def|return|if|else|import|from|as|class|with|try|except|finally|raise|yield)\b/g, '<span class="text-gray-300 font-bold">$1</span>')
             // Values/Numbers
-            .replace(/\b(\d+(\.\d+)?|true|false|null|THRESHOLD|THRESHOLD_VALUE)\b/g, '<span class="text-amber-500 font-mono">$1</span>');
+            .replace(/\b(\d+(\.\d+)?|true|false|null|THRESHOLD|THRESHOLD_VALUE)\b/g, '<span class="text-gray-400 font-mono">$1</span>');
     };
 
     return (
@@ -36,9 +36,9 @@ const CodeBlock: React.FC<{ code: string; language?: string }> = ({ code, langua
             {/* Terminal Header */}
             <div className="bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-800">
                 <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500/90 shadow-[0_0_8px_rgba(239,68,68,0.3)]"></div>
-                    <div className="w-3 h-3 rounded-full bg-amber-500/90 shadow-[0_0_8px_rgba(245,158,11,0.3)]"></div>
-                    <div className="w-3 h-3 rounded-full bg-emerald-500/90 shadow-[0_0_8px_rgba(16,185,129,0.3)]"></div>
+                    <div className="w-3 h-3 rounded-full bg-gray-500/90 shadow-[0_0_8px_rgba(0,0,0,0.3)]"></div>
+                    <div className="w-3 h-3 rounded-full bg-gray-600/90 shadow-[0_0_8px_rgba(0,0,0,0.3)]"></div>
+                    <div className="w-3 h-3 rounded-full bg-gray-700/90 shadow-[0_0_8px_rgba(0,0,0,0.3)]"></div>
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
@@ -94,31 +94,31 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
 
             // Headers
             if (line.startsWith('### ')) {
-                elements.push(<h3 key={i} className="text-xl font-bold text-gray-900 mt-10 mb-5 font-sans flex items-center gap-3"><span className="w-1.5 h-6 bg-tva-orange rounded-full"></span> {line.replace('### ', '')}</h3>);
+                elements.push(<h3 key={i} className="text-xl font-black text-gray-900 mt-10 mb-5 font-sans flex items-center gap-3"><span className="w-1.5 h-6 bg-gray-700 rounded-full"></span> {line.replace('### ', '')}</h3>);
             } else if (line.startsWith('## ')) {
-                elements.push(<h2 key={i} className="text-2xl md:text-3xl font-bold text-gray-900 mt-14 mb-8 font-sans border-b border-gray-100 pb-4 tracking-tight">{line.replace('## ', '')}</h2>);
+                elements.push(<h2 key={i} className="text-2xl md:text-3xl font-black text-gray-900 mt-14 mb-8 font-sans border-b border-gray-300 pb-4 tracking-tight">{line.replace('## ', '')}</h2>);
             } else if (line.startsWith('> ')) {
                 elements.push(
-                    <blockquote key={i} className="border-l-4 border-tva-orange bg-slate-50 px-8 py-6 my-10 rounded-r-2xl italic text-gray-700 shadow-sm border-y border-r border-gray-100">
-                        <p className="text-lg leading-relaxed">"{line.replace('> ', '')}"</p>
+                    <blockquote key={i} className="border-l-4 border-gray-700 bg-gray-50 px-8 py-6 my-10 rounded-r-2xl italic text-gray-900 shadow-sm border-y border-r border-gray-200">
+                        <p className="text-lg leading-relaxed font-semibold">"{line.replace('> ', '')}"</p>
                     </blockquote>
                 );
             } else if (line.startsWith('- ')) {
                 elements.push(
                     <li key={i} className="ml-8 mb-3 list-none relative group">
-                        <span className="absolute -left-6 top-2.5 w-2 h-2 rounded-full bg-tva-orange/40 group-hover:bg-tva-orange transition-colors"></span>
-                        <span className="text-gray-600 font-medium">{line.replace('- ', '')}</span>
+                        <span className="absolute -left-6 top-2.5 w-2 h-2 rounded-full bg-gray-700/40 group-hover:bg-gray-700 transition-colors"></span>
+                        <span className="text-gray-800 font-semibold">{line.replace('- ', '')}</span>
                     </li>
                 );
             } else if (line.trim() === '') {
                 elements.push(<div key={i} className="h-4" />);
             } else {
                 const processedLine = line
-                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>')
-                    .replace(/`(.*?)`/g, '<code class="bg-slate-100 text-tva-orange px-1.5 py-0.5 rounded-md font-mono text-[0.85em] font-bold border border-gray-200">$1</code>');
+                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-black">$1</strong>')
+                    .replace(/`(.*?)`/g, '<code class="bg-slate-100 text-gray-900 px-1.5 py-0.5 rounded-md font-mono text-[0.85em] font-black border border-gray-200">$1</code>');
                 
                 elements.push(
-                    <p key={i} className="text-gray-600 leading-relaxed mb-5 text-base md:text-lg font-light" dangerouslySetInnerHTML={{ __html: processedLine }} />
+                    <p key={i} className="text-gray-900 leading-relaxed mb-5 text-base md:text-lg font-semibold" dangerouslySetInnerHTML={{ __html: processedLine }} />
                 );
             }
         });

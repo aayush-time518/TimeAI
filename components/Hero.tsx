@@ -24,7 +24,7 @@ const RollingText: React.FC<{ words: string[] }> = ({ words }) => {
       {words.map((word, i) => (
         <span
           key={i}
-          className={`col-start-1 row-start-1 text-tva-orange transition-all duration-700 ease-out-expo ${
+          className={`col-start-1 row-start-1 text-gray-900 transition-all duration-700 ease-out-expo ${
             i === index
               ? "opacity-100 transform translate-y-0"
               : i === (index - 1 + words.length) % words.length
@@ -50,12 +50,12 @@ const EnergyAnomaly: React.FC<{ stage: number }> = ({ stage }) => {
              
              {/* 1. THE GLOW CORE */}
              <div className={`absolute inset-[-10px] rounded-full blur-2xl transition-all duration-700 ${
-                 isClean ? 'bg-green-400/20' : isHit ? 'bg-white' : 'bg-red-500/10'
+                 isClean ? 'bg-gray-200/20' : isHit ? 'bg-white' : 'bg-gray-500/10'
              }`}></div>
              
              {/* 2. THE CONTAINER */}
              <div className={`absolute inset-0 border rounded-2xl transition-all duration-700 flex flex-col items-center justify-center overflow-hidden
-                ${isClean ? 'border-green-400 bg-white/95 shadow-xl' : isHit ? 'border-white bg-white scale-110' : 'border-red-500/40 bg-slate-900/90 backdrop-blur-md'}
+                ${isClean ? 'border-gray-400 bg-white/95 shadow-xl' : isHit ? 'border-white bg-white scale-110' : 'border-gray-500/40 bg-slate-900/90 backdrop-blur-md'}
              `}>
                 
                 {isClean ? (
@@ -63,38 +63,38 @@ const EnergyAnomaly: React.FC<{ stage: number }> = ({ stage }) => {
                     <div className="w-full h-full p-2.5 flex flex-col gap-1.5 animate-in zoom-in-95 duration-500">
                         <div className="flex items-center justify-between">
                             <div className="flex gap-0.5">
-                                <Sparkles size={10} className="text-green-500" />
-                                <span className="text-[7px] font-black text-green-600 uppercase tracking-widest">Optimized</span>
+                                <Sparkles size={10} className="text-gray-700" />
+                                <span className="text-[7px] font-black text-gray-900 uppercase tracking-widest">Optimized</span>
                             </div>
-                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-gray-700 animate-pulse"></div>
                         </div>
                         {/* Beautiful Mini Chart */}
                         <div className="flex-1 flex items-end gap-1 px-0.5 pb-0.5">
-                            <div className="flex-1 bg-green-100 rounded-t-[1px]" style={{ height: '30%' }}></div>
-                            <div className="flex-1 bg-green-200 rounded-t-[1px]" style={{ height: '55%' }}></div>
-                            <div className="flex-1 bg-green-400 rounded-t-[1px] animate-[shimmer_2s_infinite]" style={{ height: '95%' }}></div>
-                            <div className="flex-1 bg-green-600 rounded-t-[1px]" style={{ height: '70%' }}></div>
-                            <div className="flex-1 bg-green-300 rounded-t-[1px]" style={{ height: '85%' }}></div>
+                            <div className="flex-1 bg-gray-200 rounded-t-[1px]" style={{ height: '30%' }}></div>
+                            <div className="flex-1 bg-gray-300 rounded-t-[1px]" style={{ height: '55%' }}></div>
+                            <div className="flex-1 bg-gray-500 rounded-t-[1px] animate-[shimmer_2s_infinite]" style={{ height: '95%' }}></div>
+                            <div className="flex-1 bg-gray-700 rounded-t-[1px]" style={{ height: '70%' }}></div>
+                            <div className="flex-1 bg-gray-400 rounded-t-[1px]" style={{ height: '85%' }}></div>
                         </div>
-                        <div className="h-4 bg-green-50 rounded flex items-center px-1.5">
-                             <TrendingUp size={10} className="text-green-600 mr-1" />
-                             <span className="text-[6px] md:text-[7px] font-mono text-green-700 font-bold">+31.4% GROWTH</span>
+                        <div className="h-4 bg-gray-100 rounded flex items-center px-1.5">
+                             <TrendingUp size={10} className="text-gray-700 mr-1" />
+                             <span className="text-[6px] md:text-[7px] font-mono text-gray-900 font-black">+31.4% GROWTH</span>
                         </div>
                     </div>
                 ) : (
                     /* --- PHASE: MESSY DATA --- */
                     <div className="relative w-full h-full flex flex-col items-center justify-center p-3">
-                        <div className="text-[7px] font-mono text-red-500/80 leading-tight w-full truncate text-center">
+                        <div className="text-[7px] font-mono text-gray-600 leading-tight w-full truncate text-center">
                             {["0x8F FF AA", "LAT_SPIKE", "ERR_U32", "NULL_PTR"].map((t, i) => (
                                 <div key={i} className={`animate-pulse`} style={{ animationDelay: `${i*0.15}s` }}>
                                   {t}
                                 </div>
                             ))}
                         </div>
-                        <Activity className={`text-red-500 w-6 h-6 mt-1.5 opacity-50 animate-pulse ${isHit ? 'opacity-0' : ''}`} />
+                        <Activity className={`text-gray-600 w-6 h-6 mt-1.5 opacity-50 animate-pulse ${isHit ? 'opacity-0' : ''}`} />
                         {/* Glitch Overlay */}
                         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-red-500/30 animate-[scanVertical_1.s_linear_infinite]"></div>
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gray-500/30 animate-[scanVertical_1.s_linear_infinite]"></div>
                     </div>
                 )}
              </div>
@@ -102,8 +102,8 @@ const EnergyAnomaly: React.FC<{ stage: number }> = ({ stage }) => {
              {/* Orbital Particles (Messy Phase) */}
              {!isClean && !isHit && (
                  <div className="absolute inset-[-15px] animate-spin-slow opacity-40">
-                     <div className="w-1 h-1 bg-red-400 rounded-full absolute top-0 left-1/2"></div>
-                     <div className="w-1 h-1 bg-red-600 rounded-full absolute bottom-0 left-1/2"></div>
+                     <div className="w-1 h-1 bg-gray-400 rounded-full absolute top-0 left-1/2"></div>
+                     <div className="w-1 h-1 bg-gray-600 rounded-full absolute bottom-0 left-1/2"></div>
                      <div className="w-1 h-1 bg-white rounded-full absolute left-0 top-1/2"></div>
                  </div>
              )}
@@ -195,7 +195,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
   const minaState = getMinaState();
 
   return (
-    <section className="relative min-h-[90vh] md:min-h-[95vh] flex items-center justify-center bg-white py-12 md:py-24 lg:py-0 overflow-hidden perspective-[2000px]">
+    <section className="relative min-h-[90vh] md:min-h-[95vh] flex items-center justify-center bg-gradient-to-br from-white via-amber-50/15 to-yellow-50/20 py-12 md:py-24 lg:py-0 overflow-hidden perspective-[2000px]">
       
       {/* Dynamic Background */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.2]" 
@@ -205,21 +205,21 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
            }}>
       </div>
       
-      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-red-50 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
-      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-50 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gray-100 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gray-100 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
 
       <div className="container mx-auto px-6 h-full flex flex-col justify-center relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           
           <div className="space-y-6 md:space-y-8 flex flex-col justify-center order-2 lg:order-1 max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out-expo">
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-sans font-bold leading-[1.1] tracking-tight text-gray-900 mb-6 drop-shadow-sm">
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-sans font-black leading-[1.1] tracking-tight text-gray-900 mb-6 drop-shadow-sm">
                 <span className="block">Accelerate with</span>
                 <span className="block mt-1">
                   <RollingText words={phrases} />
                 </span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-gray-500 font-light leading-relaxed max-w-lg mx-auto lg:mx-0">
+              <p className="text-base sm:text-lg md:text-xl text-gray-900 font-black leading-relaxed max-w-lg mx-auto lg:mx-0">
                  We build and implement custom AI agents, perform deep data analysis, and architect automated workflows that turn manual processes into autonomous results.
               </p>
             </div>
@@ -227,7 +227,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
             <div className="flex flex-col sm:flex-row gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out-expo delay-100 justify-center lg:justify-start">
               <button 
                 onClick={() => setView('contact')}
-                className="px-8 py-4 bg-gray-900 text-white font-bold text-sm uppercase tracking-widest rounded-xl shadow-xl shadow-gray-900/10 hover:bg-tva-orange hover:shadow-glow-amber transition-all duration-300 flex items-center justify-center gap-3 transform hover:-translate-y-1 active:scale-95"
+                className="px-8 py-4 bg-gray-900 text-white font-black text-sm uppercase tracking-widest rounded-xl shadow-xl shadow-gray-900/10 hover:bg-gray-800 transition-all duration-300 flex items-center justify-center gap-3 transform hover:-translate-y-1 active:scale-95"
               >
                 Contact Us <ArrowRight size={16} />
               </button>
@@ -237,7 +237,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                   const el = document.getElementById('live-demos');
                   if(el) el.scrollIntoView({behavior: 'smooth'});
                 }}
-                className="px-8 py-4 bg-white border border-gray-200 text-gray-900 font-bold text-sm uppercase tracking-widest rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3 active:scale-95 hover:border-gray-300 shadow-sm hover:shadow-md"
+                className="px-8 py-4 bg-white border border-gray-300 text-gray-900 font-black text-sm uppercase tracking-widest rounded-xl hover:bg-gray-100 hover:border-gray-400 transition-all flex items-center justify-center gap-3 active:scale-95 shadow-sm hover:shadow-lg"
               >
                 <Play size={16} className="fill-current" /> See Solutions
               </button>
@@ -281,7 +281,7 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
                     `}
                 >
                      {stage === 1.5 && (
-                         <div className="absolute inset-[-30px] border border-tva-orange/30 border-dashed rounded-full animate-[spin_4s_linear_infinite] pointer-events-none"></div>
+                         <div className="absolute inset-[-30px] border border-gray-400/30 border-dashed rounded-full animate-[spin_4s_linear_infinite] pointer-events-none"></div>
                      )}
                      <EnergyAnomaly stage={stage} />
                 </div>

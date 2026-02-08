@@ -147,7 +147,7 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
                     href="https://www.linkedin.com/company/time-ai/" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between gap-3 p-4 bg-slate-900 text-white rounded-xl shadow-lg hover:bg-tva-orange transition-all group"
+                    className="flex items-center justify-between gap-3 p-4 bg-slate-900 text-white rounded-xl shadow-lg hover:bg-gray-800 transition-all group"
                 >
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-white/10 rounded-lg">
@@ -189,7 +189,7 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
                  <div>
                     <h3 className="font-bold text-gray-900 text-sm tracking-tight leading-none">Mina</h3>
                     <div className="flex items-center gap-2 mt-1.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-700 animate-pulse"></div>
                         <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Architect Verified</span>
                     </div>
                  </div>
@@ -197,7 +197,7 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
             <div className="flex items-center gap-3">
                 {latency && (
                     <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 border border-gray-100 rounded-md animate-in fade-in duration-500">
-                        <Zap size={10} className="text-tva-orange" />
+                        <Zap size={10} className="text-gray-700" />
                         <span className="text-[8px] font-mono font-bold text-gray-500">{latency}ms</span>
                     </div>
                 )}
@@ -244,17 +244,17 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 bg-white shrink-0 border-t border-gray-50">
-            <div className="flex flex-wrap gap-2 mb-4">
+          <div className="p-5 bg-white shrink-0 border-t-2 border-gray-300">
+            <div className="flex flex-wrap gap-2.5 mb-5">
                 {suggestions.map((s, i) => (
                     <button
                         key={i}
                         onClick={() => handleSend(s)}
                         disabled={assistantState !== 'idle'}
-                        className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-[10px] font-bold text-gray-600 hover:border-tva-orange hover:text-tva-orange transition-all animate-in fade-in slide-in-from-bottom-2 duration-500 disabled:opacity-30 flex items-center gap-1.5"
+                        className="px-4 py-2 bg-gray-50 border-2 border-gray-300 rounded-full text-[10px] font-black text-gray-700 hover:border-gray-700 hover:text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 transition-all animate-in fade-in slide-in-from-bottom-2 duration-500 disabled:opacity-30 flex items-center gap-1.5 shadow-sm hover:shadow-md"
                         style={{ animationDelay: `${i * 100}ms` }}
                     >
-                        <Target size={10} className="text-tva-orange" />
+                        <Target size={11} className="text-gray-900" />
                         {s}
                     </button>
                 ))}
@@ -268,12 +268,12 @@ export const MinaAssistant: React.FC<MinaAssistantProps> = ({ currentView }) => 
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Consult Mina..."
                 disabled={assistantState !== 'idle'}
-                className="w-full bg-gray-100 border-none text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:ring-1 focus:ring-slate-300 transition-all disabled:opacity-50 font-medium"
+                className="w-full bg-white border-2 border-gray-300 text-gray-900 text-sm rounded-xl px-4 py-3.5 focus:outline-none focus:border-gray-700 focus:ring-2 focus:ring-gray-200 transition-all disabled:opacity-50 disabled:bg-gray-100 font-semibold placeholder:text-gray-500"
               />
               <button 
                 onClick={() => handleSend()}
                 disabled={assistantState !== 'idle' || !input.trim()}
-                className="absolute right-2 p-2 text-slate-900 hover:text-tva-orange disabled:opacity-0 transition-all transform hover:scale-110 active:scale-95"
+                className="absolute right-2 p-2 text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-lg disabled:opacity-0 transition-all transform hover:scale-110 active:scale-95"
               >
                 <Send size={18} />
               </button>
